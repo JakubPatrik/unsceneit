@@ -1,0 +1,53 @@
+/* Thumbnail blur (popup: "Blur all video thumbnails", on by default).
+   A manifest stylesheet: Chrome applies it before the page's first paint, so
+   a thumbnail is never visible, not even for one frame. thumbs.js turns it
+   off with <html data-scenemod-thumbs="off"> only when the viewer disabled
+   the option; until that runs, thumbnails stay blurred (the safe side). */
+
+html:not([data-scenemod-thumbs="off"]) :is(
+  /* Any YouTube thumbnail, on any site, by its image URL (img src or inline
+     background): stills, webp, animated previews, seek-bar storyboards. */
+  img[src*="ytimg.com/vi"],
+  img[src*="ytimg.com/an"],
+  img[src*="ytimg.com/sb/"],
+  img[srcset*="ytimg.com/vi"],
+  [style*="ytimg.com/vi"],
+  [style*="ytimg.com/an"],
+  [style*="ytimg.com/sb/"],
+
+  /* youtube.com containers, so a thumbnail is blurred before its image even
+     loads, and hover previews (which play the video inline). */
+  ytd-thumbnail,
+  ytd-playlist-thumbnail,
+  ytd-moving-thumbnail-renderer,
+  yt-thumbnail-view-model,
+  yt-collection-thumbnail-view-model,
+  ytd-video-preview,
+  #video-preview,
+  #inline-preview-player,
+  .yt-lockup-view-model-wiz__content-image,
+  .yt-lockup-view-model__content-image,
+  .shortsLockupViewModelHostThumbnailContainer,
+  ytm-shorts-lockup-view-model .shortsLockupViewModelHostThumbnail,
+  ytd-reel-item-renderer #thumbnail,
+
+  /* m.youtube.com */
+  .media-item-thumbnail-container,
+  .video-thumbnail-container-large,
+  .video-thumbnail-img,
+  ytm-reel-item-renderer .reel-item-thumbnail,
+
+  /* The YouTube player's own thumbnails (also in embeds): the cover image,
+     end screen, pause "more videos", end cards, up-next, seek preview. */
+  .ytp-cued-thumbnail-overlay-image,
+  .ytp-videowall-still-image,
+  .ytp-suggestion-image,
+  .ytp-ce-covering-image,
+  .ytp-autonav-endscreen-upnext-thumbnail,
+  .ytp-tooltip-bg,
+  .ytp-storyboard-framepreview-img
+) {
+  filter: blur(24px) brightness(0.75) !important;
+  /* Keep the blur inside the thumbnail instead of bleeding over titles. */
+  clip-path: inset(0) !important;
+}

@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      body {
+        width: 240px; margin: 0; padding: 12px 14px;
+        font: 13px/1.4 system-ui, sans-serif; color: #222;
+      }
+      h1 { font-size: 15px; margin: 0 0 8px; }
+      h2 {
+        font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em;
+        color: #777; margin: 12px 0 4px;
+      }
+      label { display: flex; align-items: center; gap: 6px; padding: 3px 0; cursor: pointer; }
+      #status { color: #a00; }
+      .hint { font-size: 11px; color: #888; margin: 4px 0 0; }
+      #match { font-size: 12px; }
+      #match button, #video-results button {
+        font: inherit; cursor: pointer; border: 1px solid #ccc; border-radius: 4px; background: #fff;
+      }
+      #video-search input { width: 100%; box-sizing: border-box; margin-top: 6px; padding: 4px 6px; font: inherit; }
+      #video-results { list-style: none; margin: 4px 0 0; padding: 0; }
+      #video-results button { width: 100%; text-align: left; margin-top: 3px; padding: 4px 6px; }
+    </style>
+  </head>
+  <body>
+    <h1>SceneMod</h1>
+    <h2>This video</h2>
+    <div id="match">Checking…</div>
+    <form id="video-search" autocomplete="off">
+      <input type="search" name="q" placeholder="Search the library to pick this video…" />
+    </form>
+    <ul id="video-results"></ul>
+    <div id="status">Loading filters…</div>
+    <form id="filters"></form>
+    <h2>Flagged scenes</h2>
+    <form id="flagged">
+      <label><input type="checkbox" name="mute" /> Mute audio</label>
+      <label><input type="radio" name="visual" value="blur" /> Heavy blur</label>
+      <label><input type="radio" name="visual" value="cover" /> Full cover (grey, nothing visible)</label>
+    </form>
+    <p class="hint">How a flagged scene is hidden while it plays (Pre-scan mode).</p>
+    <h2>Thumbnails</h2>
+    <form id="thumbnails">
+      <label><input type="checkbox" name="blur" /> Blur all video thumbnails</label>
+    </form>
+    <p class="hint">Hides every video thumbnail and hover preview on the page, before it can show.</p>
+    <!-- Shown only in unpacked dev builds (popup.js); store users never see it. -->
+    <section id="debug-section" hidden>
+    <h2>Debug</h2>
+    <form id="debug-mode">
+      <label><input type="radio" name="debug-mode" value="off" /> Off</label>
+      <label><input type="radio" name="debug-mode" value="live" /> Live analysis overlay</label>
+      <label><input type="radio" name="debug-mode" value="prescan" /> Pre-scan &amp; blur (lookahead)</label>
+    </form>
+    <p class="hint">Dev build only. Analyses ~1 frame/s with your active presets against production (paid OpenAI calls). Pre-scan: reload video pages after switching it on.</p>
+    </section>
+    <script src="logic.js"></script>
+    <script src="popup.js"></script>
+  </body>
+</html>
