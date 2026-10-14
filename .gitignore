@@ -1,0 +1,9 @@
+# Dev-only extension secret (written by extension/scripts/dev-setup.sh)
+extension/config.dev.js
+
+# Store packages (extension/scripts/package.sh)
+dist/
+
+# Local tool artifacts
+.DS_Store
+.bun-*.node
