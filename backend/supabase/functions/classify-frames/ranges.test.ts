@@ -9,6 +9,11 @@ import {
   frameDecisions,
   mockAnswers,
   questionName,
+  groupByFilters,
+  mergeAnswers,
+  minutesFor,
+  secondProbs,
+  storedAnswers,
   selectFilters,
 } from "./ranges.ts";
 
@@ -50,10 +55,23 @@ describe("buildRanges", () => {
     ]);
   });
 
-  it("splits runs separated by an unflagged frame", () => {
+  it("bridges a single clean frame between two flagged ones (no flicker)", () => {
     assert.deepEqual(buildRanges([f(0, "gore"), f(1), f(2, "gore")], 1), [
+      { filter_id: "gore", start_s: 0, end_s: 3 },
+    ]);
+  });
+
+  it("splits runs separated by two or more clean frames", () => {
+    assert.deepEqual(buildRanges([f(0, "gore"), f(1), f(2), f(3, "gore")], 1), [
       { filter_id: "gore", start_s: 0, end_s: 1 },
-      { filter_id: "gore", start_s: 2, end_s: 3 },
+      { filter_id: "gore", start_s: 3, end_s: 4 },
+    ]);
+  });
+
+  it("only bridges within the same filter", () => {
+    assert.deepEqual(buildRanges([f(0, "gore"), f(1, "spiders"), f(2, "gore")], 1), [
+      { filter_id: "gore", start_s: 0, end_s: 3 },
+      { filter_id: "spiders", start_s: 1, end_s: 2 },
     ]);
   });
 
@@ -183,5 +201,82 @@ describe("mockAnswers end to end", () => {
       { filter_id: "id-gore", start_s: 10, end_s: 20 },
       { filter_id: "id-15", start_s: 15, end_s: 30 },
     ]);
+  });
+});
+
+describe("secondProbs", () => {
+  it("stores every second a frame stands for, × 1000, refusals as -1", () => {
+    const frames = [{ t: 4, flags: ["a"], probabilities: { a: 0.9, b: null } }];
+    assert.deepEqual(secondProbs(frames, ["a", "b"], 2), [
+      { filter_id: "a", s: 4, p: 900 },
+      { filter_id: "a", s: 5, p: 900 },
+      { filter_id: "b", s: 4, p: -1 },
+      { filter_id: "b", s: 5, p: -1 },
+    ]);
+  });
+});
+
+describe("minutesFor", () => {
+  it("lists the minute rows holding the frames' seconds", () => {
+    assert.deepEqual(minutesFor([58, 59], 2), [0, 1]);
+  });
+});
+
+describe("storedAnswers", () => {
+  const probs = (values: Record<number, number>) =>
+    Array.from({ length: 60 }, (_, i) => (i in values ? values[i] : null));
+  const rows = [
+    { filter_id: "a", minute: 0, probs: probs({ 1: 900, 2: 200 }) },
+    { filter_id: "b", minute: 0, probs: probs({ 1: -1 }) },
+  ];
+
+  it("uses what's stored and needs nothing for a fully answered frame", () => {
+    assert.deepEqual(storedAnswers([1], ["a", "b"], 1, rows, 500), {
+      stored: [{ t: 1, flags: ["a", "b"], probabilities: { a: 0.9, b: null } }],
+      todo: [],
+    });
+  });
+
+  it("asks only the filters a frame is missing (a new filter on a scanned video)", () => {
+    const { stored, todo } = storedAnswers([2], ["a", "b", "c"], 1, rows, 500);
+    assert.deepEqual(stored, [{ t: 2, flags: [], probabilities: { a: 0.2 } }]);
+    assert.deepEqual(todo, [{ t: 2, filterIds: ["b", "c"] }]);
+  });
+
+  it("asks every filter for an unseen frame (a new video)", () => {
+    assert.deepEqual(storedAnswers([61], ["a", "b"], 1, rows, 500).todo, [{ t: 61, filterIds: ["a", "b"] }]);
+  });
+
+  it("needs every second of a longer interval", () => {
+    assert.deepEqual(storedAnswers([1], ["a"], 2, rows, 500).todo, []);
+    assert.deepEqual(storedAnswers([2], ["a"], 2, rows, 500).todo, [{ t: 2, filterIds: ["a"] }]);
+  });
+});
+
+describe("groupByFilters", () => {
+  it("groups frames needing the same filters", () => {
+    assert.deepEqual(
+      groupByFilters([
+        { t: 1, filterIds: ["c"] },
+        { t: 2, filterIds: ["a", "b"] },
+        { t: 3, filterIds: ["c"] },
+      ]),
+      [
+        { filterIds: ["c"], times: [1, 3] },
+        { filterIds: ["a", "b"], times: [2] },
+      ]
+    );
+  });
+});
+
+describe("mergeAnswers", () => {
+  it("joins stored and new answers per frame", () => {
+    assert.deepEqual(
+      mergeAnswers([
+        { t: 2, flags: [], probabilities: { a: 0.2 } },
+        { t: 2, flags: ["c"], probabilities: { c: 0.8 } },
+      ]),
+      [{ t: 2, flags: ["c"], probabilities: { a: 0.2, c: 0.8 } }]
+    );
   });
 });

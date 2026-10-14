@@ -12,10 +12,17 @@
 //
 // Each frame is sent to the OpenAI Decisions API with one predicate question
 // per filter (content_filters.prompt). The response has a boolean per frame
-// and filter id (plus the filters' keys/labels for display). Consecutive
-// flagged frames become skip_ranges rows; re-analysing a stretch of a video
-// replaces that stretch's old ranges for these filters (replace_skip_ranges).
-// Realtime broadcasts new rows to subscribed viewers.
+// and filter id (plus the filters' keys/labels for display), and the frames'
+// flagged scenes as ranges.
+//
+// With persist, the answers are stored per second and filter in frame_scans
+// (flagged or not; one row per video × filter × minute), and frames that
+// already have a stored answer for every filter aren't sent to the AI again:
+// their stored answers are used, at no cost. The AI is asked only the
+// questions a frame has no stored answer for: every filter for a new video,
+// only a filter added later for one that's already scanned. The extension reads flagged
+// scenes and scanned stretches, derived from frame_scans, through find_video /
+// video_with_ranges. Frame times and interval_s are whole seconds when saving.
 
 import "@supabase/functions-js/edge-runtime.d.ts";
 import { withSupabase } from "@supabase/server";
@@ -23,8 +30,14 @@ import {
   answerProbabilities,
   answersByFilterId,
   buildRanges,
+  groupByFilters,
+  mergeAnswers,
+  minutesFor,
+  secondProbs,
+  storedAnswers,
   type ClassifiedFrame,
   type DecisionAnswer,
+  type SecondProb,
   flaggedFilters,
   frameDecisions,
   mockAnswers,
@@ -35,7 +48,6 @@ import {
 const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY") ?? "";
 const MOCK = Deno.env.get("MOCK_DECISIONS") === "true" || !OPENAI_API_KEY;
 const MODEL = Deno.env.get("DECISIONS_MODEL") ?? "gpt-6-luna";
-const THRESHOLD = Number(Deno.env.get("FLAG_THRESHOLD") ?? "0.5");
 const CONCURRENCY = 4;
 const MAX_FRAMES = 120;
 
@@ -76,7 +88,8 @@ async function decide(image: string, filters: Filter[]): Promise<DecisionAnswer[
 
 // Images in one Decisions request are shared evidence for every question,
 // so each frame needs its own request; run a few at a time.
-async function classifyFrames(frames: Frame[], filters: Filter[]): Promise<ClassifiedFrame[]> {
+// threshold: flag at or above this probability (0–1).
+async function classifyFrames(frames: Frame[], filters: Filter[], threshold: number): Promise<ClassifiedFrame[]> {
   const out: ClassifiedFrame[] = [];
   for (let i = 0; i < frames.length; i += CONCURRENCY) {
     const batch = frames.slice(i, i + CONCURRENCY);
@@ -86,7 +99,7 @@ async function classifyFrames(frames: Frame[], filters: Filter[]): Promise<Class
     batch.forEach((f, j) =>
       out.push({
         t: f.t,
-        flags: flaggedFilters(answers[j], THRESHOLD),
+        flags: flaggedFilters(answers[j], threshold),
         probabilities: answerProbabilities(answers[j]),
       })
     );
@@ -106,6 +119,10 @@ function validate(body: any): string | null {
     if (v.youtube_id && !YOUTUBE_ID.test(v.youtube_id)) return "video.youtube_id must be an 11-character YouTube id";
   }
   if (body.interval_s !== undefined && !(body.interval_s > 0)) return "interval_s must be > 0";
+  // Answers are stored per whole second (frame_scans).
+  if (persist && body.interval_s !== undefined && !Number.isInteger(body.interval_s)) {
+    return "interval_s must be a whole number of seconds when persisting";
+  }
   const ids = body.filter_ids;
   if (
     ids !== undefined &&
@@ -118,11 +135,26 @@ function validate(body: any): string | null {
   if (frames.length > MAX_FRAMES) return `At most ${MAX_FRAMES} frames per request`;
   for (const f of frames) {
     if (typeof f?.t !== "number" || f.t < 0) return "Each frame needs t >= 0 (seconds)";
+    if (persist && !Number.isInteger(f.t)) return "Frame times must be whole seconds when persisting";
     if (typeof f.image !== "string" || !f.image.startsWith("data:image/")) {
       return "Each frame needs image as a base64 data URL";
     }
   }
   return null;
+}
+
+// flag_threshold() (probability × 1000), the single copy of the threshold.
+// Read once per function instance.
+let thresholdPermille: Promise<number> | null = null;
+function flagThreshold(db: any): Promise<number> {
+  thresholdPermille ??= db.rpc("flag_threshold").then(({ data, error }: any) => {
+    if (error) {
+      thresholdPermille = null; // retry on the next request
+      throw new Error(error.message);
+    }
+    return Number(data);
+  });
+  return thresholdPermille;
 }
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -202,33 +234,64 @@ export default {
       videoId = data;
     }
 
-    let classified: ClassifiedFrame[];
+    const filterIds = filters.map((f) => f.id);
+
+    let threshold: number;
     try {
-      classified = await classifyFrames(body.frames, filters);
+      threshold = await flagThreshold(db);
+    } catch (err) {
+      return json({ error: String(err) }, 500);
+    }
+
+    // Stored answers first; the AI is asked only what's missing per frame.
+    // (Dry runs have no video, so nothing is stored and every filter is asked.)
+    const times: number[] = body.frames.map((f: Frame) => f.t);
+    let stored: ClassifiedFrame[] = [];
+    let todo = times.map((t) => ({ t, filterIds }));
+    if (persist) {
+      const { data: rows, error } = await db
+        .from("frame_scans")
+        .select("filter_id, minute, probs")
+        .eq("video_id", videoId)
+        .in("minute", minutesFor(times, intervalS))
+        .in("filter_id", filterIds);
+      if (error) return json({ error: error.message }, 500);
+      ({ stored, todo } = storedAnswers(times, filterIds, intervalS, rows, threshold));
+    }
+
+    const analysed: ClassifiedFrame[] = [];
+    const toSave: SecondProb[] = [];
+    try {
+      for (const group of groupByFilters(todo)) {
+        const groupFilters = filters.filter((f) => group.filterIds.includes(f.id));
+        const frames = body.frames.filter((f: Frame) => group.times.includes(f.t));
+        const answers = await classifyFrames(frames, groupFilters, threshold / 1000);
+        analysed.push(...answers);
+        toSave.push(...secondProbs(answers, group.filterIds, intervalS));
+      }
     } catch (err) {
       console.error(err);
       return json({ error: String(err) }, 502);
     }
 
-    const ranges = buildRanges(classified, intervalS);
-    if (persist) {
-      // Re-analysed window: from the first frame to one interval past the last.
-      const times = classified.map((f) => f.t);
-      const { error } = await db.rpc("replace_skip_ranges", {
+    if (persist && toSave.length) {
+      const { error } = await db.rpc("save_frame_probs", {
         p_video_id: videoId,
-        p_filter_ids: filters.map((f) => f.id),
-        p_from: Math.min(...times),
-        p_to: Math.max(...times) + intervalS,
-        p_ranges: ranges,
+        p_frames: toSave,
       });
       if (error) return json({ error: error.message }, 500);
     }
+
+    const classified = mergeAnswers([...stored, ...analysed]);
+    const ranges = buildRanges(classified, intervalS);
 
     return json({
       video_id: videoId,
       mock: MOCK,
       persisted: persist,
       frames_classified: classified.length,
+      frames_from_library: classified.length - new Set(todo.map((x) => x.t)).size, // fully answered from frame_scans
+      questions_asked: todo.reduce((n, x) => n + x.filterIds.length, 0), // frame × filter questions sent to the AI
       filters: filters.map(({ id, key, label }) => ({ id, key, label })),
       decisions: frameDecisions(classified, filters.map((f) => f.id)),
       ranges: ranges.map((r) => ({ ...r, filter_key: filters.find((f) => f.id === r.filter_id)?.key })),
