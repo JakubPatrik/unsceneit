@@ -18,7 +18,7 @@ export function PlayerMock() {
           <span className="size-3 rounded-full bg-[#febc2e]" />
           <span className="size-3 rounded-full bg-[#28c840]" />
           <div className="mx-auto hidden h-6 w-72 items-center justify-center rounded-md bg-white/5 text-xs text-muted-foreground sm:flex">
-            Any video on the open web
+            Video on the open web
           </div>
           <div className="w-12" />
         </div>

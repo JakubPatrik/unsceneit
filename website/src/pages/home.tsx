@@ -22,6 +22,7 @@ import { Xenia, type XeniaState } from "@/components/site/xenia"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
+import { SUPPORT_EMAIL } from "@/site"
 
 export function Home() {
   return (
@@ -62,11 +63,25 @@ function Heading({ eyebrow, title, lead }: { eyebrow?: string; title: ReactNode;
   )
 }
 
-function SoonBadge() {
+function SoonBadge({ label = "Coming soon" }: { label?: string }) {
   return (
     <Badge variant="outline" className="border-brand/40 bg-brand/10 text-brand-soft">
-      Coming soon
+      {label}
     </Badge>
+  )
+}
+
+function AlphaBadge({ className }: { className?: string }) {
+  return (
+    <span
+      className={cn(
+        "inline-flex items-center gap-2 rounded-full border border-brand/40 bg-brand/10 px-3 py-1 text-sm text-brand-soft",
+        className,
+      )}
+    >
+      <span className="size-1.5 rounded-full bg-brand-soft" />
+      Early alpha
+    </span>
   )
 }
 
@@ -82,6 +97,7 @@ function Hero() {
       </div>
 
       <div className="mx-auto max-w-4xl px-4 text-center sm:px-6">
+        <AlphaBadge className="mb-8" />
         <h1 className="text-5xl leading-[1.02] font-semibold tracking-tighter text-balance sm:text-7xl md:text-8xl">
           The scenes you&rsquo;ll never see.
         </h1>
@@ -91,7 +107,7 @@ function Hero() {
         </p>
         <div className="mt-10 flex flex-col items-center gap-4">
           <AddToChrome />
-          <p className="text-sm text-muted-foreground">Free for every title in the unscene.it library. Chrome on desktop.</p>
+          <p className="text-sm text-muted-foreground">Free during the early alpha, for titles in the unscene.it library. Chrome on desktop.</p>
         </div>
         <a
           href="#how"
@@ -155,9 +171,6 @@ function Filters() {
         </div>
       </div>
 
-      <p className="mt-8 text-center text-sm text-muted-foreground">
-        Need something more specific? Pro will let you create your own filters. <SoonBadge />
-      </p>
     </Section>
   )
 }
@@ -203,7 +216,7 @@ function HowItWorks() {
         <Step
           n={3}
           title="Watch without worry"
-          body="Flagged scenes are blurred or covered, muted and labelled. When the scene ends, picture and sound come back. Nothing is cut."
+          body="Flagged scenes are blurred, muted and labelled. When the scene ends, picture and sound come back. Nothing is cut."
         >
           <div className="relative grid h-[106px] place-items-center overflow-hidden rounded-xl bg-[linear-gradient(135deg,#5a3d78,#d9785f)]">
             <div className="absolute inset-0 backdrop-blur-xl backdrop-brightness-50" />
@@ -238,7 +251,7 @@ const XENIA_STATES: { state: XeniaState; label: string; detail: ReactNode }[] = 
     label: "Thinking",
     detail: (
       <>
-        A spinning ring while she screens the next seconds with live AI. <SoonBadge />
+        A spinning ring while she screens the next seconds with live AI. <SoonBadge label="After the alpha" />
       </>
     ),
   },
@@ -283,8 +296,8 @@ function MeetXenia() {
 }
 
 const DETAILS = [
-  { icon: EyeOff, title: "Heavy blur or full cover", body: "A strong blur, or a grey screen with nothing visible. Your pick." },
-  { icon: VolumeX, title: "Muted while hidden", body: "Sound drops out with the picture and comes back on its own. On by default." },
+  { icon: EyeOff, title: "Heavy blur", body: "Flagged scenes are blurred so strongly that nothing shows through." },
+  { icon: VolumeX, title: "Muted while hidden", body: "Sound drops out with the picture and comes back on its own. On by default, and one switch to turn off." },
   { icon: PauseCircle, title: "Nothing plays until you choose", body: "No autoplay surprises: each video waits under a blur for your decision." },
   { icon: ImageOff, title: "Thumbnails blurred too", body: "Video thumbnails and previews are blurred before they show, so nothing slips through." },
   { icon: RefreshCw, title: "Settings that follow you", body: "Your filters sync across every Chrome where you're signed in." },
@@ -312,18 +325,18 @@ function Pricing() {
   return (
     <Section>
       <Heading
-        title="Free for the library."
+        title="Free during the alpha."
         lead="Popular movies and videos are screened once and shared, so filtering them costs you nothing."
       />
       <div className="mx-auto mt-16 grid max-w-4xl gap-4 md:grid-cols-2">
         <PlanCard
           name="Free"
           price="$0"
-          note="Forever"
+          note="Early alpha. No account needed."
           items={[
             "Unlimited filtering on every title in the library",
             "All filters, in any combination",
-            "Heavy blur, full cover and mute",
+            "Heavy blur, with optional mute",
             "Thumbnail blur",
           ]}
           cta={<AddToChrome size="sm" className="w-full" />}
@@ -331,8 +344,8 @@ function Pricing() {
         <PlanCard
           name="Pro"
           price="Credits"
-          note="Prepaid. Prices announced at launch."
-          badge={<SoonBadge />}
+          note="Prepaid. Not part of the alpha."
+          badge={<SoonBadge label="Planned" />}
           highlight
           items={[
             "Live AI for videos not in the library yet, screened about 10 seconds ahead",
@@ -395,7 +408,7 @@ function PlanCard({
 const FAQ = [
   {
     q: "Does unscene.it cut scenes out?",
-    a: "No. Flagged scenes are blurred or covered and muted while the video keeps playing, with a label such as “Hidden: gore”. Nothing is skipped, so you never lose your place in the story.",
+    a: "No. Flagged scenes are blurred (and muted, unless you turn that off) while the video keeps playing, with a label such as “Hidden: gore”. Nothing is skipped, so you never lose your place in the story.",
   },
   {
     q: "Which sites does it work on?",
@@ -403,7 +416,7 @@ const FAQ = [
   },
   {
     q: "What if a video isn't in the library?",
-    a: "Xenia tells you, and you can watch it without filters or search the library in case it's listed under another name. Live AI, which screens new videos as you watch, is coming with Pro.",
+    a: "Xenia tells you, and it plays without filters. You can also search the library in case it's listed under another name. The library keeps growing during the alpha.",
   },
   {
     q: "Is it perfect?",
@@ -423,6 +436,20 @@ const FAQ = [
           privacy policy
         </a>{" "}
         has the details.
+      </>
+    ),
+  },
+  {
+    q: "What does early alpha mean?",
+    a: (
+      <>
+        unscene.it works today for titles in its library, and it&rsquo;s free. Features such as live AI for videos
+        that aren&rsquo;t in the library yet, and your own custom filters, come later. Tell us what you&rsquo;d like
+        next at{" "}
+        <a href={`mailto:${SUPPORT_EMAIL}`} className="text-foreground underline underline-offset-4">
+          {SUPPORT_EMAIL}
+        </a>
+        .
       </>
     ),
   },
@@ -462,7 +489,7 @@ function FinalCta() {
         <h2 className="mt-10 text-5xl font-semibold tracking-tighter text-balance sm:text-7xl">Watch together. Worry less.</h2>
         <div className="mt-10 flex flex-col items-center gap-4">
           <AddToChrome />
-          <p className="text-sm text-muted-foreground">Free for every title in the library.</p>
+          <p className="text-sm text-muted-foreground">Free during the early alpha.</p>
         </div>
       </div>
     </section>

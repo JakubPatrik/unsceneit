@@ -129,7 +129,7 @@ function libraryFor(video) {
 // it's held (paused) under a blurred cover with the unscene.it dialog, which
 // first shows "checking…" and then, in place, the choices:
 //   - found:     watch with filters | watch without filters
-//   - not found: turn on live AI filter | watch without filters (or pick the
+//   - not found: turn on live AI filter (when available) | watch without filters (or pick the
 //                video from the library search)
 // Each choice removes the cover and starts playback.
 //
@@ -375,7 +375,9 @@ function decide(gate, { filtered, live = false }) {
     const count = flaggedCount(gate.result.ranges);
     say = count > 0 ? `Protected · ${count} scene${count === 1 ? "" : "s"} will be hidden` : "Protected · nothing flagged for your filters";
   } else if (filtered) {
-    say = "Not in the library yet, so nothing is filtered. Click me to turn on live AI.";
+    say = liveAIAvailable
+      ? "Not in the library yet, so nothing is filtered. Click me to turn on live AI."
+      : "Not in the library yet, so nothing is filtered.";
   }
   showBot(gate, { morph: true, say });
   play();

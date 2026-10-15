@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "unscene.it",
   "version": "0.1.0",
-  "description": "The scenes you'll never see. AI looks ahead and hides the scenes you choose to filter, on any video.",
+  "description": "Hide the scenes you'd rather not see. Pick your filters once and keep watching while the story plays on.",
   "homepage_url": "https://unscene.it",
   "icons": {
     "16": "icons/icon-16.png",

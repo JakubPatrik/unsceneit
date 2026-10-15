@@ -1,6 +1,7 @@
 // The toolbar popup: the viewer's filters (same picker as the in-page dialog,
-// notice.js noticeFilterPicker) and the thumbnail blur switch. Both are in
-// chrome.storage.sync, which the content scripts watch.
+// notice.js noticeFilterPicker), the mute-while-hidden switch and the
+// thumbnail blur switch. All are in chrome.storage.sync, which the content
+// scripts watch.
 //
 // Age is a single choice: "Under N" enables every age filter with
 // min_age >= N (an under-12 viewer also has 15+ and 18+ scenes hidden).
@@ -64,6 +65,21 @@ async function initFilters() {
 
 filtersForm.addEventListener("submit", (e) => e.preventDefault());
 initFilters();
+
+// ---- Mute while a scene is hidden (on by default; prescan.js watches it) ----
+// Only the mute is offered here; the visual part of flaggedHandling keeps its
+// stored value (heavy blur by default).
+
+const hiddenForm = document.getElementById("hidden-scenes");
+let flaggedHandling = normalizeFlaggedHandling();
+chrome.storage.sync.get({ flaggedHandling: null }).then((s) => {
+  flaggedHandling = normalizeFlaggedHandling(s.flaggedHandling);
+  hiddenForm.elements.mute.checked = flaggedHandling.mute;
+});
+hiddenForm.addEventListener("change", () => {
+  flaggedHandling = { ...flaggedHandling, mute: hiddenForm.elements.mute.checked };
+  chrome.storage.sync.set({ flaggedHandling });
+});
 
 // ---- Thumbnail blur (on by default; thumbs.js in each page watches it) ----
 

@@ -618,7 +618,7 @@ function noticeIsolateKeys(el) {
 // A button that needs at least one filter, plus the hint shown while it can't.
 function noticeNeedsFilters(button, hint, enabled) {
   const ok = enabled.size > 0;
-  if (!button.dataset.unavailable) button.disabled = !ok;
+  button.disabled = !ok;
   hint.hidden = ok;
 }
 
@@ -719,25 +719,30 @@ function noticeUnmatched(
   notice.box.className = "box";
   let current = new Set(enabled);
 
+  // Live AI (Pro) shows only where it runs (dev builds for now). Store builds
+  // offer the library search and "Watch without filters" only.
   const liveButton = liveAI
     ? noticeEl("button", { type: "button", className: "primary", onclick: onLiveAI }, [
         "Turn on live AI filter",
         noticeEl("span", { className: "pro", textContent: "PRO" }),
       ])
-    : noticeEl("button", { type: "button", disabled: true, title: "Coming soon" }, [
-        "Turn on live AI filter",
-        noticeEl("span", { className: "pro", textContent: "PRO" }),
-        noticeEl("span", { className: "muted", textContent: " · coming soon" }),
-      ]);
-  if (!liveAI) liveButton.dataset.unavailable = "1";
+    : null;
   const hint = noticeEl("div", { className: "hint", textContent: "Pick at least one filter to use live AI." });
   const picker = noticeFilterPicker(filters, current, (ids) => {
     current = new Set(ids);
     onFiltersChange(ids);
-    noticeNeedsFilters(liveButton, hint, current);
+    if (liveButton) noticeNeedsFilters(liveButton, hint, current);
   });
-  noticeNeedsFilters(liveButton, hint, current);
-  if (!liveAI) hint.hidden = true;
+  if (liveButton) noticeNeedsFilters(liveButton, hint, current);
+  else hint.hidden = true;
+
+  const detail = error
+    ? liveAI
+      ? "unscene.it couldn't reach its library. Turn on the live AI filter, or watch without filters."
+      : "unscene.it couldn't reach its library. Try again later, or watch without filters."
+    : liveAI
+      ? "Turn on the live AI filter to screen it as you watch, or watch without filters."
+      : "Nothing will be hidden in it yet. Search the library in case it's listed under another name, or watch without filters.";
 
   notice.box.replaceChildren(
     noticeCloseButton(onClose, closeTitle),
@@ -746,16 +751,10 @@ function noticeUnmatched(
       className: "title",
       textContent: error ? "Couldn't check this video" : "This video isn't in the library yet",
     }),
-    noticeEl("div", {
-      className: "muted",
-      textContent: error
-        ? "unscene.it couldn't reach its library. Turn on the live AI filter, or watch without filters."
-        : "Turn on the live AI filter to screen it as you watch, or watch without filters.",
-    }),
+    noticeEl("div", { className: "muted", textContent: detail }),
     picker,
     noticeEl("div", { className: "actions" }, [
-      liveButton,
-      hint,
+      ...(liveButton ? [liveButton, hint] : []),
       noticeEl("button", { type: "button", textContent: "Watch without filters", onclick: onWatchAnyway }),
     ]),
     ...noticeLibrarySearch("Listed under another name? Search the library:", onPicked),
