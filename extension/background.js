@@ -77,7 +77,7 @@ function respond(promise, sendResponse, fallback) {
 // ---- Library lookup ----
 // Only the playing video is looked up (never the whole library): by YouTube
 // id, else by title (find_video, index-backed). If that finds
-// nothing (or the wrong video), the user picks it in the popup's search;
+// nothing (or the wrong video), the user picks it in the dialog's search;
 // that choice is remembered per page.
 
 const MAX_MANUAL_MATCHES = 200;
@@ -98,31 +98,16 @@ function lookupVideo({ youtubeId, titles, manualId }) {
 }
 
 // From a content script whose frame plays a video: { youtubeId, title }.
-// Also records what the tab is playing for the popup ("This video").
 async function handleLookup(msg, tab) {
   // YouTube: the id only. Page/tab titles can still be the previous video's
   // right after navigating, which would match the wrong library entry.
   const titles = msg.youtubeId ? [] : [...new Set([msg.title, cleanTitle(tab?.title)].filter(Boolean))];
   const manual = tab?.url ? (await getManualMatches())[pageKey(tab.url)] : null;
-  const result = await lookupVideo({ youtubeId: msg.youtubeId, titles, manualId: manual?.id });
-  if (tab?.id != null) {
-    // Session storage survives the worker sleeping; cleared with the tab.
-    await chrome.storage.session.set({
-      [`tab:${tab.id}`]: {
-        pageUrl: pageKey(tab.url),
-        title: titles[0] ?? "",
-        youtubeId: msg.youtubeId ?? null,
-        match: result.video,
-        manual: !!manual,
-        rangeCount: result.ranges.length,
-      },
-    });
-  }
-  return result;
+  return lookupVideo({ youtubeId: msg.youtubeId, titles, manualId: manual?.id });
 }
 
-// From the popup: remember (or, with video = null, forget) the user's pick
-// for a page, then tell that tab's frames to look up again.
+// From the dialog's library search: remember (or, with video = null, forget)
+// the user's pick for a page, then tell that tab's frames to look up again.
 async function selectVideo({ tabId, pageUrl, video }) {
   const matches = await getManualMatches();
   const key = pageKey(pageUrl);
@@ -135,8 +120,6 @@ async function selectVideo({ tabId, pageUrl, video }) {
   await chrome.storage.local.set({ manualMatches: Object.fromEntries(kept) });
   chrome.tabs.sendMessage(tabId, { type: "library-changed" }).catch(() => {});
 }
-
-chrome.tabs.onRemoved.addListener((tabId) => chrome.storage.session.remove(`tab:${tabId}`));
 
 // ---- Debug modes: frame analysis (dev builds only) ----
 // classify-frames only accepts the project's secret key, which must never
@@ -211,11 +194,6 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     return respond(handleLookup(msg, sender.tab), sendResponse, { video: null, ranges: [] });
   }
 
-  if (msg.type === "get-tab-state") {
-    const key = `tab:${msg.tabId}`;
-    return respond(chrome.storage.session.get(key).then((s) => s[key] ?? null), sendResponse, null);
-  }
-
   if (msg.type === "search-videos") {
     return respond(supabaseRpc("search_videos", { p_query: msg.query }), sendResponse, []);
   }
@@ -228,10 +206,6 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       sendResponse,
       { ok: false }
     );
-  }
-
-  if (msg.type === "select-video") {
-    return respond(selectVideo(msg).then(() => ({ ok: true })), sendResponse, { ok: false });
   }
 
   if (msg.type === "analyze-frames") {

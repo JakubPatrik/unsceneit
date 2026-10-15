@@ -2,63 +2,81 @@
 <html>
   <head>
     <meta charset="utf-8" />
+    <!-- Same look as the in-page dialog (notice.js NOTICE_CSS). -->
     <style>
+      [hidden] { display: none !important; }
+      html { color-scheme: dark; }
       body {
-        width: 240px; margin: 0; padding: 12px 14px;
-        font: 13px/1.4 system-ui, sans-serif; color: #222;
+        width: 300px; margin: 0; padding: 16px;
+        background: #0e0e14; color: #f2f2f7;
+        font: 13px/1.45 system-ui, sans-serif;
       }
-      h1 { margin: 0 0 4px; line-height: 0; }
-      h1 img { width: 160px; height: auto; }
-      .tagline { font-size: 11px; color: #777; margin: 0 0 8px; }
-      h2 {
-        font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em;
-        color: #777; margin: 12px 0 4px;
+      header { margin-bottom: 14px; }
+      .logo { display: block; width: 150px; height: auto; }
+      .tagline { margin: 6px 0 0; font-size: 11.5px; color: #b8b8c8; }
+
+      .card { padding: 10px; border-radius: 10px; background: #1b1b26; }
+      .card + .card { margin-top: 10px; }
+      .label {
+        font-size: 11px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase;
+        color: #a99cff; margin-bottom: 6px;
       }
-      label { display: flex; align-items: center; gap: 6px; padding: 3px 0; cursor: pointer; }
-      #status { color: #a00; }
-      .hint { font-size: 11px; color: #888; margin: 4px 0 0; }
-      #match { font-size: 12px; }
-      #match button, #video-results button {
-        font: inherit; cursor: pointer; border: 1px solid #ccc; border-radius: 4px; background: #fff;
+      .muted { color: #b8b8c8; }
+      .error { color: #ffd479; font-size: 12px; }
+
+      select {
+        width: 100%; margin-bottom: 8px; padding: 6px 8px; border-radius: 8px; font: inherit;
+        border: 1px solid #44445a; background: #262634; color: #f2f2f7;
       }
-      #video-search input { width: 100%; box-sizing: border-box; margin-top: 6px; padding: 4px 6px; font: inherit; }
-      #video-results { list-style: none; margin: 4px 0 0; padding: 0; }
-      #video-results button { width: 100%; text-align: left; margin-top: 3px; padding: 4px 6px; }
+      select:focus-visible { outline: 2px solid #a99cff; outline-offset: 1px; }
+      .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+      .chip { display: inline-flex; align-items: center; cursor: pointer; }
+      .chip input, .switch input { position: absolute; opacity: 0; pointer-events: none; }
+      .chip span {
+        padding: 4px 9px; border-radius: 999px; border: 1px solid #44445a; background: #262634;
+        font-size: 12px; user-select: none; transition: background-color 0.15s ease, border-color 0.15s ease;
+      }
+      .chip:hover span { background: #33334a; }
+      .chip input:checked + span { background: #6b4cff; border-color: #6b4cff; color: #fff; }
+      .chip input:focus-visible + span { outline: 2px solid #a99cff; outline-offset: 1px; }
+
+      .switch { display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; }
+      .switch .text { flex: 1; }
+      .switch .track {
+        position: relative; flex: none; width: 28px; height: 16px; border-radius: 999px; background: #44445a;
+        transition: background-color 0.2s ease;
+      }
+      .switch .track::after {
+        content: ""; position: absolute; top: 2px; left: 2px; width: 12px; height: 12px; border-radius: 50%;
+        background: #fff; transition: transform 0.2s ease;
+      }
+      .switch input:checked + .track { background: #6b4cff; }
+      .switch input:checked + .track::after { transform: translateX(12px); }
+      .switch input:focus-visible + .track { outline: 2px solid #a99cff; outline-offset: 1px; }
+      .hint { margin: 6px 0 0; font-size: 11px; color: #b8b8c8; }
     </style>
   </head>
   <body>
-    <h1><img src="icons/logo.png" alt="unscene.it" /></h1>
-    <p class="tagline">The scenes you'll never see.</p>
-    <h2>This video</h2>
-    <div id="match">Checking…</div>
-    <form id="video-search" autocomplete="off">
-      <input type="search" name="q" placeholder="Search the library to pick this video…" />
+    <header>
+      <img class="logo" src="icons/logo-light.png" alt="unscene.it" />
+      <p class="tagline">The scenes you'll never see.</p>
+    </header>
+
+    <form id="filters" class="card" autocomplete="off">
+      <div class="label">Your filters</div>
+      <div id="filters-body" class="muted">Loading filters…</div>
     </form>
-    <ul id="video-results"></ul>
-    <div id="status">Loading filters…</div>
-    <form id="filters"></form>
-    <h2>Flagged scenes</h2>
-    <form id="flagged">
-      <label><input type="checkbox" name="mute" /> Mute audio</label>
-      <label><input type="radio" name="visual" value="blur" /> Heavy blur</label>
-      <label><input type="radio" name="visual" value="cover" /> Full cover (grey, nothing visible)</label>
+
+    <form id="thumbnails" class="card">
+      <div class="label">Thumbnails</div>
+      <label class="switch">
+        <span class="text">Blur video thumbnails</span>
+        <input type="checkbox" name="blur" checked />
+        <span class="track"></span>
+      </label>
+      <p class="hint">Blurs every video thumbnail and hover preview before it can show.</p>
     </form>
-    <p class="hint">How a flagged scene is hidden while it plays.</p>
-    <h2>Thumbnails</h2>
-    <form id="thumbnails">
-      <label><input type="checkbox" name="blur" /> Blur all video thumbnails</label>
-    </form>
-    <p class="hint">Hides every video thumbnail and hover preview on the page, before it can show.</p>
-    <!-- Shown only in unpacked dev builds (popup.js); store users never see it. -->
-    <section id="debug-section" hidden>
-    <h2>Debug</h2>
-    <form id="debug-mode">
-      <label><input type="radio" name="debug-mode" value="off" /> Off</label>
-      <label><input type="radio" name="debug-mode" value="live" /> Live analysis overlay</label>
-      <label><input type="radio" name="debug-mode" value="prescan" /> Pre-scan &amp; blur (lookahead)</label>
-    </form>
-    <p class="hint">Dev build only. Analyses ~1 frame/s with your active presets against production (paid OpenAI calls). Pre-scan: reload video pages after switching it on.</p>
-    </section>
+
     <script src="logic.js"></script>
     <script src="popup.js"></script>
   </body>

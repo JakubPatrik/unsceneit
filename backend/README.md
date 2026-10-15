@@ -193,7 +193,7 @@ Leave `extension/tests/` out of the store package.
 
 1. **Filters:** the popup loads the visible `content_filters` (built-ins, without prompts) through the background worker. Enabled filter **ids** are saved to `chrome.storage.sync`.
 2. **Lookup:** as soon as a `<video>`'s metadata loads (before it plays), the content script sends the frame's YouTube id (from the URL, if any) and title. The background worker adds the tab's title and calls `find_video`, so only that video is fetched, never the whole library. It takes well under a millisecond on the database, even with 50,000 videos (see Performance). Results are cached for 5 minutes. A new video in the same player (YouTube) triggers a new lookup.
-3. **Manual pick:** the popup's **This video** section shows the match, or "Not in the library". The search box calls `search_videos`. Picking a result saves it for that page (`chrome.storage.local.manualMatches`, newest 200), and the tab's frames look up again through `video_with_ranges`.
+3. **Manual pick:** when a video isn't found, the dialog's library search calls `search_videos`. Picking a result saves it for that page (`chrome.storage.local.manualMatches`, newest 200), and the tab's frames look up again through `video_with_ranges`.
 4. **Playback gate** (`content.js` + `notice.js`, from `document_start`): a video plays **only after the viewer chooses**. From the moment it appears, it's held (paused) under a blurred cover. While the library is checked, Xenia, the bot in the top-right corner, says "Checking this video against your filters…" with a spinner in its bubble. Then the dialog with the choices appears:
    - **Found:** **Watch with filters** (library scenes are hidden) or **Watch without filters** (nothing is hidden).
    - **Not found:** **Turn on live AI filter** (Pro) or **Watch without filters**, plus a library search for videos listed under another name. Picking one counts as "with filters".
@@ -212,7 +212,7 @@ Leave `extension/tests/` out of the store package.
 
 ## Debug modes (extension)
 
-The extension popup's **Debug** section has three modes: **Off**, **Live analysis overlay**, and **Pre-scan & blur**. They're stored per device in `chrome.storage.local.debugMode`. Both active modes call `classify-frames` as a dry run (`persist: false`) with your active filters as `filter_ids`, and show a panel over the video:
+There are three debug modes: **Off**, **Live analysis overlay**, and **Pre-scan & blur**. They're stored per device in `chrome.storage.local.debugMode`. The popup no longer has controls for them, so to use one, set `debugMode` (`"live"` or `"prescan"`) from the extension's service-worker console with `chrome.storage.local.set({ debugMode: "live" })`. Both active modes call `classify-frames` as a dry run (`persist: false`) with your active filters as `filter_ids`, and show a panel over the video:
 - a MOCK or LIVE AI badge and the response time
 - the analysed frame, outlined red if any filter flagged it
 - a ✓/✗ for each filter with a probability bar
@@ -229,7 +229,7 @@ The extension popup's **Debug** section has three modes: **Off**, **Live analysi
 **Pre-scan & blur** (`prescan.js`, `mse-tee.js`, `tee-flag.js`): a continuous lookahead of `PRESCAN_WINDOW_S` seconds (10).
 - **One initial stall.** On a fresh load, or after seeking past the analysed region, playback pauses behind a loading animation while the next `PRESCAN_WINDOW_S` seconds are captured and analysed in one request.
 - **Steady state.** While you watch second *k*, second *k+5* is captured and analysed, one request per second. There are no further pauses unless analysis falls behind, which triggers a "Waiting for analysis…" stall. Seconds already analysed aren't requested again after seeking back.
-- **Hide, never skip.** This applies whenever the viewer watches with filters, with or without live AI. Flagged scenes, from the AI or the database, stay hidden while they play, with a "Hidden: gore" label. Hiding starts 1 second early and ends 1 second late, because a scene can begin or end between samples (library ranges already come padded from the database). Seeking past a scene would break the lookahead. How it hides is set under **Flagged scenes** in the popup, stored in `chrome.storage.sync.flaggedHandling`:
+- **Hide, never skip.** This applies whenever the viewer watches with filters, with or without live AI. Flagged scenes, from the AI or the database, stay hidden while they play, with a "Hidden: gore" label. Hiding starts 1 second early and ends 1 second late, because a scene can begin or end between samples (library ranges already come padded from the database). Seeking past a scene would break the lookahead. How it hides comes from `chrome.storage.sync.flaggedHandling`. The popup no longer has controls for it, so viewers get the defaults:
   - **Mute audio:** on by default. Only a mute that unscene.it caused is undone afterwards.
   - **Heavy blur** (default), or **Full cover**: an opaque grey layer, so nothing is visible.
 - **How future frames are read.** Frames come from a hidden shadow `<video>`, never the visible player:
@@ -240,7 +240,7 @@ The extension popup's **Debug** section has three modes: **Off**, **Live analysi
 - **Dev builds only.** `classify-frames` accepts only the secret key, which must never ship in the store build. So the debug modes run only in your own unpacked copy:
   1. Run `extension/scripts/dev-setup.sh`. It writes `extension/config.dev.js` with the production secret key, gitignored and readable only by you.
   2. In `chrome://extensions`, use **Load unpacked** and pick `extension/`.
-  3. The popup now shows the **Debug** section. Store installs never see it, and the background worker refuses to analyse unless the extension is loaded unpacked *and* `config.dev.js` exists.
+  3. Live AI and the dialog's **Show live AI debug panel** switch are now available. Store installs never see them, and the background worker refuses to analyse unless the extension is loaded unpacked *and* `config.dev.js` exists.
 - **Store package:** `extension/scripts/package.sh` builds `dist/unsceneit-<version>.zip`. It leaves out `config.dev.js`, tests and scripts, and aborts if a secret key would end up inside.
 - **Cost:** roughly one Decisions request per second of playback, with every active preset as a question in it. Use `MOCK_DECISIONS=true` to work on the UI without spending.
 - **Capture limits:** cross-origin videos without CORS can't be captured. DRM (EME) players can't be mirrored or captured.
