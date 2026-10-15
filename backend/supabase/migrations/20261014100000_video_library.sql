@@ -1,4 +1,4 @@
--- SceneMod schema, part 2: the video library.
+-- UnSceneIt schema, part 2: the video library.
 --
 --   videos         one row per video, found by YouTube id or title
 --   frame_results  the AI's answer per video × frame time × filter: the

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Deploys the SceneMod backend to the linked hosted Supabase project:
+# Deploys the unscene.it backend to the linked hosted Supabase project:
 #   1. applies pending migrations           (supabase db push)
 #   2. uploads Edge Function secrets         (from supabase/functions/.env)
 #   3. deploys the classify-frames function

@@ -5,7 +5,7 @@
 ## 1. Executive Summary & Value Proposition
 
 * **Product Concept:** A lightweight browser extension coupled with an intelligent backend that automatically detects streaming video elements, evaluates content against user-defined safety presets, and seamlessly skips or mutes harmful scenes.
-* **Core Value:** Gives viewers absolute control over their viewing experience by filtering out unwanted content—ranging from age-restricted material (12+, 15+) to specific phobias and triggers (spiders, heights, gore)—without breaking immersion.
+* **Core Value:** Gives viewers absolute control over their viewing experience by filtering out unwanted content—ranging from age-restricted material (12+, 15+) to specific phobias and triggers (spiders, gore)—without breaking immersion.
 * **Competitive Edge:** Leverages OpenAI’s high-speed **Decisions API (powered by GPT-6 Luna)** for cost-effective, precise binary classification, combining a zero-cost global pre-processed database with a real-time fallback inference pipeline for unindexed content.
 
 ---
@@ -15,7 +15,7 @@
 Users can toggle multiple modular filter profiles simultaneously:
 
 * **Age Ratings:** Under-12, Under-15, Mature/R-rated exclusions.
-* **Phobia Triggers:** Arachnophobia (spiders/insects), acrophobia (extreme heights), blood and gore.
+* **Phobia Triggers:** Arachnophobia (spiders/insects), blood and gore.
 * **Sensory Cues:** Flashing lights / seizure risk profiles (future iteration).
 
 ---

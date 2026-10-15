@@ -1,9 +1,9 @@
 // Runs in every frame (top page + all iframes), from document_start:
 //   - the playback gate: a video plays only after the viewer chooses how to
-//     watch it, behind a blurred cover + SceneMod dialog;
-//   - skipping of the library's flagged ranges for the viewer's filters.
-// Pure helpers (resolveSkip, youtubeIdFromUrl, ...) come from logic.js; the
-// cover/dialog UI from notice.js.
+//     watch it, behind a blurred cover + unscene.it dialog.
+// Flagged scenes are hidden (never skipped) by prescan.js. Pure helpers
+// (youtubeIdFromUrl, ...) come from logic.js; the cover/dialog UI from
+// notice.js.
 
 // ---- Extension lifetime ----
 // After the extension is reloaded or updated, scripts already injected into
@@ -21,7 +21,7 @@ function extensionAlive() {
 // ---- Settings ----
 
 // Filter ids the user enabled in the popup. Only ranges tagged with one of
-// these are skipped; nothing is skipped until the user picks a preset.
+// these are hidden; nothing is hidden until the user picks a preset.
 let enabledFilters = new Set();
 chrome.storage.sync.get({ enabledFilters: [] }).then((s) => (enabledFilters = new Set(s.enabledFilters)));
 chrome.storage.onChanged.addListener((changes, area) => {
@@ -81,7 +81,7 @@ function isYouTubeMainVideo(video) {
   return !!player && player.contains(video);
 }
 
-// Which video this is, for lookups, decisions and skipping. On YouTube it's
+// Which video this is, for lookups, decisions and hiding. On YouTube it's
 // the video id from the URL (the player swaps streams in the same element and
 // a decision holds for the whole video); elsewhere: stream + page.
 function videoKey(video) {
@@ -126,7 +126,7 @@ function libraryFor(video) {
 
 // ---- Playback gate ----
 // A video plays only after the viewer decides. From the moment it appears
-// it's held (paused) under a blurred cover with the SceneMod dialog, which
+// it's held (paused) under a blurred cover with the unscene.it dialog, which
 // first shows "checking…" and then, in place, the choices:
 //   - found:     watch with filters | watch without filters
 //   - not found: turn on live AI filter | watch without filters (or pick the
@@ -161,7 +161,7 @@ function flaggedCount(ranges) {
 
 // The gate a <video> belongs to, if any.
 function gateForVideo(video) {
-  if (video.dataset.scenemodShadow) return null; // pre-scan's hidden lookahead copy
+  if (video.dataset.unsceneitShadow) return null; // pre-scan's hidden lookahead copy
   if (ON_YOUTUBE) return pageYouTubeId() && isYouTubeMainVideo(video) ? gates.get(videoKey(video)) : null;
   return gates.get(videoKey(video)) ?? null;
 }
@@ -173,20 +173,20 @@ function isUndecided(video) {
 
 // -- YouTube hold stylesheet, from first paint: the whole player area (also
 // its placeholder while the page boots) is blurred, YouTube's play button is
-// hidden, and the player ignores clicks; only the SceneMod dialog works.
-const HOLD_ATTR = "scenemodHold";
+// hidden, and the player ignores clicks; only the unscene.it dialog works.
+const HOLD_ATTR = "unsceneitHold";
 const holdStyle = document.createElement("style");
 holdStyle.textContent = `
-  html[data-scenemod-hold] #player-placeholder,
-  html[data-scenemod-hold] #player-wrap,
-  html[data-scenemod-hold] ytd-player,
-  html[data-scenemod-hold] #player-container-outer,
-  html[data-scenemod-hold] #movie_player,
-  html[data-scenemod-hold] #shorts-player {
+  html[data-unsceneit-hold] #player-placeholder,
+  html[data-unsceneit-hold] #player-wrap,
+  html[data-unsceneit-hold] ytd-player,
+  html[data-unsceneit-hold] #player-container-outer,
+  html[data-unsceneit-hold] #movie_player,
+  html[data-unsceneit-hold] #shorts-player {
     filter: ${flaggedVideoFilter("blur")} !important;
     pointer-events: none !important;
   }
-  html[data-scenemod-hold] .ytp-large-play-button {
+  html[data-unsceneit-hold] .ytp-large-play-button {
     display: none !important;
   }`;
 if (ON_YOUTUBE) document.documentElement.append(holdStyle);
@@ -315,6 +315,10 @@ function showGate(gate) {
 //   live: the live AI look-ahead (prescan.js) takes over; it holds playback
 //   behind its own loader while the first seconds are analysed, then plays.
 function decide(gate, { filtered, live = false }) {
+  // Re-opened from the bot while live AI was already protecting this video:
+  // its look-ahead (results for every filter) is still bound to the video.
+  const liveRunning =
+    gate.previous?.live && prescan.enabled && gate.videos().includes(prescan.video);
   gate.previous = null; // a new choice replaces whatever the bot's dialog was undoing
   gate.state = "open";
   gate.filtered = filtered;
@@ -331,8 +335,17 @@ function decide(gate, { filtered, live = false }) {
   if (!live && prescan.enabled && debug.mode !== "prescan") prescanSetEnabled(false);
   renderOverlay(); // the debug panel hides while watching without filters
 
+  // Still live: just resume. Results already in hide by the new filters at
+  // once; if anything ahead is missing, the look-ahead's own stall holds there.
+  if (live && liveRunning) {
+    release();
+    showBot(gate, { morph: true, say: "Xenia is protecting this video" });
+    play();
+    return;
+  }
+
   if (live) {
-    // Stay paused + blurred under the SceneMod loader while live AI
+    // Stay paused + blurred under the unscene.it loader while live AI
     // pre-screens the first PRESCAN_WINDOW_S seconds; play as soon as their results are in.
     gate.state = "screening";
     gate.progress = noticeScreening(gate.anchor);
@@ -349,7 +362,7 @@ function decide(gate, { filtered, live = false }) {
           if (prescan.enabled && debug.mode !== "prescan") prescanSetEnabled(false);
         }
         release();
-        showBot(gate, { morph: true, say: problem ? `Live AI is off: ${problem}.` : "Live AI is protecting this video" });
+        showBot(gate, { morph: true, say: problem ? `Xenia is off: ${problem}.` : "Xenia is protecting this video" });
         play();
       },
     });
@@ -360,7 +373,7 @@ function decide(gate, { filtered, live = false }) {
   let say = "Watching without filters. Click me to turn them on.";
   if (filtered && gate.result?.video) {
     const count = flaggedCount(gate.result.ranges);
-    say = count > 0 ? `Protected · ${count} scene${count === 1 ? "" : "s"} will be skipped` : "Protected · nothing flagged for your filters";
+    say = count > 0 ? `Protected · ${count} scene${count === 1 ? "" : "s"} will be hidden` : "Protected · nothing flagged for your filters";
   } else if (filtered) {
     say = "Not in the library yet, so nothing is filtered. Click me to turn on live AI.";
   }
@@ -368,7 +381,7 @@ function decide(gate, { filtered, live = false }) {
   play();
 }
 
-// The SceneMod bot for a decided gate, in the player's top-right corner. Its
+// Xenia, the unscene.it bot, for a decided gate, in the player's top-right corner. Its
 // eyes look around while it's actually filtering; clicking it re-opens the
 // dialog (see reopenGate).
 function showBot(gate, { morph = false, say = null } = {}) {
@@ -408,7 +421,7 @@ function botGate() {
   return null;
 }
 
-// Watching without filters: SceneMod stays completely out of the way
+// Watching without filters: unscene.it stays completely out of the way
 // (prescan.js / debug.js check this too).
 function isUnfiltered(video) {
   const gate = gateForVideo(video);
@@ -451,7 +464,7 @@ function videoSubject(video) {
 
 // Other sites: main videos only (not previews or ads).
 function isGatedVideo(video) {
-  return !ON_YOUTUBE && !video.dataset.scenemodShadow && video.offsetWidth >= 200 && video.offsetHeight >= 100;
+  return !ON_YOUTUBE && !video.dataset.unsceneitShadow && video.offsetWidth >= 200 && video.offsetHeight >= 100;
 }
 
 // -- Wiring
@@ -526,6 +539,8 @@ function shutDown() {
   gates.clear();
   noticeHide();
   setDebugMode("off"); // debug.js: stops its ticker and pre-scan, removes its overlay
+  clearInterval(prescan.timer);
+  standDown(); // prescan.js: shows any hidden scene again
 }
 
 // Other sites: gate a <video> as soon as it starts loading (before play).
@@ -562,27 +577,3 @@ chrome.runtime.onMessage.addListener((msg) => {
   }
 });
 
-// ---- Skipping ----
-// timeupdate doesn't bubble, but a capturing listener on document sees it
-// for every <video> in this frame, including ones added later.
-document.addEventListener(
-  "timeupdate",
-  (e) => {
-    const video = e.target;
-    if (!(video instanceof HTMLVideoElement)) return;
-    if (video.dataset.scenemodShadow) return; // pre-scan's hidden lookahead copy
-    if (prescan.enabled) return; // live AI look-ahead (prescan.js) blurs instead of seeking
-    if (!enabledFilters.size) return;
-    const gate = gateForVideo(video);
-    if (gate?.state !== "open" || gate.filtered === false) return; // undecided, or watching without filters
-    const ranges = libraryFor(video)?.ranges;
-    if (!ranges?.length) return;
-    const from = video.currentTime;
-    const t = resolveSkip(from, ranges, enabledFilters);
-    if (t !== from) {
-      video.currentTime = t;
-      debugSkipped(from, t, ranges); // debug.js; no-op unless the overlay is on
-    }
-  },
-  true
-);

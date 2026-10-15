@@ -1,4 +1,10 @@
-// Live AI look-ahead (pre-scan): continuous lookahead (PRESCAN_WINDOW_S) with blur. Results
+// Hiding flagged scenes, and the live AI look-ahead (pre-scan).
+//
+// Hiding: whenever the viewer watches with filters, flagged scenes (library
+// ranges, plus live AI's) play blurred or covered, muted, with a "Hidden: …"
+// label. Nothing is ever skipped.
+//
+// Look-ahead (live AI only): continuous lookahead (PRESCAN_WINDOW_S). Results
 // are saved to the library (all built-in filters), blurring only the
 // viewer's active ones.
 //
@@ -27,9 +33,9 @@ const PRESCAN_SEEK_TIMEOUT_MS = 3000;
 const PRESCAN_RETRY_MS = 1000;
 
 const prescan = {
-  enabled: false,
+  enabled: false, // live AI look-ahead on (hiding runs either way)
   // Live AI just turned on from the dialog: the video is held paused (by
-  // content.js, under the SceneMod loader) while the first PRESCAN_WINDOW_S seconds are
+  // content.js, under the unscene.it loader) while the first PRESCAN_WINDOW_S seconds are
   // analysed; onProgress(text, fraction) feeds the loader and onReady(problem)
   // releases + plays it. { onReady, onProgress, started }
   warmup: null,
@@ -49,6 +55,7 @@ const prescan = {
   retryAt: 0,
   stalling: null, // null | "initial" | "behind"
   blur: null, // { keys, prevValue, prevPriority, mutedByUs } while a flagged scene is hidden
+  blurLoop: null, // token of the current per-frame loop; a newer one replaces it
   layer: null, // loader + blur label elements in the overlay's shadow DOM
   libraryApplied: null, // library result whose scanned seconds are in `analysed`
   // Filter ids every analysed second was answered for. Live AI asks about all
@@ -62,22 +69,19 @@ const prescan = {
 
 // ---- Lifecycle (called by debug.js) ----
 
+// Turns the live AI look-ahead on or off. Hiding by the library's ranges
+// goes on either way (prescanTick).
 function prescanSetEnabled(on) {
   if (on === prescan.enabled) return;
   prescan.enabled = on;
-  if (on) {
-    prescan.timer = setInterval(prescanTick, PRESCAN_TICK_MS);
-    prescanTick();
-  } else {
-    clearInterval(prescan.timer);
-    prescan.timer = null;
-    finishWarmup("live AI was switched off");
-    if (prescan.stalling) endStall();
-    unblur();
-    if (prescan.ownShadow) prescan.shadow?.remove();
-    Object.assign(prescan, { video: null, mediaKey: null, shadow: null, ownShadow: false });
-    prescan.generation++;
-  }
+  if (on) return prescanTick();
+  finishWarmup("live AI was switched off");
+  if (prescan.stalling) endStall();
+  if (prescan.ownShadow) prescan.shadow?.remove();
+  // Drop live results now; the next tick starts over from the library's.
+  Object.assign(prescan, { mediaKey: null, shadow: null, ownShadow: false, liveRanges: [] });
+  prescan.generation++;
+  if (prescan.video) applyBlur(prescan.video.currentTime);
 }
 
 // Live AI from the "not in the library" panel: hold the (paused) video behind
@@ -153,9 +157,12 @@ function standDown() {
 // ---- Main loop ----
 
 function prescanTick() {
+  if (!prescan.enabled && !gates.size) return standDown(); // nothing gated in this frame
   const video = debugActiveVideo();
   if (!video || isUndecided(video)) return; // the viewer hasn't chosen yet
   if (isUnfiltered(video)) return standDown(); // watching without filters: hands off
+  // Without live AI, hide only in videos the viewer chose to watch with filters.
+  if (!prescan.enabled && gateForVideo(video)?.state !== "open") return standDown();
   if (debug.video !== video) {
     debug.video = video;
     mountOverlay();
@@ -163,7 +170,10 @@ function prescanTick() {
   positionOverlay(); // debug.js's ticker may be off (live AI started from the panel)
   if (video !== prescan.video || mediaKey(video.currentSrc, location.href) !== prescan.mediaKey) {
     resetFor(video, "New video");
-  } else if (currentFiltersKey() !== prescan.filtersKey) {
+  }
+  // A library title without live AI: hide its flagged scenes; nothing to look ahead for.
+  if (!prescan.enabled) return applyBlur(video.currentTime);
+  if (currentFiltersKey() !== prescan.filtersKey) {
     if ([...enabledFilters].every((id) => prescan.analysedFilters?.has(id))) {
       // Already answered for these filters: keep everything, just hide by them.
       prescan.filtersKey = currentFiltersKey();
@@ -183,7 +193,7 @@ function prescanTick() {
       debugLog("Live AI needs at least one filter: playing without screening");
       video.play().catch(() => {});
     }
-    return setUnavailable("No filters enabled: pick some in the SceneMod dialog or popup");
+    return setUnavailable("No filters enabled: pick some in the unscene.it dialog or popup");
   }
   if (!prescan.shadow && !attachLookaheadShadow(video)) {
     // Can't look ahead (e.g. the page loaded before live AI was on): don't
@@ -293,7 +303,7 @@ function endStall() {
 function attachLookaheadShadow(video) {
   const src = video.currentSrc;
   if (!src) return false;
-  const teed = document.querySelector(`video[data-scenemod-shadow-for="${CSS.escape(src)}"]`);
+  const teed = document.querySelector(`video[data-unsceneit-shadow-for="${CSS.escape(src)}"]`);
   if (teed) {
     prescan.shadow = teed;
     return true;
@@ -321,7 +331,7 @@ function createClone(video, crossOrigin) {
   clone.muted = true;
   clone.preload = "auto";
   if (crossOrigin != null) clone.crossOrigin = crossOrigin;
-  clone.dataset.scenemodShadow = "1";
+  clone.dataset.unsceneitShadow = "1";
   clone.setAttribute("aria-hidden", "true");
   clone.style.cssText =
     "position:fixed;left:0;top:0;width:2px;height:2px;opacity:0;pointer-events:none;z-index:-1;";
@@ -452,8 +462,9 @@ function handleCrossOrigin() {
 
 function startBlurLoop(video) {
   if (!("requestVideoFrameCallback" in video)) return;
+  const loop = (prescan.blurLoop = {});
   const onFrame = (_now, meta) => {
-    if (!prescan.enabled || prescan.video !== video) return;
+    if (prescan.blurLoop !== loop || prescan.video !== video) return;
     applyBlur(meta.mediaTime);
     video.requestVideoFrameCallback(onFrame);
   };
@@ -466,7 +477,7 @@ for (const type of ["emptied", "loadstart"]) {
   document.addEventListener(
     type,
     (e) => {
-      if (prescan.enabled && e.target === prescan.video) prescan.mediaKey = null;
+      if (prescan.video && e.target === prescan.video) prescan.mediaKey = null;
     },
     true
   );
@@ -477,7 +488,7 @@ for (const type of ["seeked", "timeupdate"]) {
   document.addEventListener(
     type,
     (e) => {
-      if (prescan.enabled && e.target === prescan.video) applyBlur(prescan.video.currentTime);
+      if (prescan.video && e.target === prescan.video) applyBlur(prescan.video.currentTime);
     },
     true
   );
@@ -599,7 +610,7 @@ function prescanUnmountLayer() {
 }
 
 // A stall: the video is covered by a dimmed, blurred copy of its current
-// frame, and the SceneMod bot shows that it's working (busy face, progress in
+// frame, and Xenia (the bot) shows that it's working (busy face, progress in
 // its bubble; notice.js).
 function showLoader(title) {
   prescan.stallTitle = title;
@@ -670,3 +681,4 @@ function prescanStatusHtml() {
 // file loaded.
 if (debug.root && !prescan.layer) prescanMountLayer(debug.root);
 if (debug.mode === "prescan") prescanSetEnabled(true);
+prescan.timer = setInterval(prescanTick, PRESCAN_TICK_MS);

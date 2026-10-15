@@ -4,8 +4,8 @@
 -- A row's 60 slots are the minute's seconds. Each holds the AI's probability
 -- that the answer is yes, × 1000 (0–1000), or -1 when the AI refused (counts
 -- as flagged), or null when that second hasn't been analysed for the filter.
--- A 2-hour film with 7 filters is 840 rows of about 200 bytes, instead of
--- 50,400 rows with a header and index entry each. A row stays small enough to
+-- A 2-hour film with 6 filters is 720 rows of about 200 bytes, instead of
+-- 43,200 rows with a header and index entry each. A row stays small enough to
 -- be stored inline and rewritten cheaply when live AI fills in a second.
 --
 -- Whether a second is flagged is decided when it's read, against

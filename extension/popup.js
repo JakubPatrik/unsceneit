@@ -2,7 +2,7 @@
 // the enabled filter keys in chrome.storage.sync, which content scripts watch.
 //
 // Age filters are a single choice: "Under N" enables every age filter with
-// min_age >= N (an under-12 viewer also skips 15+ and 18+ scenes).
+// min_age >= N (an under-12 viewer also has 15+ and 18+ scenes hidden).
 // Trigger filters are independent checkboxes.
 
 const form = document.getElementById("filters");

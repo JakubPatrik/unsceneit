@@ -4,12 +4,12 @@
 //               second, sent via the background worker to classify-frames as
 //               a dry run (nothing is stored), and the result is drawn over
 //               the video: the analysed frame, each active filter's verdict
-//               and probability, recent frames, skip events and errors.
+//               and probability, recent frames, hidden scenes and errors.
 //   "prescan" — same panel, fed by prescan.js (lookahead + blur); no
 //               current-frame capture here.
 //
-// Uses enabledFilters / libraryFor from content.js, pickVideo / formatTime /
-// skippedFilters from logic.js, and prescan* hooks from prescan.js.
+// Uses enabledFilters / libraryFor from content.js, pickVideo / formatTime
+// from logic.js, and prescan* hooks from prescan.js.
 
 const DEBUG_TICK_MS = 1000;
 const DEBUG_CAPTURE_WIDTH = 512;
@@ -38,8 +38,8 @@ chrome.storage.onChanged.addListener((changes, area) => {
   if (area === "local" && changes.debugMode) setDebugMode(changes.debugMode.newValue);
 });
 
-// "Show live AI debug panel" toggle in the SceneMod dialog (dev builds; off by
-// default). It alone decides whether the "SceneMod debug" panel shows.
+// "Show live AI debug panel" toggle in the unscene.it dialog (dev builds; off by
+// default). It alone decides whether the "unscene.it debug" panel shows.
 let showDebugPanel = false;
 chrome.storage.local.get({ showDebugPanel: false }).then((s) => {
   showDebugPanel = s.showDebugPanel;
@@ -72,7 +72,7 @@ function setDebugMode(mode) {
 // ---- Capture & analysis ----
 
 function debugActiveVideo() {
-  const video = pickVideo([...document.querySelectorAll("video:not([data-scenemod-shadow])")]);
+  const video = pickVideo([...document.querySelectorAll("video:not([data-unsceneit-shadow])")]);
   // Ignore tiny players (ads, previews, hover thumbnails).
   if (!video || video.offsetWidth < 200 || video.offsetHeight < 100) return null;
   return video;
@@ -153,13 +153,6 @@ async function debugTick() {
   } finally {
     debug.inFlight = false;
   }
-}
-
-// Called by content.js after a database-driven skip.
-function debugSkipped(from, to, ranges) {
-  if (!debug.on) return;
-  const keys = skippedFilters(ranges, enabledFilters, from, to);
-  debugLog(`Skipped ${formatTime(from)} → ${formatTime(to)} (${keys.join(", ")})`);
 }
 
 function debugLog(text) {
@@ -285,7 +278,7 @@ function renderOverlay() {
 
   const head = `
     <div class="head">
-      SceneMod debug
+      unscene.it debug
       ${last ? `<span class="badge ${last.mock ? "mock" : "live"}">${last.mock ? "MOCK" : "LIVE AI"}</span>` : ""}
       ${last ? `<span class="ms">${last.ms} ms</span>` : ""}
     </div>`;
@@ -345,7 +338,7 @@ function renderOverlay() {
   // Only the panel hides: live AI's loader and "Hidden: …" labels share this
   // overlay and keep working. Shown only with the dialog's toggle on, in dev
   // builds (liveAIAvailable, content.js); a store build never shows it.
-  // Never while watching without filters: SceneMod stays out of the way.
+  // Never while watching without filters: unscene.it stays out of the way.
   const unfiltered = !!video && isUnfiltered(video);
   debug.panel.hidden = !(liveAIAvailable && showDebugPanel) || unfiltered;
 }

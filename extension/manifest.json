@@ -1,8 +1,15 @@
 {
   "manifest_version": 3,
-  "name": "SceneMod",
+  "name": "unscene.it",
   "version": "0.1.0",
-  "description": "Hides or skips scenes that match your content filters, using AI analysis of video frames.",
+  "description": "The scenes you'll never see. AI looks ahead and hides the scenes you choose to filter, on any video.",
+  "homepage_url": "https://unscene.it",
+  "icons": {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
   "permissions": [
     "storage"
   ],
@@ -10,8 +17,12 @@
     "<all_urls>"
   ],
   "action": {
-    "default_title": "SceneMod filters",
-    "default_popup": "popup.html"
+    "default_title": "unscene.it filters",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "32": "icons/icon-32.png"
+    }
   },
   "background": {
     "service_worker": "background.js"

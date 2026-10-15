@@ -1,10 +1,10 @@
 /* Thumbnail blur (popup: "Blur all video thumbnails", on by default).
    A manifest stylesheet: Chrome applies it before the page's first paint, so
    a thumbnail is never visible, not even for one frame. thumbs.js turns it
-   off with <html data-scenemod-thumbs="off"> only when the viewer disabled
+   off with <html data-unsceneit-thumbs="off"> only when the viewer disabled
    the option; until that runs, thumbnails stay blurred (the safe side). */
 
-html:not([data-scenemod-thumbs="off"]) :is(
+html:not([data-unsceneit-thumbs="off"]) :is(
   /* Any YouTube thumbnail, on any site, by its image URL (img src or inline
      background): stills, webp, animated previews, seek-bar storyboards. */
   img[src*="ytimg.com/vi"],

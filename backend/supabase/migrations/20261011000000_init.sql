@@ -1,4 +1,4 @@
--- SceneMod schema, part 1: admins and content filters (built-in +
+-- UnSceneIt schema, part 1: admins and content filters (built-in +
 -- user-created). The video library (videos, per-frame AI results) is in
 -- 20261014100000_video_library.sql.
 --
@@ -70,8 +70,6 @@ insert into public.content_filters (user_id, key, label, category, min_age, sort
    'Does this movie frame show adult-only content, such as explicit sexual activity, full nudity, or graphic violence?'),
   ('27507de5-a60a-4089-9969-3be4382b7f97', 'spiders', 'Spiders & insects', 'trigger', null, 10,
    'Does this movie frame show a spider, insect, or other creepy-crawly (real or realistic), even if small or only partly visible?'),
-  ('27507de5-a60a-4089-9969-3be4382b7f97', 'heights', 'Extreme heights', 'trigger', null, 20,
-   'Does this movie frame show an extreme height from a precarious viewpoint, such as looking down from a cliff edge or skyscraper ledge, or a person dangling or about to fall from a great height?'),
   ('27507de5-a60a-4089-9969-3be4382b7f97', 'gore', 'Blood & gore', 'trigger', null, 30,
    'Does this movie frame show blood, open wounds, serious injuries, mutilation, or other gore?'),
   ('27507de5-a60a-4089-9969-3be4382b7f97', 'inappropriate', 'Sensual & revealing content', 'trigger', null, 40,

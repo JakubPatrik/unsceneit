@@ -7,7 +7,9 @@
         width: 240px; margin: 0; padding: 12px 14px;
         font: 13px/1.4 system-ui, sans-serif; color: #222;
       }
-      h1 { font-size: 15px; margin: 0 0 8px; }
+      h1 { margin: 0 0 4px; line-height: 0; }
+      h1 img { width: 160px; height: auto; }
+      .tagline { font-size: 11px; color: #777; margin: 0 0 8px; }
       h2 {
         font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em;
         color: #777; margin: 12px 0 4px;
@@ -25,7 +27,8 @@
     </style>
   </head>
   <body>
-    <h1>SceneMod</h1>
+    <h1><img src="icons/logo.png" alt="unscene.it" /></h1>
+    <p class="tagline">The scenes you'll never see.</p>
     <h2>This video</h2>
     <div id="match">Checking…</div>
     <form id="video-search" autocomplete="off">
@@ -40,7 +43,7 @@
       <label><input type="radio" name="visual" value="blur" /> Heavy blur</label>
       <label><input type="radio" name="visual" value="cover" /> Full cover (grey, nothing visible)</label>
     </form>
-    <p class="hint">How a flagged scene is hidden while it plays (Pre-scan mode).</p>
+    <p class="hint">How a flagged scene is hidden while it plays.</p>
     <h2>Thumbnails</h2>
     <form id="thumbnails">
       <label><input type="checkbox" name="blur" /> Blur all video thumbnails</label>

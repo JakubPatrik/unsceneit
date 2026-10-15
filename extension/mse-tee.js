@@ -6,10 +6,10 @@
 // extension can't simply clone the player to look ahead. This script mirrors
 // every video SourceBuffer's appended segments into a second MediaSource
 // attached to a hidden "shadow" <video>. prescan.js (isolated world, same
-// DOM) finds it via data-scenemod-shadow-for="<player's blob URL>" and seeks
+// DOM) finds it via data-unsceneit-shadow-for="<player's blob URL>" and seeks
 // it freely to capture upcoming frames without touching the visible player.
 //
-// Only tees when tee-flag.js set <html data-scenemod-tee="1">. Every step is
+// Only tees when tee-flag.js set <html data-unsceneit-tee="1">. Every step is
 // best-effort: the page's own calls always go through unchanged, and any
 // mirroring failure is swallowed.
 (() => {
@@ -17,7 +17,7 @@
 
   const KEEP_BEHIND_S = 30; // shadow buffer kept behind its seek position
 
-  const enabled = () => document.documentElement?.dataset.scenemodTee === "1";
+  const enabled = () => document.documentElement?.dataset.unsceneitTee === "1";
 
   const MSProto = MediaSource.prototype;
   const SBProto = SourceBuffer.prototype;
@@ -48,7 +48,7 @@
     const video = document.createElement("video");
     video.muted = true;
     video.preload = "auto";
-    video.dataset.scenemodShadow = "1";
+    video.dataset.unsceneitShadow = "1";
     video.setAttribute("aria-hidden", "true");
     video.style.cssText =
       "position:fixed;left:0;top:0;width:2px;height:2px;opacity:0;pointer-events:none;z-index:-1;";
@@ -61,7 +61,7 @@
       open: false,
       buffers: [],
       tag(url) {
-        video.dataset.scenemodShadowFor = url;
+        video.dataset.unsceneitShadowFor = url;
       },
     };
     source.addEventListener(

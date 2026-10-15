@@ -3,31 +3,6 @@
 // Loaded as a classic script in the extension (functions become globals)
 // and via require() in tests.
 
-// ---- Skipping ----
-
-// Final playback position for time `t`: if an enabled range covers `t`, jump
-// to its end, and keep jumping while the new position lands inside another
-// enabled range (overlaps chain, e.g. gore 30–45 + 15+ 35–60 → 60).
-// Terminates because every jump strictly increases `t`.
-function resolveSkip(t, ranges, enabledFilters) {
-  const active = ranges.filter((r) => enabledFilters.has(r.filter));
-  let range;
-  while ((range = active.find((r) => t >= r.start && t < r.end))) {
-    t = range.end;
-  }
-  return t;
-}
-
-// Labels (filter keys) of the enabled ranges a skip from `from` to `to`
-// jumped over (for the debug log), deduped in range order. Ranges carry the
-// filter id in `filter` and, when known, its key in `key`.
-function skippedFilters(ranges, enabledFilters, from, to) {
-  const keys = ranges
-    .filter((r) => enabledFilters.has(r.filter) && r.start < to && r.end > from)
-    .map((r) => r.key ?? r.filter);
-  return [...new Set(keys)];
-}
-
 // Seconds → "m:ss.s" (e.g. 62.5 → "1:02.5").
 function formatTime(s) {
   s = Math.round(s * 10) / 10; // round first so 59.96 → "1:00.0", not "0:60.0"
@@ -211,8 +186,6 @@ function migrateEnabledFilters(stored, filters) {
 
 if (typeof module !== "undefined") {
   module.exports = {
-    resolveSkip,
-    skippedFilters,
     formatTime,
     coveredUntil,
     nextSampleSecond,

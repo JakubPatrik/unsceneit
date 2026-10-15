@@ -2,8 +2,6 @@
 const { describe, it } = require("node:test");
 const assert = require("node:assert/strict");
 const {
-  resolveSkip,
-  skippedFilters,
   formatTime,
   coveredUntil,
   nextSampleSecond,
@@ -25,133 +23,6 @@ const {
 
 const on = (...ids) => new Set(ids);
 
-describe("resolveSkip", () => {
-  const single = [{ start: 30, end: 40, filter: "gore" }];
-
-  it("leaves time alone when no filters are enabled", () => {
-    assert.equal(resolveSkip(35, single, on()), 35);
-  });
-
-  it("leaves time alone with no ranges", () => {
-    assert.equal(resolveSkip(35, [], on("gore")), 35);
-  });
-
-  it("leaves time alone before a range", () => {
-    assert.equal(resolveSkip(29.9, single, on("gore")), 29.9);
-  });
-
-  it("treats the start as inclusive", () => {
-    assert.equal(resolveSkip(30, single, on("gore")), 40);
-  });
-
-  it("jumps to the end from inside a range", () => {
-    assert.equal(resolveSkip(33.3, single, on("gore")), 40);
-  });
-
-  it("treats the end as exclusive (no re-skip after landing)", () => {
-    assert.equal(resolveSkip(40, single, on("gore")), 40);
-  });
-
-  it("ignores ranges whose filter is not enabled", () => {
-    assert.equal(resolveSkip(35, single, on("spiders", "rated_15")), 35);
-  });
-
-  describe("overlapping ranges with different filters (gore 30–45, 15+ 35–60)", () => {
-    const overlap = [
-      { start: 30, end: 45, filter: "gore" },
-      { start: 35, end: 60, filter: "rated_15" },
-    ];
-
-    it("chains both into one jump when both are enabled", () => {
-      assert.equal(resolveSkip(30, overlap, on("gore", "rated_15")), 60);
-    });
-
-    it("stops at the gore end when only gore is enabled", () => {
-      assert.equal(resolveSkip(30, overlap, on("gore")), 45);
-    });
-
-    it("does not skip 30–35 when only 15+ is enabled", () => {
-      assert.equal(resolveSkip(32, overlap, on("rated_15")), 32);
-    });
-
-    it("skips from inside the 15+ part when only 15+ is enabled", () => {
-      assert.equal(resolveSkip(36, overlap, on("rated_15")), 60);
-    });
-
-    it("skips from inside the non-overlapping tail", () => {
-      assert.equal(resolveSkip(50, overlap, on("gore", "rated_15")), 60);
-    });
-
-    it("gives the same result regardless of range order", () => {
-      const reversed = [...overlap].reverse();
-      assert.equal(resolveSkip(30, reversed, on("gore", "rated_15")), 60);
-    });
-  });
-
-  it("chains exactly adjacent ranges", () => {
-    const adjacent = [
-      { start: 10, end: 20, filter: "gore" },
-      { start: 20, end: 30, filter: "spiders" },
-    ];
-    assert.equal(resolveSkip(15, adjacent, on("gore", "spiders")), 30);
-  });
-
-  it("does not bridge a gap between ranges", () => {
-    const gap = [
-      { start: 10, end: 20, filter: "gore" },
-      { start: 21, end: 30, filter: "gore" },
-    ];
-    assert.equal(resolveSkip(15, gap, on("gore")), 20);
-  });
-
-  it("jumps to the outer end for a nested range", () => {
-    const nested = [
-      { start: 10, end: 50, filter: "rated_18" },
-      { start: 20, end: 30, filter: "gore" },
-    ];
-    assert.equal(resolveSkip(25, nested, on("gore", "rated_18")), 50);
-  });
-
-  it("follows a chain of three overlapping ranges", () => {
-    const chain = [
-      { start: 0, end: 10, filter: "a" },
-      { start: 5, end: 20, filter: "b" },
-      { start: 15, end: 40, filter: "c" },
-    ];
-    assert.equal(resolveSkip(1, chain, on("a", "b", "c")), 40);
-  });
-
-  it("ignores malformed ranges (end <= start) without looping forever", () => {
-    const bad = [
-      { start: 30, end: 30, filter: "gore" },
-      { start: 50, end: 40, filter: "gore" },
-    ];
-    assert.equal(resolveSkip(30, bad, on("gore")), 30);
-    assert.equal(resolveSkip(45, bad, on("gore")), 45);
-  });
-});
-
-describe("skippedFilters", () => {
-  const overlap = [
-    { start: 30, end: 45, filter: "gore" },
-    { start: 35, end: 60, filter: "rated_15" },
-    { start: 90, end: 100, filter: "gore" },
-  ];
-
-  it("lists every enabled filter a chained skip jumped over", () => {
-    assert.deepEqual(skippedFilters(overlap, on("gore", "rated_15"), 30, 60), ["gore", "rated_15"]);
-  });
-
-  it("leaves out disabled filters", () => {
-    assert.deepEqual(skippedFilters(overlap, on("gore"), 30, 45), ["gore"]);
-  });
-
-  it("ignores ranges outside the jump and dedupes keys", () => {
-    assert.deepEqual(skippedFilters(overlap, on("gore"), 92, 100), ["gore"]);
-    assert.deepEqual(skippedFilters(overlap, on("gore", "rated_15"), 60, 61), []);
-  });
-});
-
 describe("labels for logs and the blur badge", () => {
   const ranges = [
     { start: 10, end: 20, filter: "id-gore", key: "gore" },
@@ -159,7 +30,6 @@ describe("labels for logs and the blur badge", () => {
   ];
 
   it("shows filter keys rather than ids", () => {
-    assert.deepEqual(skippedFilters(ranges, on("id-gore"), 10, 20), ["gore"]);
     assert.deepEqual(blurKeysAt(ranges, on("id-gore"), 12, 1), ["gore"]);
   });
 
@@ -419,14 +289,14 @@ describe("age presets", () => {
     });
   });
 
-  it("an Under 12 viewer skips a 15+ scene", () => {
+  it("an Under 12 viewer has a 15+ scene hidden", () => {
     const ranges = [{ start: 35, end: 60, filter: "rated_15" }];
-    assert.equal(resolveSkip(40, ranges, new Set(ageFilterIds(age, 12))), 60);
+    assert.deepEqual(blurKeysAt(ranges, new Set(ageFilterIds(age, 12)), 40, 0), ["rated_15"]);
   });
 
-  it("an Under 18 viewer does not skip a 15+ scene", () => {
+  it("an Under 18 viewer sees a 15+ scene", () => {
     const ranges = [{ start: 35, end: 60, filter: "rated_15" }];
-    assert.equal(resolveSkip(40, ranges, new Set(ageFilterIds(age, 18))), 40);
+    assert.deepEqual(blurKeysAt(ranges, new Set(ageFilterIds(age, 18)), 40, 0), []);
   });
 });
 
@@ -503,7 +373,7 @@ describe("library lookup helpers", () => {
 
     it("needs every enabled filter scanned (a new filter rescans)", () => {
       assert.deepEqual([...scannedSeconds(scanned, ["gore", "spiders"])], [0, 1, 2, 3, 6, 7]);
-      assert.deepEqual([...scannedSeconds(scanned, ["gore", "heights"])], []);
+      assert.deepEqual([...scannedSeconds(scanned, ["gore", "inappropriate"])], []);
     });
 
     it("is empty without filters", () => {

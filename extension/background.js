@@ -63,12 +63,12 @@ const getFilters = () =>
   if (!enabledFilters.length) return;
   const migrated = migrateEnabledFilters(enabledFilters, await getFilters());
   if (migrated.join() !== enabledFilters.join()) await chrome.storage.sync.set({ enabledFilters: migrated });
-})().catch((err) => console.warn("SceneMod: settings migration failed", err));
+})().catch((err) => console.warn("unscene.it: settings migration failed", err));
 
 // Replies to an async message with the result of `promise`, or `fallback` on error.
 function respond(promise, sendResponse, fallback) {
   promise.then(sendResponse, (err) => {
-    console.warn("SceneMod: Supabase request failed", err);
+    console.warn("unscene.it: Supabase request failed", err);
     sendResponse(fallback);
   });
   return true; // keep the message channel open

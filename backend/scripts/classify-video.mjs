@@ -69,7 +69,7 @@ function secretKey() {
 }
 
 // 1. Extract frames: one every `every` seconds, 512px wide JPEGs.
-const dir = mkdtempSync(join(tmpdir(), "scenemod-frames-"));
+const dir = mkdtempSync(join(tmpdir(), "unsceneit-frames-"));
 try {
   execFileSync("ffmpeg", [
     "-loglevel", "error",

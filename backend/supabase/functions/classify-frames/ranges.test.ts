@@ -22,9 +22,9 @@ describe("flaggedFilters", () => {
     const answers = [
       { type: "predicate", name: "gore", probability: 0.5 },
       { type: "predicate", name: "spiders", probability: 0.49 },
-      { type: "predicate", name: "heights", probability: 0.97 },
+      { type: "predicate", name: "inappropriate", probability: 0.97 },
     ];
-    assert.deepEqual(flaggedFilters(answers, 0.5), ["gore", "heights"]);
+    assert.deepEqual(flaggedFilters(answers, 0.5), ["gore", "inappropriate"]);
   });
 
   it("treats a refusal as flagged", () => {

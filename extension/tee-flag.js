@@ -1,5 +1,5 @@
 // Runs at document_start in the extension's isolated world. Sets
-// <html data-scenemod-tee="1">, which tells mse-tee.js (page main world, no
+// <html data-unsceneit-tee="1">, which tells mse-tee.js (page main world, no
 // chrome.* access) to mirror video buffers for the live AI look-ahead, when:
 //   - live AI is available (dev builds with config.dev.js; background.js sets
 //     liveAIAvailable), so it's ready by default, or
@@ -10,8 +10,8 @@ const teeSettings = { debugMode: "off", liveAIAvailable: false };
 
 function applyTeeFlag() {
   const on = teeSettings.liveAIAvailable || teeSettings.debugMode === "prescan";
-  if (on) document.documentElement.dataset.scenemodTee = "1";
-  else delete document.documentElement.dataset.scenemodTee;
+  if (on) document.documentElement.dataset.unsceneitTee = "1";
+  else delete document.documentElement.dataset.unsceneitTee;
 }
 
 chrome.storage.local.get(teeSettings).then((s) => {

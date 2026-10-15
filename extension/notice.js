@@ -14,7 +14,7 @@
 //                                          `liveAI`), or watch
 //   noticeHide()
 // Positioned over the video (or its player while the <video> is still 0×0),
-// kept in place continuously, works in fullscreen. While SceneMod is waiting
+// kept in place continuously, works in fullscreen. While unscene.it is waiting
 // (checking / asking), a blurred, darkened cover sits over the whole player:
 // it hides the video, its thumbnail and the site's own play button, and
 // catches clicks so the player can't be started underneath.
@@ -27,7 +27,7 @@ const NOTICE_AUTOHIDE_MS = 3500;
 // lastRect: last good position, kept while the anchor briefly vanishes or
 // measures 0×0 (YouTube re-lays out its player while loading).
 // mode: what's showing — "dialog" (loader or choices, over the cover), "toast",
-// "bot" (the small round SceneMod bot in the player's top-right corner),
+// "bot" (Xenia, the small round unscene.it bot, in the player's top-right corner),
 // "checking" (library lookup: the cover, and the bot saying so), or
 // "screening" (live AI's first pre-screen: the cover, and the bot saying how
 // far it is).
@@ -74,7 +74,7 @@ const NOTICE_CSS = `
     border: none; background: transparent; color: #b8b8c8; font: 18px/1 system-ui, sans-serif;
   }
   .close:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
-  .brand { font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: #a99cff; font-weight: 700; }
+  .brand { font-size: 12px; letter-spacing: 0.01em; color: #a99cff; font-weight: 700; }
   .title { font-size: 15px; font-weight: 600; margin: 4px 0; }
   .box:not(.loader):not(.toast) .brand,
   .box:not(.loader):not(.toast) .title { padding-right: 28px; } /* room for the ✕ */
@@ -124,7 +124,7 @@ const NOTICE_CSS = `
   .pro { font-size: 10px; font-weight: 700; padding: 1px 5px; margin-left: 4px; border-radius: 4px; background: #6b4cff; color: #fff; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* The SceneMod bot: a flat round face with two pill eyes in the player's
+  /* Xenia, the unscene.it bot: a flat round face with two pill eyes in the player's
      top-right corner. Purple while filtering, grey when off. */
   .bot {
     position: absolute; top: 14px; right: 14px; width: 46px; height: 46px; border-radius: 50%;
@@ -214,14 +214,14 @@ function noticeMount(target, { cover = false, mode = "dialog" } = {}) {
     // Its own view-transition group, not animated: YouTube swaps its loading
     // skeleton for the app with a View Transition, which otherwise cross-fades
     // snapshots of the whole screen, this overlay included (a visible blink).
-    notice.host.style.viewTransitionName = "scenemod-notice";
+    notice.host.style.viewTransitionName = "unsceneit-notice";
     noticeViewTransitionStyle();
     notice.root = notice.host.attachShadow({ mode: "closed" });
     const style = document.createElement("style");
     style.textContent = NOTICE_CSS;
     notice.cover = noticeEl("div", { className: "cover" });
     notice.box = noticeEl("div", { className: "box" });
-    // The SceneMod bot stays in the corner the whole time: over the dialog and
+    // Xenia (the bot) stays in the corner the whole time: over the dialog and
     // loader too, and on its own once a choice is made (see noticeBot).
     notice.bot = noticeEl("div", { className: "bot" }, [
       noticeEl("div", { className: "eyes" }, [noticeEl("div", { className: "eye" }), noticeEl("div", { className: "eye" })]),
@@ -252,7 +252,7 @@ function noticeMount(target, { cover = false, mode = "dialog" } = {}) {
   if (mode !== prevMode) noticeBotBusy(null);
   // Only the bot on its own opens the dialog (noticeBot sets the handler).
   notice.bot.classList.toggle("passive", mode !== "bot");
-  notice.bot.title = mode === "bot" ? "SceneMod: change filters" : "SceneMod";
+  notice.bot.title = mode === "bot" ? "Xenia · change filters" : "Xenia";
   notice.bot.onclick = null;
   if (!NOTICE_BOT_MODES.has(mode)) notice.bubble.hidden = true;
   clearTimeout(notice.timer);
@@ -275,13 +275,13 @@ function noticeReparent() {
 // the document root can't be styled from inside the shadow DOM): show the new
 // state at once, at its final place, with no cross-fade.
 function noticeViewTransitionStyle() {
-  if (document.getElementById("scenemod-notice-vt")) return;
+  if (document.getElementById("unsceneit-notice-vt")) return;
   const style = document.createElement("style");
-  style.id = "scenemod-notice-vt";
+  style.id = "unsceneit-notice-vt";
   style.textContent = `
-    ::view-transition-group(scenemod-notice) { animation: none; }
-    ::view-transition-old(scenemod-notice) { display: none; }
-    ::view-transition-new(scenemod-notice) { animation: none; opacity: 1; }`;
+    ::view-transition-group(unsceneit-notice) { animation: none; }
+    ::view-transition-old(unsceneit-notice) { display: none; }
+    ::view-transition-new(unsceneit-notice) { animation: none; opacity: 1; }`;
   document.documentElement.append(style);
 }
 
@@ -323,7 +323,7 @@ function noticeGuard(parent) {
 // Last good position of the covered player, remembered for this tab (session
 // storage), so a reload or YouTube's in-app navigation can draw the overlay at
 // once, before the new player has laid out.
-const NOTICE_RECT_KEY = "scenemod:lastRect";
+const NOTICE_RECT_KEY = "unsceneit:lastRect";
 function noticeRememberRect(rect) {
   notice.lastRect = rect;
   try {
@@ -413,7 +413,7 @@ function noticeScreening(target) {
   return (step, fraction) => noticeBotBusy({ step, fraction });
 }
 
-// SceneMod is holding the video: a sticky bubble by the bot with what it's
+// unscene.it is holding the video: a sticky bubble by the bot with what it's
 // waiting for ({ title, step, fraction, spinner }; missing fields keep their
 // value; a progress bar shows when there's a fraction).
 // null: done, the bubble goes. (The face only changes while frames are
@@ -460,7 +460,7 @@ function noticeMatched(target, title, flaggedCount, { pressPlay = false } = {}) 
   notice.box.className = "box toast";
   const detail =
     flaggedCount > 0
-      ? ` · ${flaggedCount} scene${flaggedCount === 1 ? "" : "s"} will be skipped`
+      ? ` · ${flaggedCount} scene${flaggedCount === 1 ? "" : "s"} will be hidden`
       : " · nothing flagged for your filters";
   notice.box.replaceChildren(
     noticeEl("span", { className: "ok", textContent: "✓ Protected: " }),
@@ -470,7 +470,7 @@ function noticeMatched(target, title, flaggedCount, { pressPlay = false } = {}) 
   notice.timer = setTimeout(noticeHide, NOTICE_AUTOHIDE_MS);
 }
 
-// After a choice, the dialog shrinks into the SceneMod bot in the player's
+// After a choice, the dialog shrinks into Xenia, the bot, in the player's
 // top-right corner. active: eyes look around (filters or live AI on); else
 // closed (watching without filters). onOpen: the bot was clicked (content.js
 // pauses and re-opens the dialog). say: a short speech bubble. morph: animate
@@ -626,7 +626,7 @@ function noticeNeedsFilters(button, hint, enabled) {
 // wins over the automatic match) and calls onPicked(video).
 function noticeLibrarySearch(label, onPicked) {
   const results = noticeEl("ul");
-  const search = noticeEl("input", { type: "search", placeholder: "Search the SceneMod library…" });
+  const search = noticeEl("input", { type: "search", placeholder: "Search the unscene.it library…" });
   let timer = null;
   search.addEventListener("input", () => {
     clearTimeout(timer);
@@ -656,7 +656,7 @@ function noticeLibrarySearch(label, onPicked) {
 }
 
 // In the library: watch with or without filters.
-//   ranges: the video's library ranges ({ filter }), to count what gets skipped.
+//   ranges: the video's library ranges ({ filter }), to count what gets hidden.
 //   filters/enabled/onFiltersChange: the "Your filters" picker.
 //   liveRest: "with filters" also runs live AI for what isn't scanned yet.
 function noticeFound(
@@ -680,7 +680,7 @@ function noticeFound(
       (current.size === 0
         ? "Pick your filters below."
         : count > 0
-          ? `${count} scene${count === 1 ? "" : "s"} will be skipped for your filters.`
+          ? `${count} scene${count === 1 ? "" : "s"} will be hidden for your filters.`
           : "Nothing is flagged for your current filters.") +
       (liveRest && current.size > 0 ? " Live AI screens anything not scanned yet." : "");
     noticeNeedsFilters(withFilters, hint, current);
@@ -694,7 +694,7 @@ function noticeFound(
 
   notice.box.replaceChildren(
     noticeCloseButton(onClose, closeTitle),
-    noticeEl("div", { className: "brand", textContent: "SceneMod" }),
+    noticeEl("div", { className: "brand", textContent: "unscene.it" }),
     noticeEl("div", { className: "title" }, [noticeEl("span", { className: "ok", textContent: "✓ " }), title]),
     detail,
     picker,
@@ -741,7 +741,7 @@ function noticeUnmatched(
 
   notice.box.replaceChildren(
     noticeCloseButton(onClose, closeTitle),
-    noticeEl("div", { className: "brand", textContent: "SceneMod" }),
+    noticeEl("div", { className: "brand", textContent: "unscene.it" }),
     noticeEl("div", {
       className: "title",
       textContent: error ? "Couldn't check this video" : "This video isn't in the library yet",
@@ -749,7 +749,7 @@ function noticeUnmatched(
     noticeEl("div", {
       className: "muted",
       textContent: error
-        ? "SceneMod couldn't reach its library. Turn on the live AI filter, or watch without filters."
+        ? "unscene.it couldn't reach its library. Turn on the live AI filter, or watch without filters."
         : "Turn on the live AI filter to screen it as you watch, or watch without filters.",
     }),
     picker,
