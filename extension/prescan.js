@@ -210,15 +210,14 @@ function prescanTick() {
   applyBlur(video.currentTime);
 
   const t = video.currentTime;
-  const end = Number.isFinite(video.duration) ? video.duration : Infinity;
-  const covered = coveredUntil(prescan.analysed, t) >= Math.min(t + 1, end);
+  const covered = screenedEnough(prescan.analysed, t, 1, video.duration);
 
   // Just turned on: held while the first PRESCAN_WINDOW_S seconds are analysed; as soon as
   // their results are in, finishWarmup() lets content.js play.
   if (prescan.warmup) {
     if (!video.paused) video.pause();
     requestWindow(t, video.duration);
-    if (covered && coveredUntil(prescan.analysed, t) >= Math.min(t + PRESCAN_WINDOW_S, end)) finishWarmup();
+    if (screenedEnough(prescan.analysed, t, PRESCAN_WINDOW_S, video.duration)) finishWarmup();
     else if (Date.now() - prescan.warmup.started > PRESCAN_WARMUP_TIMEOUT_MS) {
       debugLog("Pre-screen is slow: playing, and pausing wherever results are still missing");
       finishWarmup();
@@ -241,7 +240,7 @@ function prescanTick() {
 
   // Steady state: keep ~PRESCAN_WINDOW_S analysed ahead, one second at a time (also while
   // paused, so pressing play needs no stall).
-  if (document.visibilityState !== "visible") return;
+  if (document.visibilityState !== "visible" || video.ended) return;
   if (prescan.capturing || prescan.pending.size >= PRESCAN_MAX_IN_FLIGHT) return;
   if (Date.now() < prescan.retryAt) return;
   const s = nextSampleSecond(prescan.analysed, prescan.pending, t, PRESCAN_LOOKAHEAD_S, video.duration);
@@ -279,9 +278,7 @@ function startStall(kind) {
 
 function checkStall() {
   const video = prescan.video;
-  const end = Number.isFinite(video.duration) ? video.duration : Infinity;
-  const need = Math.min(video.currentTime + 2, end);
-  if (coveredUntil(prescan.analysed, video.currentTime) >= need) {
+  if (screenedEnough(prescan.analysed, video.currentTime, 2, video.duration)) {
     endStall();
     video.play().catch((err) => debugLog(`Couldn't resume playback: ${err.message}`));
   } else if (!video.paused) {
@@ -482,6 +479,15 @@ for (const type of ["emptied", "loadstart"]) {
     true
   );
 }
+
+// The video ended: nothing left to wait for.
+document.addEventListener(
+  "ended",
+  (e) => {
+    if (e.target === prescan.video && prescan.stalling) endStall();
+  },
+  true
+);
 
 // Seeks and pauses don't produce new frames for the loop above.
 for (const type of ["seeked", "timeupdate"]) {

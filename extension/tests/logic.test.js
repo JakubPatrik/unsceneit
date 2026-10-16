@@ -4,6 +4,7 @@ const assert = require("node:assert/strict");
 const {
   formatTime,
   coveredUntil,
+  screenedEnough,
   nextSampleSecond,
   initialWindow,
   blurKeysAt,
@@ -379,5 +380,33 @@ describe("library lookup helpers", () => {
     it("is empty without filters", () => {
       assert.deepEqual([...scannedSeconds(scanned, [])], []);
     });
+  });
+});
+
+describe("screenedEnough", () => {
+  const upTo = (n) => new Set(Array.from({ length: n }, (_, i) => i)); // seconds 0 … n-1
+
+  it("needs the next seconds analysed", () => {
+    assert.equal(screenedEnough(upTo(10), 5, 2, 100), true);
+    assert.equal(screenedEnough(upTo(6), 5, 2, 100), false);
+  });
+
+  it("never waits for the video's final second, which may not be capturable", () => {
+    // 254.6 s video, analysed up to second 253: second 254 is the partial tail.
+    assert.equal(screenedEnough(upTo(254), 253.2, 2, 254.6), true);
+    assert.equal(screenedEnough(upTo(254), 254.1, 1, 254.6), true);
+  });
+
+  it("is always true at or after the end", () => {
+    assert.equal(screenedEnough(new Set(), 254.6, 1, 254.6), true);
+  });
+
+  it("still waits for analysis before the tail", () => {
+    assert.equal(screenedEnough(upTo(250), 250, 2, 254.6), false);
+  });
+
+  it("treats an unknown duration as endless", () => {
+    assert.equal(screenedEnough(upTo(3), 2, 2, NaN), false);
+    assert.equal(screenedEnough(upTo(5), 2, 2, Infinity), true);
   });
 });

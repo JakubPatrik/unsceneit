@@ -22,6 +22,17 @@ function coveredUntil(analysed, t) {
   return s;
 }
 
+// Whether playback may continue from `t`: the next `aheadS` seconds are
+// analysed. The video's final `tailS` seconds never count: the last partial
+// second often can't be captured, and a stall there would hold the video just
+// before its end ("Waiting for analysis…" forever). They're still analysed
+// when possible.
+function screenedEnough(analysed, t, aheadS, duration, tailS = 1) {
+  const stop = Number.isFinite(duration) ? duration - tailS : Infinity;
+  if (t >= stop) return true;
+  return coveredUntil(analysed, t) >= Math.min(t + aheadS, stop);
+}
+
 // Next whole second to capture: the earliest in [floor(t), t + lookaheadS)
 // that is neither analysed nor in flight and exists in the video, else null.
 function nextSampleSecond(analysed, pending, t, lookaheadS, duration) {
@@ -188,6 +199,7 @@ if (typeof module !== "undefined") {
   module.exports = {
     formatTime,
     coveredUntil,
+    screenedEnough,
     nextSampleSecond,
     initialWindow,
     blurKeysAt,

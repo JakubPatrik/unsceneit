@@ -7,3 +7,9 @@ dist/
 # Local tool artifacts
 .DS_Store
 .bun-*.node
+
+# Chrome "Pack extension" output: private signing key and a CRX of the raw
+# extension/ folder (includes config.dev.js). Never commit or share; the
+# Chrome Web Store takes the ZIP from extension/scripts/package.sh instead.
+*.pem
+*.crx

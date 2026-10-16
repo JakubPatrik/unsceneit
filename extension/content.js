@@ -384,12 +384,13 @@ function decide(gate, { filtered, live = false }) {
 }
 
 // Xenia, the unscene.it bot, for a decided gate, in the player's top-right corner. Its
-// eyes look around while it's actually filtering; clicking it re-opens the
-// dialog (see reopenGate).
+// eyes look around while it's actually filtering; she rests (grey) when
+// watching without filters or once the video has ended. Clicking her re-opens
+// the dialog (see reopenGate).
 function showBot(gate, { morph = false, say = null } = {}) {
   gate.bot = true;
   noticeBot(gate.anchor, {
-    active: gate.filtered && (gate.live || !!gate.result?.video),
+    active: gate.filtered && (gate.live || !!gate.result?.video) && !gate.ended,
     onOpen: () => reopenGate(gate),
     morph,
     say,
@@ -556,6 +557,32 @@ for (const type of ["loadstart", "loadedmetadata"]) {
     true
   );
 }
+
+// The video ended: Xenia rests until it plays again (replay, or seeking back).
+document.addEventListener(
+  "ended",
+  (e) => {
+    const video = e.target;
+    if (!(video instanceof HTMLVideoElement)) return;
+    const gate = gateForVideo(video);
+    if (gate?.state !== "open" || !gate.bot || gate.ended) return;
+    gate.ended = true;
+    if (notice.gateKey === gate.key && notice.mode === "bot") showBot(gate);
+  },
+  true
+);
+document.addEventListener(
+  "play",
+  (e) => {
+    const video = e.target;
+    if (!(video instanceof HTMLVideoElement)) return;
+    const gate = gateForVideo(video);
+    if (!gate?.ended) return;
+    gate.ended = false;
+    if (gate.state === "open" && gate.bot && notice.gateKey === gate.key && notice.mode === "bot") showBot(gate);
+  },
+  true
+);
 
 // Any play while undecided is undone at once (YouTube autoplay, keyboard…).
 document.addEventListener(
