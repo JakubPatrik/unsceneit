@@ -25,7 +25,7 @@ export function Privacy() {
         <div className="mt-10 rounded-2xl border border-border bg-card/60 p-6">
           <p className="font-medium">The short version</p>
           <ul className="mt-3 list-disc space-y-1.5 pl-5 text-muted-foreground">
-            <li>To find a video in our library, the extension sends its YouTube ID or its page title. Nothing else about you.</li>
+            <li>To find a video in our library, the extension sends its YouTube video ID. Nothing else about you.</li>
             <li>No account, no name, no browsing history. We only have your email address if you join the waitlist.</li>
             <li>No video files are uploaded, and no person watches what you watch.</li>
             <li>We never sell your data or use it for advertising.</li>
@@ -46,8 +46,8 @@ export function Privacy() {
             <p>The extension only sends what it needs to work:</p>
             <ul className="list-disc space-y-3 pl-5">
               <li>
-                <strong>Which video is playing.</strong> When a video starts loading, the extension sends its YouTube video
-                ID or, on other sites, the title of the page, so we can look it up in the unscene.it library and return the
+                <strong>Which video is playing.</strong> The extension runs only on YouTube. When a video starts loading, it sends the video&rsquo;s YouTube
+                ID so we can look it up in the unscene.it library and return the
                 scenes your filters should hide. The page&rsquo;s address is not sent.
               </li>
               <li>

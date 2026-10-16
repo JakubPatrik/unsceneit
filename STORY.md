@@ -67,7 +67,7 @@ Lead with personal filtering: unscene.it hides only what each viewer chooses. Th
   2. The story keeps playing: scenes are blurred, not cut.
   3. Nothing plays until you've chosen: every video waits, blurred, until you pick how to watch it.
   4. Free during the alpha.
-- **Where to point people:** YouTube and video on the open web, for titles in the library. Streaming services come later (see Claims to avoid).
+- **Where to point people:** YouTube, including YouTube videos embedded in other websites, for titles in the library. Other video sites and streaming services come later (see Claims to avoid).
 - **Tone:** calm, practical and non-judgmental. Describe what gets hidden; never moralize about the content or the people who watch it. The audiences below have very different reasons, so speak to each one separately.
 - **Call to action:** install free from the Chrome Web Store, or visit unscene.it.
 
@@ -95,14 +95,14 @@ Lead with personal filtering: unscene.it hides only what each viewer chooses. Th
    - When a flagged scene comes up, it's blurred and labelled ("Hidden: gore") while the movie keeps playing. When the scene ends, picture and sound come back on their own. Nothing is skipped, so you never lose your place.
    - **Without filters**, nothing is analysed or changed. Xenia stays grey in the corner in case you change your mind.
 
-**On or off per site.** A switch at the top of the extension menu turns unscene.it off for the site you're on (every page of it) and back on. It's on everywhere by default.
+**On or off with one switch.** A switch at the top of the extension menu turns unscene.it off on YouTube and back on. It's on by default.
 
-**Thumbnails are blurred too.** By default, unscene.it blurs every video thumbnail and hover preview, on YouTube and anywhere YouTube images appear, before it can show, so a stray thumbnail can't give a scene away. Viewers can turn this off in the extension menu.
+**Thumbnails are blurred too.** By default, unscene.it blurs every video thumbnail and hover preview, on YouTube, before it can show, so a stray thumbnail can't give a scene away. Viewers can turn this off in the extension menu.
 
 ## What happens behind the scenes (keep it simple in copy)
 
 - **A shared library of known titles.** Popular movies and videos are screened once with AI and stored. Anyone watching a known title gets the results instantly, at no cost to them.
-- **It works where the video plays.** It detects video players on ordinary web pages, including embedded players such as YouTube. No video files are uploaded or downloaded. To find a video in the library, the extension sends only its YouTube ID or page title.
+- **It works on YouTube.** On YouTube watch pages, and on YouTube videos embedded in other websites. No video files are uploaded or downloaded. To find a video in the library, the extension sends only its YouTube video ID.
 - **After the alpha: live AI.** For videos nobody has screened yet, Xenia will analyse them live, about 10 seconds ahead of you, and save the results to the library for the next viewer. Don't present this as available.
 
 ## Why it's different
@@ -135,8 +135,8 @@ Exact prices aren't set yet.
 - **Don't promise live AI, Pro or custom filters** in alpha copy, and don't say it works on "any video". Safe wording: "for videos in the unscene.it library". Pointing people to the early access waitlist is fine.
 - **Don't promise perfection.** Scenes are judged by AI, frame by frame, and it can miss a scene or over-flag a harmless one. Say "helps you avoid" or "automatically hides", never "guarantees" or "100%".
 - **Don't mention sensitivity sliders or strictness settings.** They don't exist and aren't planned.
-- **Don't claim Netflix, Disney+ or other DRM streaming services.** Their protected video can't be analysed. Safe wording: "works with videos on the open web, including YouTube".
-- **Don't say nothing leaves your device.** The extension sends a video's ID or page title to look it up. Safe wording: "no video files are uploaded".
+- **Don't claim Netflix, Disney+ or other DRM streaming services.** Their protected video can't be analysed. Safe wording: "works on YouTube".
+- **Don't say nothing leaves your device.** The extension sends a video's YouTube ID to look it up. Safe wording: "no video files are uploaded".
 - **Don't imply a human is watching.** No person reviews what you watch. "Xenia watches so you don't have to" is fine. Don't present her as a real person.
 - **Don't name the AI vendor** without checking with the founder first.
 - **Don't show screenshots of live AI, sign-up or credits.**

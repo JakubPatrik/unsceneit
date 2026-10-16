@@ -128,7 +128,7 @@ function Hero() {
             <AddToChrome />
             <WaitlistButton />
           </div>
-          <p className="text-sm text-muted-foreground">Free during the early alpha, for titles in the unscene.it library. Chrome on desktop.</p>
+          <p className="text-sm text-muted-foreground">Free during the early alpha, for YouTube videos in the unscene.it library. Chrome on desktop.</p>
         </div>
         <a
           href="#how"
@@ -438,7 +438,7 @@ const FAQ = [
   },
   {
     q: "Which sites does it work on?",
-    a: "YouTube and video on the open web. Netflix, Disney+ and other streaming services that protect their video aren't supported yet.",
+    a: "YouTube, including YouTube videos embedded on other websites. Other video sites, and streaming services such as Netflix and Disney+, aren't supported yet.",
   },
   {
     q: "What if a video isn't in the library?",
@@ -456,8 +456,8 @@ const FAQ = [
     q: "What data does the extension send?",
     a: (
       <>
-        Only what it needs to find the video in the library: a YouTube video ID, or on other sites the video&rsquo;s
-        title, plus anything you type into the library search. Nothing is sold or used for ads. The{" "}
+        Only what it needs to find the video in the library: its YouTube video ID, plus anything you type into the
+        library search. Nothing is sold or used for ads. The{" "}
         <a href="/privacy/" className="text-foreground underline underline-offset-4">
           privacy policy
         </a>{" "}

@@ -46,7 +46,7 @@ FEATURES
 • Nothing plays until you choose: no autoplay surprises. Every video waits for your decision.
 • Thumbnails blurred too: video thumbnails and hover previews are blurred before they can show. You can turn this off.
 • Xenia: click her at any time to change your filters mid-video, or to watch without filters.
-• On or off per site: one switch in the menu turns unscene.it off for the site you're on, and back on whenever you like.
+• On or off with one switch: turn unscene.it off on YouTube from the menu, and back on whenever you like.
 • Settings that follow you: your filters sync across every Chrome where you're signed in.
 
 WHO IT'S FOR
@@ -56,11 +56,11 @@ WHO IT'S FOR
 • Couples and families who want to watch together comfortably.
 
 WHERE IT WORKS
-YouTube and video players on the open web, for videos in the unscene.it library. Streaming services that protect their video with DRM, such as Netflix and Disney+, aren't supported.
+YouTube, including YouTube videos embedded on other websites, for videos in the unscene.it library. Other video sites, and streaming services such as Netflix and Disney+, aren't supported yet.
 
 GOOD TO KNOW
 • Scenes are judged by AI, frame by frame. It can occasionally miss a scene or hide a harmless one, so unscene.it helps you avoid what you chose but can't guarantee it.
-• No account needed. To find a video in the library, the extension sends only its YouTube video ID or its page title. No video files are uploaded, and no person ever watches what you watch. Your data is never sold or used for advertising. Privacy policy: https://unscene.it/privacy/
+• No account needed. To find a video in the library, the extension sends only its YouTube video ID. No video files are uploaded, and no person ever watches what you watch. Your data is never sold or used for advertising. Privacy policy: https://unscene.it/privacy/
 • Free during the alpha.
 
 Questions, feedback or a video you'd like screened: hello@unscene.it
@@ -87,9 +87,9 @@ Don't show a live AI pre-screen, the debug panel or anything with "PRO" as the m
 - **Single purpose:** Hides scenes in online videos that match the filters the user chooses.
 - **Permission justification:**
   - `storage`: saves the viewer's filters and settings.
-  - Host permission (all sites): finds and filters video players on any page the viewer watches, and blurs video thumbnails.
+  - Host permission (www.youtube.com): finds the video player on YouTube pages (and in YouTube players embedded on other sites), hides flagged scenes and blurs video thumbnails.
 - **Remote code:** No, I am not using remote code.
-- **Data usage:** tick **Web history** (video IDs and page titles sent for library lookups) and **Website content**. Then tick all three certifications.
+- **Data usage:** tick **Web history** (the YouTube video IDs sent for library lookups). Then tick all three certifications.
 - **Privacy policy URL:** https://unscene.it/privacy/
 
 ## Test instructions (for the reviewer)

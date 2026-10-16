@@ -34,7 +34,9 @@ async function initSiteSwitch() {
   if (!site) {
     document.body.classList.add("no-site");
     siteSwitch.disabled = true;
-    siteLabel.textContent = "unscene.it doesn't run on this page.";
+    // The extension only has access to youtube.com (manifest), so any other
+    // tab's address is hidden from it too.
+    siteLabel.textContent = "unscene.it runs on YouTube. Open a video there.";
     return;
   }
   const { disabledSites } = await chrome.storage.sync.get({ disabledSites: [] });

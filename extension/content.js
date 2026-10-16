@@ -1,4 +1,7 @@
-// Runs in every frame (top page + all iframes), from document_start:
+// Runs in every frame (top page + all iframes), from document_start. The
+// manifest limits it to https://www.youtube.com/* for now (watch pages and
+// YouTube players embedded in other sites); the "other sites" paths below are
+// kept for when more sites are added.
 //   - the playback gate: a video plays only after the viewer chooses how to
 //     watch it, behind a blurred cover + unscene.it dialog.
 // Flagged scenes are hidden (never skipped) by prescan.js. Pure helpers
