@@ -24,7 +24,7 @@ A reviewer will likely open a random YouTube video. If it isn't in the library, 
   ```
 
 - [ ] Check each one in a store-like install: open it, see "Found in the library · N scenes will be hidden", and confirm the scenes blur at the right times.
-- [ ] Pick 2–3 of them as the reviewer test videos (see section 5).
+- [x] Pick 2–3 of them as the reviewer test videos (see section 5).
 
 ## 3. Sign-in: decide the plan
 
@@ -58,7 +58,7 @@ Either way, credits and payments come later. They'll need a payment provider, te
 ## 4. Store listing: text and images
 
 - [x] **Icon, 128×128 PNG**: `store/icon-128.png` (96×96 artwork, 16 px padding). Also used as `extension/icons/icon-128.png`.
-- [ ] **Screenshots, 1280×800**, 1 to 5 of them. Shot list and rules in `store/listing.md`. Suggested shots:
+- [x] **Screenshots, 1280×800**, 1 to 5 of them. Shot list and rules in `store/listing.md`. Suggested shots:
   1. the dialog over a video ("Found in the library");
   2. a scene hidden, with the "Hidden: …" label and Xenia in the corner;
   3. the popup with filters;
@@ -84,7 +84,7 @@ Either way, credits and payments come later. They'll need a payment provider, te
   - **Data collected**: Web history (video IDs and page titles) and Website content.
   - Confirm all three data-use statements.
   - **Privacy policy URL**: https://unscene.it/privacy/
-- [ ] **Test instructions (for reviewers):**
+- [x] **Test instructions (for reviewers):**
   - links to the reviewer test videos from section 2;
   - the steps: pick "Blood & gore" in the popup, open the video, choose "Watch with filters", jump to m:ss;
   - a note that live AI is not part of this release.
