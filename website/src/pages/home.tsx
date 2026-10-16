@@ -1,5 +1,6 @@
 import {
   ArrowDown,
+  ArrowRight,
   Bug,
   Check,
   CloudOff,
@@ -21,8 +22,9 @@ import { PlayerMock } from "@/components/site/player-mock"
 import { Xenia, type XeniaState } from "@/components/site/xenia"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
-import { SUPPORT_EMAIL } from "@/site"
+import { FOUNDER_OFFER, SUPPORT_EMAIL } from "@/site"
 
 export function Home() {
   return (
@@ -60,6 +62,22 @@ function Heading({ eyebrow, title, lead }: { eyebrow?: string; title: ReactNode;
       <h2 className="text-4xl font-semibold tracking-tight text-balance sm:text-6xl">{title}</h2>
       {lead && <p className="mt-5 text-lg text-pretty text-muted-foreground">{lead}</p>}
     </div>
+  )
+}
+
+// Secondary call to action next to the install button.
+function WaitlistButton() {
+  return (
+    <Button
+      asChild
+      variant="outline"
+      className="h-12 gap-2 rounded-full border-white/15 bg-white/5 px-7 text-base font-medium hover:bg-white/10"
+    >
+      <a href="/waitlist/">
+        Join the waitlist
+        <ArrowRight className="size-4 opacity-70" />
+      </a>
+    </Button>
   )
 }
 
@@ -102,11 +120,14 @@ function Hero() {
           The scenes you&rsquo;ll never see.
         </h1>
         <p className="mx-auto mt-7 max-w-2xl text-lg text-pretty text-muted-foreground sm:text-xl">
-          A Chrome extension that hides the scenes you choose (gore, spiders, sexual content, or anything above your
+          A Chrome extension that hides the scenes you choose (gore, spiders, 18+ content, or anything above your
           family&rsquo;s age limit) while the story keeps playing.
         </p>
         <div className="mt-10 flex flex-col items-center gap-4">
-          <AddToChrome />
+          <div className="flex flex-col items-center gap-3 sm:flex-row">
+            <AddToChrome />
+            <WaitlistButton />
+          </div>
           <p className="text-sm text-muted-foreground">Free during the early alpha, for titles in the unscene.it library. Chrome on desktop.</p>
         </div>
         <a
@@ -344,7 +365,7 @@ function Pricing() {
         <PlanCard
           name="Pro"
           price="Credits"
-          note="Prepaid. Not part of the alpha."
+          note={`Prepaid. Join the waitlist for ${FOUNDER_OFFER}.`}
           badge={<SoonBadge label="Planned" />}
           highlight
           items={[
@@ -352,6 +373,11 @@ function Pricing() {
             "Create your own filters",
             "Every Pro screening joins the shared library for everyone after you",
           ]}
+          cta={
+            <Button asChild variant="outline" className="h-9 w-full rounded-full border-brand/40 bg-transparent hover:bg-brand/10">
+              <a href="/waitlist/">Join the early access waitlist</a>
+            </Button>
+          }
         />
       </div>
     </Section>
@@ -444,8 +470,11 @@ const FAQ = [
     a: (
       <>
         unscene.it works today for titles in its library, and it&rsquo;s free. Features such as live AI for videos
-        that aren&rsquo;t in the library yet, and your own custom filters, come later. Tell us what you&rsquo;d like
-        next at{" "}
+        that aren&rsquo;t in the library yet, and your own custom filters, come later.{" "}
+        <a href="/waitlist/" className="text-foreground underline underline-offset-4">
+          Join the waitlist
+        </a>{" "}
+        to get them first, with founding-member pricing. Tell us what you&rsquo;d like next at{" "}
         <a href={`mailto:${SUPPORT_EMAIL}`} className="text-foreground underline underline-offset-4">
           {SUPPORT_EMAIL}
         </a>
@@ -488,7 +517,10 @@ function FinalCta() {
         <Xenia size={56} />
         <h2 className="mt-10 text-5xl font-semibold tracking-tighter text-balance sm:text-7xl">Watch together. Worry less.</h2>
         <div className="mt-10 flex flex-col items-center gap-4">
-          <AddToChrome />
+          <div className="flex flex-col items-center gap-3 sm:flex-row">
+            <AddToChrome />
+            <WaitlistButton />
+          </div>
           <p className="text-sm text-muted-foreground">Free during the early alpha.</p>
         </div>
       </div>

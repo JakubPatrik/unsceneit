@@ -26,7 +26,7 @@ export function Privacy() {
           <p className="font-medium">The short version</p>
           <ul className="mt-3 list-disc space-y-1.5 pl-5 text-muted-foreground">
             <li>To find a video in our library, the extension sends its YouTube ID or its page title. Nothing else about you.</li>
-            <li>No account, no name, no email address, no browsing history.</li>
+            <li>No account, no name, no browsing history. We only have your email address if you join the waitlist.</li>
             <li>No video files are uploaded, and no person watches what you watch.</li>
             <li>We never sell your data or use it for advertising.</li>
           </ul>
@@ -65,6 +65,20 @@ export function Privacy() {
             </p>
           </Part>
 
+          <Part title="If you join the waitlist">
+            <p>
+              The early access waitlist on this website asks for your <strong>email address</strong>. We keep it, with the
+              date you joined and whether you came from the website or the extension, to tell you when live AI and Pro
+              launch and to give you the founding-member pricing we promised. We only email you about unscene.it early
+              access and Pro.
+            </p>
+            <p>
+              You can unsubscribe from any email, or ask us at {email} to remove your address, and we&rsquo;ll delete it.
+              The waitlist is the only place we collect an email address, and it isn&rsquo;t linked to anything the
+              extension sends.
+            </p>
+          </Part>
+
           <Part title="Live AI (Pro, when available)">
             <p>
               Live AI isn&rsquo;t available yet. When it is, and only if you turn it on for a video, the extension will send
@@ -93,11 +107,20 @@ export function Privacy() {
 
           <Part title="What we don't do">
             <ul className="list-disc space-y-1.5 pl-5">
-              <li>We don&rsquo;t collect your name, email address, account details or browsing history.</li>
+              <li>We don&rsquo;t collect your name, account details or browsing history. Your email address only if you join the waitlist.</li>
               <li>We don&rsquo;t sell or rent your data, or share it for advertising, credit checks or lending.</li>
-              <li>We don&rsquo;t use analytics, trackers or cookies in the extension or on this website.</li>
+              <li>We don&rsquo;t use analytics, trackers or cookies in the extension, and no cookies or advertising trackers on this website.</li>
               <li>No person at unscene.it reviews what you watch.</li>
             </ul>
+          </Part>
+
+          <Part title="This website">
+            <p>
+              unscene.it uses <strong>Vercel Web Analytics</strong> to count visits to this website. It sets no cookies
+              and doesn&rsquo;t identify you or follow you to other sites. It records which pages are visited, the
+              referring site, and your browser, operating system, device type and country, all in aggregate. The
+              extension doesn&rsquo;t use analytics.
+            </p>
           </Part>
 
           <Part title="Chrome Web Store user data policy">
@@ -119,8 +142,11 @@ export function Privacy() {
             <p>We use a small number of providers to run unscene.it, and they may process data only on our behalf:</p>
             <ul className="list-disc space-y-1.5 pl-5">
               <li>
-                <strong>Supabase</strong>: hosts our database and servers. The library is stored in Canada, which the EU
-                recognises as providing adequate data protection.
+                <strong>Supabase</strong>: hosts our database and servers, including the library and the waitlist. Data is
+                stored in Canada, which the EU recognises as providing adequate data protection.
+              </li>
+              <li>
+                <strong>Vercel</strong>: hosts this website and provides its visitor analytics.
               </li>
               <li>
                 <strong>An AI service provider</strong>, for live AI only, once it&rsquo;s available.
@@ -132,7 +158,8 @@ export function Privacy() {
             <p>
               Video lookups and searches aren&rsquo;t stored by us. Our hosting provider keeps standard request logs,
               including IP addresses, for a short period for security and reliability, then deletes them. Library entries
-              (video titles, IDs and flagged scenes) are kept for as long as the library runs.
+              (video titles, IDs and flagged scenes) are kept for as long as the library runs. Waitlist addresses are
+              kept until you unsubscribe or ask us to delete them.
             </p>
           </Part>
 

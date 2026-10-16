@@ -7,7 +7,7 @@ What's left before unscene.it goes public as an **early alpha**. The website (ht
 The store build filters titles from the shared library and blurs thumbnails. **Live AI doesn't run for store users** (it needs sign-in and credits), so nothing should promise it.
 
 - [x] **STORY.md**: mark the product as an early alpha. Say that live AI doesn't run yet and that only library titles are filtered. Move live AI, Pro and custom filters under "Not built yet".
-- [x] **Manifest description** (`extension/manifest.json`, 132 characters at most). It still says "AI looks ahead… on any video". Suggested: *"Hides the scenes you choose, like gore, spiders or sexual content, in videos from the unscene.it library. Blurs thumbnails too."*
+- [x] **Manifest description** (`extension/manifest.json`, 132 characters at most). It still says "AI looks ahead… on any video". Suggested: *"Hides the scenes you choose, like gore, spiders or 18+ content, in videos from the unscene.it library. Blurs thumbnails too."*
 - [x] **Hide the "Turn on live AI filter · coming soon" button** in store builds. Reviewers can flag a visible feature that doesn't work. The "not in the library" dialog should offer "Watch without filters" and the library search only.
 - [x] **Website**: add an "Early alpha" label and check every claim against the store build (`website/src/pages/home.tsx`).
 - [x] **Hiding style**: the popup has a "Mute sound while hidden" switch. Scenes are always heavily blurred, and the website and STORY.md say so.
@@ -30,11 +30,16 @@ A reviewer will likely open a random YouTube video. If it isn't in the library, 
 
 Live AI and custom filters (Pro) need accounts and credits. For the alpha, choose one of these:
 
-**A. No auth yet: collect emails (recommended for the alpha)**
-- A "Get notified when Pro launches" email form on the website. It saves to a Supabase `waitlist` table, insert-only through RLS.
-- A small "Want live AI? Join the waitlist" link in the popup that opens the website.
-- Smallest change. It adds no extension permissions and no account data in the extension.
-- Before launching it: add "email address, if you join the waitlist" to the privacy policy.
+**A. No auth yet: collect emails (chosen, built)**
+- [x] **Deploy the waitlist table:** run `backend/scripts/deploy.sh` (it applies `20261016000000_waitlist.sql`). Until then the form on https://unscene.it/waitlist/ shows an error.
+- [ ] **Deploy the waitlist position:** from `backend/`, run `supabase db push` (applies `20261016010000_waitlist_position.sql`), so the "You're on the list" card shows "#N". Until then the card simply shows no number.
+- [x] Founding-member discount: 50% off Pro for life (`FOUNDER_OFFER` in `website/src/site.ts`). Honour it when Pro pricing launches.
+- [ ] Before the first email to the list: pick a sender (e.g. Resend or Mailgun) and add an unsubscribe link, as the privacy policy promises.
+
+What was built:
+- https://unscene.it/waitlist/: an email form promising first access to live AI and 50% off Pro for life. It saves through `join_waitlist()` into the `waitlist` table, which nobody can read through the API.
+- In store builds, the dialog's **Live AI filter** button opens it in a new tab (`?from=extension`, recorded as the source). The pricing card and FAQ on the website link to it too.
+- The privacy policy covers the waitlist. The extension itself still collects no email, so its data disclosures in the developer dashboard don't change.
 
 **B. Basic Supabase auth, signed in on the extension and the website**
 - Sign in on the website with a Supabase magic link (email only, no passwords).

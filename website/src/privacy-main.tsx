@@ -1,11 +1,4 @@
-import { StrictMode } from "react"
-import { createRoot } from "react-dom/client"
-
-import "./index.css"
+import { mount } from "./mount"
 import { Privacy } from "./pages/privacy"
 
-createRoot(document.getElementById("root")!).render(
-  <StrictMode>
-    <Privacy />
-  </StrictMode>,
-)
+mount(<Privacy />)

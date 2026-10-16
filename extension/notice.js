@@ -37,6 +37,10 @@ const notice = {
   busy: null, // live AI working: { title, step, fraction } shown by the bot (noticeBotBusy)
 };
 
+// Store builds: the live AI button opens the early access waitlist
+// (website/src/pages/waitlist.tsx) instead.
+const WAITLIST_URL = "https://unscene.it/waitlist/?from=extension";
+
 const NOTICE_CSS = `
   [hidden] { display: none !important; }
   .cover {
@@ -719,21 +723,26 @@ function noticeUnmatched(
   notice.box.className = "box";
   let current = new Set(enabled);
 
-  // Live AI (Pro) shows only where it runs (dev builds for now). Store builds
-  // offer the library search and "Watch without filters" only.
+  // Live AI (Pro) runs only in dev builds for now. Store builds show the same
+  // button, but it opens the early access waitlist in a new tab; the video
+  // stays here, waiting for a choice.
   const liveButton = liveAI
     ? noticeEl("button", { type: "button", className: "primary", onclick: onLiveAI }, [
         "Turn on live AI filter",
         noticeEl("span", { className: "pro", textContent: "PRO" }),
       ])
-    : null;
+    : noticeEl("button", { type: "button", onclick: () => window.open(WAITLIST_URL, "_blank", "noopener") }, [
+        "Live AI filter",
+        noticeEl("span", { className: "pro", textContent: "PRO" }),
+        noticeEl("span", { className: "muted", textContent: " · join the early access waitlist ↗" }),
+      ]);
   const hint = noticeEl("div", { className: "hint", textContent: "Pick at least one filter to use live AI." });
   const picker = noticeFilterPicker(filters, current, (ids) => {
     current = new Set(ids);
     onFiltersChange(ids);
-    if (liveButton) noticeNeedsFilters(liveButton, hint, current);
+    if (liveAI) noticeNeedsFilters(liveButton, hint, current);
   });
-  if (liveButton) noticeNeedsFilters(liveButton, hint, current);
+  if (liveAI) noticeNeedsFilters(liveButton, hint, current);
   else hint.hidden = true;
 
   const detail = error
@@ -742,7 +751,7 @@ function noticeUnmatched(
       : "unscene.it couldn't reach its library. Try again later, or watch without filters."
     : liveAI
       ? "Turn on the live AI filter to screen it as you watch, or watch without filters."
-      : "Nothing will be hidden in it yet. Search the library in case it's listed under another name, or watch without filters.";
+      : "Nothing will be hidden in it yet. Search the library in case it's listed under another name, or watch without filters. Live AI, which screens new videos as you watch, is coming soon.";
 
   notice.box.replaceChildren(
     noticeCloseButton(onClose, closeTitle),
@@ -754,7 +763,8 @@ function noticeUnmatched(
     noticeEl("div", { className: "muted", textContent: detail }),
     picker,
     noticeEl("div", { className: "actions" }, [
-      ...(liveButton ? [liveButton, hint] : []),
+      liveButton,
+      hint,
       noticeEl("button", { type: "button", textContent: "Watch without filters", onclick: onWatchAnyway }),
     ]),
     ...noticeLibrarySearch("Listed under another name? Search the library:", onPicked),

@@ -15,4 +15,14 @@ export const COMPANY = {
 export const SUPPORT_EMAIL = "hello@unscene.it"
 
 // Last change to the privacy policy (shown at its top).
-export const PRIVACY_UPDATED = "October 15, 2026"
+export const PRIVACY_UPDATED = "October 16, 2026"
+
+// The early access waitlist's promise (waitlist page, pricing card):
+// founding members keep this discount for life.
+export const FOUNDER_OFFER = "50% off Pro for life"
+
+// Supabase, for the waitlist form. The publishable key is public by design;
+// the database only lets it call join_waitlist() (see the waitlist migration).
+// Same project as extension/config.js.
+export const SUPABASE_URL = "https://sankeqoeuociotbufbsb.supabase.co"
+export const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_JDPQRTbTBP2DS73o0SCRZQ_xy9VsmaY"

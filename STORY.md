@@ -6,7 +6,7 @@ How unscene.it works, for writing marketing copy. unscene.it is in **early alpha
 
 ## In one line
 
-unscene.it is a browser extension that quietly hides the scenes you don't want to see (gore, spiders, sexual content, or anything above your family's age limit) while the story keeps playing.
+unscene.it is a browser extension that quietly hides the scenes you don't want to see (gore, spiders, 18+ content, or anything above your family's age limit) while the story keeps playing.
 
 ## Early alpha: what it does today
 
@@ -18,10 +18,12 @@ All copy written now must stay within this list.
 - **Free.** No account, no sign-up.
 
 **Not in the alpha:**
-- **Live AI** (screening videos that aren't in the library yet) doesn't run for store users. The live AI button isn't shown at all.
+- **Live AI** (screening videos that aren't in the library yet) doesn't run for store users. In the dialog for a video that isn't in the library, the **Live AI filter** button opens the early access waitlist (https://unscene.it/waitlist/) in a new tab.
 - **Pro, accounts, credits and custom filters** don't exist yet.
 
 Videos that aren't in the library play unfiltered, after the viewer chooses "Watch without filters".
+
+**Early access waitlist.** Anyone can join with their email address. Everyone on it gets live AI first and the **founding-member discount: 50% off Pro for life**.
 
 ## Brand
 
@@ -87,7 +89,7 @@ Lead with personal filtering: unscene.it hides only what each viewer chooses. Th
 4. **Open a video.** It doesn't play straight away: it waits, paused and blurred, while Xenia checks it against the shared library. On YouTube this happens from the first moment the page appears, so nothing slips through while the page loads.
 5. **Choose how to watch:**
    - **In the library:** the dialog shows the title and how many scenes your filters will hide. Choose **Watch with filters** or **Watch without filters**.
-   - **Not in the library:** choose **Watch without filters**, or search the library in case the video is listed under another name.
+   - **Not in the library:** choose **Watch without filters**, or search the library in case the video is listed under another name. **Live AI filter** opens the early access waitlist.
    - **Watch with filters** stays greyed out until at least one filter is picked. **Watch without filters** always works, and closing the dialog means the same thing, so a video is never stuck.
 6. **Watch.** The dialog shrinks into Xenia and the video plays.
    - When a flagged scene comes up, it's blurred and labelled ("Hidden: gore") while the movie keeps playing. When the scene ends, picture and sound come back on their own. Nothing is skipped, so you never lose your place.
@@ -128,7 +130,7 @@ Exact prices aren't set yet.
 
 ## Claims to avoid
 
-- **Don't promise live AI, Pro or custom filters** in alpha copy, and don't say it works on "any video". Safe wording: "for videos in the unscene.it library".
+- **Don't promise live AI, Pro or custom filters** in alpha copy, and don't say it works on "any video". Safe wording: "for videos in the unscene.it library". Pointing people to the early access waitlist is fine.
 - **Don't promise perfection.** Scenes are judged by AI, frame by frame, and it can miss a scene or over-flag a harmless one. Say "helps you avoid" or "automatically hides", never "guarantees" or "100%".
 - **Don't mention sensitivity sliders or strictness settings.** They don't exist and aren't planned.
 - **Don't claim Netflix, Disney+ or other DRM streaming services.** Their protected video can't be analysed. Safe wording: "works with videos on the open web, including YouTube".

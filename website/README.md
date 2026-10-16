@@ -2,11 +2,14 @@
 
 The landing page and privacy policy for https://unscene.it. Built with React, Vite, Tailwind CSS and shadcn/ui.
 
+Uses **pnpm** (pinned in `package.json`; Vercel picks it up from `pnpm-lock.yaml`).
+
 ```bash
-npm install
-npm run dev      # http://localhost:5173
-npm run build    # static site in dist/
-npm run preview  # serve dist/ locally
+pnpm install
+pnpm dev         # http://localhost:5173
+pnpm build       # static site in dist/
+pnpm preview     # serve dist/ locally
+pnpm dlx shadcn@latest add <component>   # add a shadcn/ui component
 ```
 
 ## Pages
@@ -15,8 +18,10 @@ npm run preview  # serve dist/ locally
 |---|---|
 | `/` | `index.html` → `src/pages/home.tsx` |
 | `/privacy/` | `privacy/index.html` → `src/pages/privacy.tsx` |
+| `/waitlist/` | `waitlist/index.html` → `src/pages/waitlist.tsx` |
+| any unknown URL | `404.html` → `src/pages/not-found.tsx` |
 
-Each page is its own HTML file, so the build is plain static files and `/privacy/` works on any host without rewrite rules.
+Each page is its own HTML file, so the build is plain static files that work on any host without rewrite rules. URLs without the trailing slash (`/waitlist`) redirect to it, on Vercel (`vercel.json`) and in `pnpm dev` / `pnpm preview` (`vite.config.ts`). Vercel serves `404.html` for anything else. To add a page, add its HTML file and its name to `PAGES` in `vite.config.ts`.
 
 ## Settings
 
