@@ -32,7 +32,7 @@ Live AI and custom filters (Pro) need accounts and credits. For the alpha, choos
 
 **A. No auth yet: collect emails (chosen, built)**
 - [x] **Deploy the waitlist table:** run `backend/scripts/deploy.sh` (it applies `20261016000000_waitlist.sql`). Until then the form on https://unscene.it/waitlist/ shows an error.
-- [ ] **Deploy the waitlist position:** from `backend/`, run `supabase db push` (applies `20261016010000_waitlist_position.sql`), so the "You're on the list" card shows "#N". Until then the card simply shows no number.
+- [x] **Deploy the waitlist position:** from `backend/`, run `supabase db push` (applies `20261016010000_waitlist_position.sql`), so the "You're on the list" card shows "#N". Until then the card simply shows no number.
 - [x] Founding-member discount: 50% off Pro for life (`FOUNDER_OFFER` in `website/src/site.ts`). Honour it when Pro pricing launches.
 - [ ] Before the first email to the list: pick a sender (e.g. Resend or Mailgun) and add an unsubscribe link, as the privacy policy promises.
 
@@ -57,26 +57,26 @@ Either way, credits and payments come later. They'll need a payment provider, te
 
 ## 4. Store listing: text and images
 
-- [ ] **Icon, 128×128 PNG.** 96×96 of artwork centred, with 16 px of transparent padding on every side, per Google's guidelines. The current `extension/icons/icon-128.png` fills the whole square. Remake it from `assets/icon.png`, and use the same file for the listing.
-- [ ] **Screenshots, 1280×800**, 1 to 5 of them. Suggested shots:
+- [x] **Icon, 128×128 PNG**: `store/icon-128.png` (96×96 artwork, 16 px padding). Also used as `extension/icons/icon-128.png`.
+- [ ] **Screenshots, 1280×800**, 1 to 5 of them. Shot list and rules in `store/listing.md`. Suggested shots:
   1. the dialog over a video ("Found in the library");
   2. a scene hidden, with the "Hidden: …" label and Xenia in the corner;
   3. the popup with filters;
   4. the thumbnail blur on YouTube.
-- [ ] **Small promo tile, 440×280** (required). Optional: a 1400×560 marquee.
-- [ ] **Summary**: the same text as the manifest description.
-- [ ] **Detailed description**, adapted from STORY.md:
+- [x] **Small promo tile, 440×280**: `store/promo-small-440x280.png`. Marquee: `store/promo-marquee-1400x560.png`. Edit `store/promo.html` and run `store/render.sh` to change them.
+- [x] **Summary**: the same text as the manifest description (in `store/listing.md`).
+- [x] **Detailed description**, in `store/listing.md`, adapted from STORY.md:
   - what it hides and how, and the early-alpha scope;
   - which sites it works on, and that DRM services like Netflix are not supported;
   - no promises of perfection.
-- [ ] **Category**: Entertainment, or Tools. **Language**: English.
-- [ ] **Support**: hello@unscene.it. **Website**: https://unscene.it.
+- [x] **Category**: Entertainment, or Tools. **Language**: English.
+- [x] **Support**: hello@unscene.it. **Website**: https://unscene.it.
 
 ## 5. Developer dashboard
 
-- [ ] **Developer account**: 2-step verification on, $5 registration fee paid.
-- [ ] **Trader declaration (EU)**: DoubleCross Digital LLC, 30 N Gould St, Ste R, Sheridan, WY 82801, USA. Have a business phone number ready, since traders' details are shown publicly.
-- [ ] **Privacy section:**
+- [x] **Developer account**: 2-step verification on, $5 registration fee paid.
+- [x] **Trader declaration (EU)**: DoubleCross Digital LLC, 30 N Gould St, Ste R, Sheridan, WY 82801, USA. Have a business phone number ready, since traders' details are shown publicly.
+- [x] **Privacy section:**
   - **Single purpose**: "Hides scenes in online videos that match the filters the user chooses."
   - **`storage`**: saves the viewer's filters and settings.
   - **Access to all sites**: finds and filters video players on any page the viewer watches.
@@ -88,11 +88,11 @@ Either way, credits and payments come later. They'll need a payment provider, te
   - links to the reviewer test videos from section 2;
   - the steps: pick "Blood & gore" in the popup, open the video, choose "Watch with filters", jump to m:ss;
   - a note that live AI is not part of this release.
-- [ ] Optional: verify unscene.it in Google Search Console, so the listing shows it as a verified website.
+- [x] Optional: verify unscene.it in Google Search Console, so the listing shows it as a verified website.
 
 ## 6. Build, test, submit
 
-- [ ] Bump `version` in `extension/manifest.json` if needed. Build the zip with `extension/scripts/package.sh`; it leaves out the developer files and refuses to build if a secret key would end up inside.
+- [x] Bump `version` in `extension/manifest.json` if needed. Build the zip with `extension/scripts/package.sh`; it leaves out the developer files and refuses to build if a secret key would end up inside.
 - [ ] Install the zip in a **fresh Chrome profile** (not "Load unpacked") and check the full flow:
   - a video waits under the blur, the dialog appears, the right scenes are hidden;
   - Xenia works, the thumbnail blur works;

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Builds the store upload, dist/unscene-it-<version>.zip, without dev-only files
+# Builds the store upload, dist/unsceneit-<version>.zip, without dev-only files
 # (config.dev.js, tests, scripts). Refuses to build if a secret key would end
 # up in the package.
 set -euo pipefail
@@ -7,7 +7,7 @@ set -euo pipefail
 cd "$(dirname "$0")/.." # extension/
 VERSION="$(python3 -c 'import json; print(json.load(open("manifest.json"))["version"])')"
 OUT_DIR="../dist"
-OUT="$OUT_DIR/unscene-it-$VERSION.zip"
+OUT="$OUT_DIR/unsceneit-$VERSION.zip"
 
 mkdir -p "$OUT_DIR"
 rm -f "$OUT"

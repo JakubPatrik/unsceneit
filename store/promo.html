@@ -1,0 +1,98 @@
+<!doctype html>
+<!--
+  Chrome Web Store promo images, rendered to PNG by render.sh:
+    promo.html?size=small    → promo-small-440x280.png   (required)
+    promo.html?size=marquee  → promo-marquee-1400x560.png (optional)
+  Brand colours match website/src/index.css; Xenia matches extension/notice.js.
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      @font-face { font-family: Geist; src: url(geist.woff2) format("woff2"); font-weight: 100 900; }
+      * { box-sizing: border-box; margin: 0; }
+      html, body { overflow: hidden; }
+      body {
+        position: relative; font-family: Geist, system-ui, sans-serif; color: #f2f2f7;
+        background:
+          radial-gradient(60% 90% at 78% 50%, rgb(113 107 243 / 0.42), transparent 70%),
+          radial-gradient(50% 70% at 0% 0%, rgb(113 107 243 / 0.12), transparent 70%),
+          #090a10;
+        -webkit-font-smoothing: antialiased;
+      }
+      body.small { width: 440px; height: 280px; --s: 1; }
+      body.marquee { width: 1400px; height: 560px; --s: 2.1; }
+
+      .copy { position: absolute; top: 50%; transform: translateY(-50%); left: calc(30px * var(--s)); width: calc(205px * var(--s)); }
+      .marquee .copy { left: 120px; width: 600px; }
+      .logo { display: flex; align-items: center; gap: calc(8px * var(--s)); }
+      .logo img { width: calc(26px * var(--s)); height: calc(26px * var(--s)); border-radius: calc(7px * var(--s)); }
+      .logo span { font-size: calc(19px * var(--s)); font-weight: 600; letter-spacing: -0.02em; }
+      .logo b { color: #716bf3; font-weight: 600; }
+      h1 {
+        margin-top: calc(16px * var(--s)); font-size: calc(29px * var(--s)); line-height: 1.04;
+        font-weight: 600; letter-spacing: -0.035em;
+      }
+      .sub { display: none; }
+      .marquee .sub { display: block; margin-top: 26px; font-size: 26px; line-height: 1.35; color: #a6a8bd; max-width: 520px; }
+
+      /* A small video frame with a hidden scene, Xenia on its corner */
+      .frame {
+        position: absolute; top: 50%; transform: translateY(-50%) rotate(-3deg);
+        right: calc(30px * var(--s)); width: calc(168px * var(--s)); height: calc(112px * var(--s));
+        border-radius: calc(12px * var(--s)); overflow: hidden;
+        border: 1px solid rgb(255 255 255 / 0.14);
+        box-shadow: 0 calc(14px * var(--s)) calc(40px * var(--s)) rgb(0 0 0 / 0.55);
+      }
+      .marquee .frame { right: 150px; width: 470px; height: 300px; }
+      .scene {
+        position: absolute; inset: -20%;
+        background: linear-gradient(180deg, #151a3a 0%, #5a3d78 40%, #d9785f 68%, #f2b27a 80%, #241c3b 81%, #14111f 100%);
+        filter: blur(calc(9px * var(--s))) brightness(0.6) saturate(1.15);
+      }
+      .label {
+        position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+        display: flex; align-items: center; gap: calc(5px * var(--s)); white-space: nowrap;
+        padding: calc(5px * var(--s)) calc(10px * var(--s)); border-radius: 999px;
+        background: rgb(0 0 0 / 0.62); font-size: calc(11px * var(--s)); font-weight: 600;
+      }
+      .marquee .label { font-size: 24px; padding: 11px 22px; gap: 10px; }
+      .label svg { width: 1.1em; height: 1.1em; }
+      .xenia {
+        position: absolute; display: grid; place-items: center; border-radius: 50%;
+        width: calc(50px * var(--s)); height: calc(50px * var(--s));
+        right: calc(14px * var(--s)); top: calc(50% - 82px * var(--s));
+        background: #5b4cf0; box-shadow: 0 calc(6px * var(--s)) calc(22px * var(--s)) rgb(91 76 240 / 0.55);
+      }
+      .marquee .xenia { width: 118px; height: 118px; right: 110px; top: 70px; }
+      .eyes { display: flex; gap: calc(7.6px * var(--s)); transform: translateX(6%); }
+      .eye { width: calc(6.5px * var(--s)); height: calc(12px * var(--s)); border-radius: 999px; background: #fff; }
+      .marquee .eyes { gap: 18px; }
+      .marquee .eye { width: 15px; height: 28px; }
+    </style>
+  </head>
+  <body>
+    <div class="copy">
+      <div class="logo"><img src="icon-source.png" alt="" /><span>unscene<b>.</b>it</span></div>
+      <h1>The scenes you’ll never see.</h1>
+      <p class="sub">Hide the scenes you’d rather not see, while the story keeps playing.</p>
+    </div>
+
+    <div class="frame">
+      <div class="scene"></div>
+      <div class="label">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M10.7 5.1A10.8 10.8 0 0 1 12 5c7 0 10 7 10 7a13.2 13.2 0 0 1-1.7 2.7" />
+          <path d="M6.6 6.6A13.5 13.5 0 0 0 2 12s3 7 10 7a9.7 9.7 0 0 0 5.4-1.6" />
+          <path d="M9.9 9.9a3 3 0 1 0 4.2 4.2" /><path d="m2 2 20 20" />
+        </svg>
+        Hidden: Blood &amp; gore
+      </div>
+    </div>
+    <div class="xenia"><div class="eyes"><span class="eye"></span><span class="eye"></span></div></div>
+
+    <script>
+      document.body.className = new URLSearchParams(location.search).get("size") === "marquee" ? "marquee" : "small";
+    </script>
+  </body>
+</html>
