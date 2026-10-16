@@ -46,6 +46,7 @@ FEATURES
 • Nothing plays until you choose: no autoplay surprises. Every video waits for your decision.
 • Thumbnails blurred too: video thumbnails and hover previews are blurred before they can show. You can turn this off.
 • Xenia: click her at any time to change your filters mid-video, or to watch without filters.
+• On or off per site: one switch in the menu turns unscene.it off for the site you're on, and back on whenever you like.
 • Settings that follow you: your filters sync across every Chrome where you're signed in.
 
 WHO IT'S FOR

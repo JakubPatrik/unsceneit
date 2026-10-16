@@ -6,16 +6,37 @@
 // notice.js.
 
 // ---- Extension lifetime ----
-// After the extension is reloaded or updated, scripts already injected into
-// open tabs are cut off from it: every chrome.runtime call throws "Extension
-// context invalidated". This copy then releases the page (no cover, no blur,
-// nothing held) and stops, instead of keeping the video paused forever.
+// unscene.it stops working in this page, releasing it (no cover, no blur,
+// nothing held or muted) through shutDown(), when:
+//   - the viewer switches it off for this site in the popup (site.js;
+//     turning it back on reloads the tab there, so the gate starts fresh);
+//   - the extension is reloaded or updated: scripts already injected into
+//     open tabs are cut off from it, and every chrome.runtime call throws
+//     "Extension context invalidated".
+let siteOff = false;
 function extensionAlive() {
+  if (siteOff) return false;
   try {
     return !!chrome.runtime?.id;
   } catch {
     return false;
   }
+}
+
+chrome.storage.sync.get({ disabledSites: [] }).then((s) => {
+  if (isSiteDisabled(s.disabledSites, frameSite())) switchOff();
+});
+chrome.storage.onChanged.addListener((changes, area) => {
+  if (area === "sync" && changes.disabledSites && isSiteDisabled(changes.disabledSites.newValue, frameSite())) switchOff();
+});
+
+// Switched off for this site: release the page now (tick() would within
+// 100 ms; this avoids even that). Only called from storage callbacks, which
+// run after this whole script has loaded.
+function switchOff() {
+  if (siteOff) return;
+  siteOff = true;
+  shutDown();
 }
 
 // ---- Settings ----
@@ -65,15 +86,31 @@ chrome.storage.onChanged.addListener((changes, area) => {
 
 const ON_YOUTUBE = /(^|\.)youtube(-nocookie)?\.com$/.test(location.hostname);
 
-// The YouTube video this page/frame is about (watch, embed, shorts), or null.
+// The YouTube video this page/frame plays, or null. Only a watch page
+// (/watch?v=…) or a YouTube player embedded in another site (/embed/…).
+// Every other YouTube page (home, search, channels, Shorts, …) only has hover
+// previews: nothing there is gated, looked up, analysed or saved.
 function pageYouTubeId() {
-  return ON_YOUTUBE ? youtubeIdFromUrl(location.href) : null;
+  if (!ON_YOUTUBE) return null;
+  const { pathname } = location;
+  return pathname === "/watch" || pathname.startsWith("/embed/") ? youtubeIdFromUrl(location.href) : null;
 }
 
-// YouTube's main player box. Watch pages also hold a hidden hover-preview
-// player with the same classes, which is never gated.
+// YouTube's main player box. Watch pages also hold a hover-preview player
+// (#inline-player), which is never used.
 function youtubePlayer() {
-  return document.querySelector(location.pathname.startsWith("/shorts/") ? "#shorts-player" : "#movie_player");
+  return document.querySelector("#movie_player");
+}
+
+// The one video unscene.it works with in this frame, or null:
+//   - YouTube: the main player's video on a watch page (or embed), never a
+//     hover preview, and nothing on any other YouTube page;
+//   - elsewhere: the biggest video on the page (logic.js pickMainVideo), so
+//     smaller ads and previews are ignored even while they play.
+// The gate, the look-ahead and the debug panel all use this.
+function mainVideo() {
+  if (ON_YOUTUBE) return pageYouTubeId() ? (youtubePlayer()?.querySelector("video") ?? null) : null;
+  return pickMainVideo([...document.querySelectorAll("video:not([data-unsceneit-shadow])")]);
 }
 
 function isYouTubeMainVideo(video) {
@@ -181,8 +218,7 @@ holdStyle.textContent = `
   html[data-unsceneit-hold] #player-wrap,
   html[data-unsceneit-hold] ytd-player,
   html[data-unsceneit-hold] #player-container-outer,
-  html[data-unsceneit-hold] #movie_player,
-  html[data-unsceneit-hold] #shorts-player {
+  html[data-unsceneit-hold] #movie_player {
     filter: ${flaggedVideoFilter("blur")} !important;
     pointer-events: none !important;
   }
@@ -465,9 +501,9 @@ function videoSubject(video) {
   };
 }
 
-// Other sites: main videos only (not previews or ads).
+// Other sites: only the page's main video (the biggest), not previews or ads.
 function isGatedVideo(video) {
-  return !ON_YOUTUBE && !video.dataset.unsceneitShadow && video.offsetWidth >= 200 && video.offsetHeight >= 100;
+  return !ON_YOUTUBE && !video.dataset.unsceneitShadow && video === mainVideo();
 }
 
 // -- Wiring

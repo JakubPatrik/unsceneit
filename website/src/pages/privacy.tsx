@@ -93,7 +93,8 @@ export function Privacy() {
           <Part title="What stays on your device">
             <ul className="list-disc space-y-3 pl-5">
               <li>
-                <strong>Your settings</strong>: your filters, how scenes are hidden and whether thumbnails are blurred. They
+                <strong>Your settings</strong>: your filters, how scenes are hidden, whether thumbnails are blurred, and the
+                sites you&rsquo;ve switched unscene.it off for. They
                 are saved with Chrome&rsquo;s storage. If you use Chrome sync, Google syncs them between your browsers under
                 Google&rsquo;s own privacy policy.
               </li>

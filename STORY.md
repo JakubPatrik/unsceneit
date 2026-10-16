@@ -95,6 +95,8 @@ Lead with personal filtering: unscene.it hides only what each viewer chooses. Th
    - When a flagged scene comes up, it's blurred and labelled ("Hidden: gore") while the movie keeps playing. When the scene ends, picture and sound come back on their own. Nothing is skipped, so you never lose your place.
    - **Without filters**, nothing is analysed or changed. Xenia stays grey in the corner in case you change your mind.
 
+**On or off per site.** A switch at the top of the extension menu turns unscene.it off for the site you're on (every page of it) and back on. It's on everywhere by default.
+
 **Thumbnails are blurred too.** By default, unscene.it blurs every video thumbnail and hover preview, on YouTube and anywhere YouTube images appear, before it can show, so a stray thumbnail can't give a scene away. Viewers can turn this off in the extension menu.
 
 ## What happens behind the scenes (keep it simple in copy)

@@ -144,7 +144,21 @@ devSecretKey().then((key) => chrome.storage.local.set({ liveAIAvailable: !!key }
 //     built-in filters and saves the ranges to the library, so the next viewer
 //     gets them; the page only blurs the viewer's active filters.
 //   - Debug live overlay (persist: false): dry run for the given filterIds.
+function isYouTubeUrl(url) {
+  try {
+    return /(^|\.)youtube(-nocookie)?\.com$/.test(new URL(url).hostname);
+  } catch {
+    return false;
+  }
+}
+
 async function analyzeFrames({ frames, filterIds, persist = false, video }, tab) {
+  // Never save from YouTube without a video id: that's a hover preview on the
+  // home or search page (content.js mainVideo ignores those; this is the
+  // safety net). It would create a library entry named after the page.
+  if (persist && !video?.youtubeId && isYouTubeUrl(tab?.url)) {
+    throw new Error("Not saved: YouTube page without a video id (preview or search)");
+  }
   const key = await devSecretKey();
   if (!key) {
     throw new Error(

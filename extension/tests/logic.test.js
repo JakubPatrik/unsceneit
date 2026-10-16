@@ -12,7 +12,7 @@ const {
   migrateEnabledFilters,
   flaggedVideoFilter,
   mediaKey,
-  pickVideo,
+  pickMainVideo,
   youtubeIdFromUrl,
   cleanTitle,
   pageKey,
@@ -199,42 +199,39 @@ describe("mediaKey", () => {
   });
 });
 
-describe("pickVideo", () => {
-  const video = (props) => ({
-    paused: true,
-    ended: false,
-    offsetWidth: 100,
-    offsetHeight: 100,
-    ...props,
-  });
+describe("pickMainVideo", () => {
+  const video = (props) => ({ paused: true, ended: false, offsetWidth: 640, offsetHeight: 360, ...props });
 
   it("returns null when there are no videos", () => {
-    assert.equal(pickVideo([]), null);
+    assert.equal(pickMainVideo([]), null);
   });
 
-  it("prefers a playing video over a larger paused one", () => {
-    const big = video({ offsetWidth: 1920, offsetHeight: 1080 });
-    const playing = video({ paused: false });
-    assert.equal(pickVideo([big, playing]), playing);
-  });
-
-  it("does not treat an ended video as playing", () => {
-    const ended = video({ paused: false, ended: true });
-    const big = video({ offsetWidth: 1920, offsetHeight: 1080 });
-    assert.equal(pickVideo([ended, big]), big);
-  });
-
-  it("falls back to the largest video", () => {
-    const small = video({ offsetWidth: 300, offsetHeight: 150 });
+  it("picks the biggest video, even when a smaller one is playing", () => {
     const big = video({ offsetWidth: 1280, offsetHeight: 720 });
-    assert.equal(pickVideo([small, big]), big);
+    const preview = video({ paused: false, offsetWidth: 360, offsetHeight: 200 });
+    assert.equal(pickMainVideo([preview, big]), big);
+  });
+
+  it("ignores videos below 200×100 (ads, previews)", () => {
+    assert.equal(pickMainVideo([video({ offsetWidth: 199, offsetHeight: 400 }), video({ offsetWidth: 400, offsetHeight: 99 })]), null);
+  });
+
+  it("ignores hidden videos (zero size)", () => {
+    const hidden = video({ offsetWidth: 0, offsetHeight: 0 });
+    const shown = video();
+    assert.equal(pickMainVideo([hidden, shown]), shown);
+  });
+
+  it("keeps the first of equal sizes", () => {
+    const first = video();
+    assert.equal(pickMainVideo([first, video()]), first);
   });
 
   it("does not reorder the input array", () => {
     const small = video({ offsetWidth: 300, offsetHeight: 150 });
     const big = video({ offsetWidth: 1280, offsetHeight: 720 });
     const list = [small, big];
-    pickVideo(list);
+    pickMainVideo(list);
     assert.deepEqual(list, [small, big]);
   });
 });

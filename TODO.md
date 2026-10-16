@@ -58,7 +58,7 @@ Either way, credits and payments come later. They'll need a payment provider, te
 ## 4. Store listing: text and images
 
 - [x] **Icon, 128×128 PNG**: `store/icon-128.png` (96×96 artwork, 16 px padding). Also used as `extension/icons/icon-128.png`.
-- [x] **Screenshots, 1280×800**, 1 to 5 of them. Shot list and rules in `store/listing.md`. Suggested shots:
+- [ ] **Screenshots, 1280×800**, 1 to 5 of them. Shot list and rules in `store/listing.md`. Suggested shots:
   1. the dialog over a video ("Found in the library");
   2. a scene hidden, with the "Hidden: …" label and Xenia in the corner;
   3. the popup with filters;
@@ -92,7 +92,7 @@ Either way, credits and payments come later. They'll need a payment provider, te
 
 ## 6. Build, test, submit
 
-- [x] Bump `version` in `extension/manifest.json` if needed. Build the zip with `extension/scripts/package.sh`; it leaves out the developer files and refuses to build if a secret key would end up inside.
+- [ ] Bump `version` in `extension/manifest.json` if needed. Build the zip with `extension/scripts/package.sh`; it leaves out the developer files and refuses to build if a secret key would end up inside.
 - [ ] Install the zip in a **fresh Chrome profile** (not "Load unpacked") and check the full flow:
   - a video waits under the blur, the dialog appears, the right scenes are hidden;
   - Xenia works, the thumbnail blur works;

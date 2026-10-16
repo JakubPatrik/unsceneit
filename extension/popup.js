@@ -1,7 +1,7 @@
-// The toolbar popup: the viewer's filters (same picker as the in-page dialog,
-// notice.js noticeFilterPicker), the mute-while-hidden switch and the
-// thumbnail blur switch. All are in chrome.storage.sync, which the content
-// scripts watch.
+// The toolbar popup: the on/off switch for the current site (site.js), the
+// viewer's filters (same picker as the in-page dialog, notice.js
+// noticeFilterPicker), the mute-while-hidden switch and the thumbnail blur
+// switch. All are in chrome.storage.sync, which the content scripts watch.
 //
 // Age is a single choice: "Under N" enables every age filter with
 // min_age >= N (an under-12 viewer also has 15+ and 18+ scenes hidden).
@@ -12,6 +12,44 @@ function el(tag, props = {}, children = []) {
   node.append(...children);
   return node;
 }
+
+// ---- On/off for this site ----
+// Off: the page is released at once, in every open tab of the site
+// (content.js switchOff). On: the tab reloads, so videos are caught from the
+// start again.
+
+const siteSwitch = document.getElementById("site-switch");
+const siteLabel = document.getElementById("site-label");
+
+function renderSite(site, on) {
+  document.body.classList.toggle("site-off", !on);
+  siteSwitch.checked = on;
+  siteSwitch.setAttribute("aria-label", `unscene.it on ${site}`);
+  siteLabel.replaceChildren(el("span", {}, [on ? "On for " : "Off for ", el("b", { textContent: site })]));
+}
+
+async function initSiteSwitch() {
+  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  const site = siteForUrl(tab?.url);
+  if (!site) {
+    document.body.classList.add("no-site");
+    siteSwitch.disabled = true;
+    siteLabel.textContent = "unscene.it doesn't run on this page.";
+    return;
+  }
+  const { disabledSites } = await chrome.storage.sync.get({ disabledSites: [] });
+  renderSite(site, !isSiteDisabled(disabledSites, site));
+
+  siteSwitch.addEventListener("change", async () => {
+    const on = siteSwitch.checked;
+    const { disabledSites } = await chrome.storage.sync.get({ disabledSites: [] });
+    await chrome.storage.sync.set({ disabledSites: withSite(disabledSites, site, on) });
+    renderSite(site, on);
+    if (on) chrome.tabs.reload(tab.id);
+  });
+}
+
+initSiteSwitch();
 
 // ---- Filters ----
 

@@ -12,8 +12,15 @@
         font: 13px/1.45 system-ui, sans-serif;
       }
       header { margin-bottom: 14px; }
+      .top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
       .logo { display: block; width: 150px; height: auto; }
       .tagline { margin: 6px 0 0; font-size: 11.5px; color: #b8b8c8; }
+      .site { display: flex; align-items: center; gap: 6px; margin: 8px 0 0; font-size: 11.5px; color: #b8b8c8; }
+      .site::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #5fe0a0; }
+      .site b { color: #f2f2f7; font-weight: 600; }
+      body.site-off .site::before { background: #8b8b98; }
+      body.site-off .card { opacity: 0.45; }
+      body.no-site .site::before { display: none; }
 
       .card { padding: 10px; border-radius: 10px; background: #1b1b26; }
       .card + .card { margin-top: 10px; }
@@ -53,13 +60,26 @@
       .switch input:checked + .track { background: #6b4cff; }
       .switch input:checked + .track::after { transform: translateX(12px); }
       .switch input:focus-visible + .track { outline: 2px solid #a99cff; outline-offset: 1px; }
+      .switch input:disabled + .track { opacity: 0.4; cursor: not-allowed; }
+      /* The site switch in the header: a bigger version. */
+      .switch.big .track { width: 38px; height: 22px; }
+      .switch.big .track::after { top: 3px; left: 3px; width: 16px; height: 16px; }
+      .switch.big input:checked + .track::after { transform: translateX(16px); }
       .hint { margin: 6px 0 0; font-size: 11px; color: #b8b8c8; }
     </style>
   </head>
   <body>
     <header>
-      <img class="logo" src="icons/logo-light.png" alt="unscene.it" />
+      <div class="top">
+        <img class="logo" src="icons/logo-light.png" alt="unscene.it" />
+        <!-- On/off for the current site (site.js); popup.js fills it in. -->
+        <label class="switch big" title="Turn unscene.it on or off on this site">
+          <input type="checkbox" id="site-switch" checked aria-describedby="site-label" />
+          <span class="track"></span>
+        </label>
+      </div>
       <p class="tagline">The scenes you'll never see.</p>
+      <p class="site" id="site-label"></p>
     </header>
 
     <form id="filters" class="card" autocomplete="off">
@@ -87,6 +107,7 @@
       <p class="hint">Blurs every video thumbnail and hover preview before it can show.</p>
     </form>
 
+    <script src="site.js"></script>
     <script src="logic.js"></script>
     <script src="popup.js"></script>
   </body>

@@ -4,12 +4,14 @@
 //   - live AI is available (dev builds with config.dev.js; background.js sets
 //     liveAIAvailable), so it's ready by default, or
 //   - the pre-scan debug mode is on.
-// Store builds without live AI never mirror anything.
+// Store builds without live AI never mirror anything, and nothing is mirrored
+// on a site the viewer switched unscene.it off for (site.js).
 
 const teeSettings = { debugMode: "off", liveAIAvailable: false };
+let teeSiteOff = false;
 
 function applyTeeFlag() {
-  const on = teeSettings.liveAIAvailable || teeSettings.debugMode === "prescan";
+  const on = !teeSiteOff && (teeSettings.liveAIAvailable || teeSettings.debugMode === "prescan");
   if (on) document.documentElement.dataset.unsceneitTee = "1";
   else delete document.documentElement.dataset.unsceneitTee;
 }
@@ -18,7 +20,15 @@ chrome.storage.local.get(teeSettings).then((s) => {
   Object.assign(teeSettings, s);
   applyTeeFlag();
 });
+chrome.storage.sync.get({ disabledSites: [] }).then((s) => {
+  teeSiteOff = isSiteDisabled(s.disabledSites, frameSite());
+  applyTeeFlag();
+});
 chrome.storage.onChanged.addListener((changes, area) => {
+  if (area === "sync" && changes.disabledSites) {
+    teeSiteOff = isSiteDisabled(changes.disabledSites.newValue, frameSite());
+    return applyTeeFlag();
+  }
   if (area !== "local") return;
   for (const key of Object.keys(teeSettings)) {
     if (changes[key]) teeSettings[key] = changes[key].newValue;

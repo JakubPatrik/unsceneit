@@ -91,13 +91,27 @@ function mediaKey(src, pageUrl) {
 
 // ---- Video picking ----
 
-// The main video in a frame: the one playing, else the largest.
-function pickVideo(videos) {
-  if (!videos.length) return null;
-  const playing = videos.find((v) => !v.paused && !v.ended);
-  if (playing) return playing;
-  const area = (v) => v.offsetWidth * v.offsetHeight;
-  return [...videos].sort((a, b) => area(b) - area(a))[0];
+// Smallest video worth filtering; anything smaller is an ad, a preview or
+// a thumbnail animation.
+const MIN_VIDEO_WIDTH = 200;
+const MIN_VIDEO_HEIGHT = 100;
+
+// The one main video among `videos`: the biggest on screen (at least
+// MIN_VIDEO_WIDTH × MIN_VIDEO_HEIGHT), whether or not it's playing, so a
+// smaller preview or ad that starts playing never takes over. Ties go to the
+// first. null when none is big enough.
+function pickMainVideo(videos) {
+  let best = null;
+  let bestArea = 0;
+  for (const v of videos) {
+    if (v.offsetWidth < MIN_VIDEO_WIDTH || v.offsetHeight < MIN_VIDEO_HEIGHT) continue;
+    const area = v.offsetWidth * v.offsetHeight;
+    if (area > bestArea) {
+      best = v;
+      bestArea = area;
+    }
+  }
+  return best;
 }
 
 // ---- Library lookup ----
@@ -206,7 +220,7 @@ if (typeof module !== "undefined") {
     normalizeFlaggedHandling,
     flaggedVideoFilter,
     mediaKey,
-    pickVideo,
+    pickMainVideo,
     youtubeIdFromUrl,
     cleanTitle,
     pageKey,

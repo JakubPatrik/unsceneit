@@ -28,7 +28,7 @@ const PRESCAN_WINDOW_S = 10;
 const PRESCAN_LOOKAHEAD_S = PRESCAN_WINDOW_S + 1; // steady state keeps ~PRESCAN_WINDOW_S analysed ahead
 const PRESCAN_MAX_IN_FLIGHT = 3;
 const PRESCAN_TICK_MS = 250;
-const PRESCAN_BLUR_PAD_S = 1; // live ranges, each side; library ranges come padded by the backend
+const PRESCAN_BLUR_PAD_S = 0.5; // live ranges, each side; library ranges come padded by the backend (skip_padding_s, same value)
 const PRESCAN_SEEK_TIMEOUT_MS = 3000;
 const PRESCAN_RETRY_MS = 1000;
 

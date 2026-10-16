@@ -8,7 +8,7 @@
 //   "prescan" — same panel, fed by prescan.js (lookahead + blur); no
 //               current-frame capture here.
 //
-// Uses enabledFilters / libraryFor from content.js, pickVideo / formatTime
+// Uses enabledFilters / libraryFor / mainVideo from content.js, formatTime
 // from logic.js, and prescan* hooks from prescan.js.
 
 const DEBUG_TICK_MS = 1000;
@@ -71,11 +71,10 @@ function setDebugMode(mode) {
 
 // ---- Capture & analysis ----
 
+// The video the panel and the look-ahead work on: the frame's main video
+// (content.js mainVideo), so YouTube previews and smaller videos are ignored.
 function debugActiveVideo() {
-  const video = pickVideo([...document.querySelectorAll("video:not([data-unsceneit-shadow])")]);
-  // Ignore tiny players (ads, previews, hover thumbnails).
-  if (!video || video.offsetWidth < 200 || video.offsetHeight < 100) return null;
-  return video;
+  return mainVideo();
 }
 
 // JPEG data URL of the video's current frame. Throws SecurityError for
