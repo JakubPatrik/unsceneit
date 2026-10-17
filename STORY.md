@@ -69,7 +69,7 @@ Lead with personal filtering: unscene.it hides only what each viewer chooses. Th
   4. Free during the alpha.
 - **Where to point people:** YouTube, including YouTube videos embedded in other websites, for titles in the library. Other video sites and streaming services come later (see Claims to avoid).
 - **Tone:** calm, practical and non-judgmental. Describe what gets hidden; never moralize about the content or the people who watch it. The audiences below have very different reasons, so speak to each one separately.
-- **Call to action:** install free from the Chrome Web Store, or visit unscene.it.
+- **Call to action:** install free from the Chrome Web Store (https://chromewebstore.google.com/detail/unsceneit/inpekbgpobkhdmfilepnojnfflhocgid), or visit unscene.it. The website's buttons read "Add to Chrome".
 
 ## Who it's for
 

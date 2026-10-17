@@ -1,8 +1,9 @@
 // Site-wide settings. Change these in one place.
 
-// The Chrome Web Store listing. null until the extension is published: the
-// install buttons then read "Coming soon to Chrome" instead of linking.
-export const CHROME_STORE_URL: string | null = null
+// The Chrome Web Store listing (the install buttons and the footer link).
+// null shows "Coming soon to Chrome" instead of linking.
+export const CHROME_STORE_URL: string | null =
+  "https://chromewebstore.google.com/detail/unsceneit/inpekbgpobkhdmfilepnojnfflhocgid"
 
 // The company behind unscene.it (footer, and the data controller in the
 // privacy policy).

@@ -5,8 +5,8 @@ import { cn } from "@/lib/utils"
 import { CHROME_STORE_URL } from "@/site"
 
 // The main call to action: a white pill, like the rest of the site's
-// primary buttons. Until the store listing exists it says so instead of
-// linking nowhere.
+// primary buttons, opening the Chrome Web Store listing in a new tab.
+// Without a listing URL it says "Coming soon" instead of linking nowhere.
 export function AddToChrome({ size = "lg", className }: { size?: "sm" | "lg"; className?: string }) {
   const classes = cn(
     "rounded-full bg-foreground font-medium text-background hover:bg-foreground/90",

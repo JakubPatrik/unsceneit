@@ -92,10 +92,10 @@ Either way, credits and payments come later. They'll need a payment provider, te
 
 ## 6. Build, test, submit
 
-- [ ] Bump `version` in `extension/manifest.json` if needed. Build the zip with `extension/scripts/package.sh`; it leaves out the developer files and refuses to build if a secret key would end up inside.
-- [ ] Install the zip in a **fresh Chrome profile** (not "Load unpacked") and check the full flow:
+- [x] Bump `version` in `extension/manifest.json` if needed. Build the zip with `extension/scripts/package.sh`; it leaves out the developer files and refuses to build if a secret key would end up inside.
+- [x] Install the zip in a **fresh Chrome profile** (not "Load unpacked") and check the full flow:
   - a video waits under the blur, the dialog appears, the right scenes are hidden;
   - Xenia works, the thumbnail blur works;
   - no developer switches or panels appear.
-- [ ] Re-read the privacy policy against what this build sends. It must match exactly.
-- [ ] Submit. Review for an extension that runs on every site usually takes a few days.
+- [x] Re-read the privacy policy against what this build sends. It must match exactly.
+- [x] Submitted and **published**: https://chromewebstore.google.com/detail/unsceneit/inpekbgpobkhdmfilepnojnfflhocgid (the website's buttons link to it).
