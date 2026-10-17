@@ -15,10 +15,11 @@ To change the tiles, edit `promo.html` and run `./render.sh`. It also regenerate
 
 ## Product details
 
-**Name:** unscene.it
+**Name** (from `extension/manifest.json`, 75 characters max; keywords chosen in [SEO.md](../SEO.md)):
+> unscene.it: Safe YouTube Content Filter & Blur
 
 **Summary** (from `extension/manifest.json`, 132 characters max):
-> Hide the scenes you'd rather not see. Pick your filters once and keep watching while the story plays on.
+> YouTube content filter: blur scenes with gore, spiders or anything above your age limit, plus thumbnails. The story keeps playing.
 
 **Category:** Entertainment (Tools also fits)
 
@@ -27,9 +28,9 @@ To change the tiles, edit `promo.html` and run `./render.sh`. It also regenerate
 **Detailed description** (plain text; paste as is):
 
 ```
-unscene.it hides the scenes you'd rather not see, so you can keep watching.
+unscene.it is a YouTube content filter that hides the scenes you'd rather not see: blood and gore, spiders and insects, sensual or revealing content, or anything above your family's age limit.
 
-Pick what you want to avoid (blood and gore, spiders and insects, sensual or revealing content, or anything above your family's age limit) and unscene.it blurs those scenes while the story keeps playing. Nothing is cut or skipped, so you never lose your place.
+Flagged scenes are blurred and muted while the story keeps playing, and video thumbnails are blurred too. Nothing is cut or skipped, so you never lose your place, and you never have to block a whole video or channel.
 
 EARLY ALPHA
 unscene.it is in early alpha. It filters videos in the unscene.it library, a growing collection of videos that have already been screened. Videos that aren't in the library yet play normally, without filters. Live AI, which will screen videos that aren't in the library yet as you watch, is coming next. Join the early access waitlist at https://unscene.it/waitlist/ to get it first, at 50% off Pro for life.
@@ -37,22 +38,23 @@ unscene.it is in early alpha. It filters videos in the unscene.it library, a gro
 HOW IT WORKS
 1. Pick your filters in the extension menu: an age limit (Under 12, Under 15 or Under 18) and any of the triggers.
 2. Open a video. It waits under a blur while Xenia, your guardian in the corner of the player, checks it against the library.
-3. Choose "Watch with filters". Flagged scenes are blurred and labelled as they play ("Hidden: gore"). When a scene ends, the picture and sound come back on their own.
+3. Choose "Watch with filters". Flagged scenes are blurred and labelled as they play ("Hidden: gore"), like a trigger warning that also hides the scene. When a scene ends, the picture and sound come back on their own.
 
 FEATURES
 • Personal filters: turn on any combination. One viewer hides only spiders; another hides gore and anything over 12.
 • Heavy blur: flagged scenes are blurred so strongly that nothing shows through.
 • Muted while hidden: sound drops out with the picture. On by default, with a switch in the menu.
 • Nothing plays until you choose: no autoplay surprises. Every video waits for your decision.
-• Thumbnails blurred too: video thumbnails and hover previews are blurred before they can show. You can turn this off.
+• Blurred YouTube thumbnails: thumbnails and hover previews are blurred before they can show, so a graphic thumbnail can't catch you off guard. You can turn this off.
 • Xenia: click her at any time to change your filters mid-video, or to watch without filters.
 • On or off with one switch: turn unscene.it off on YouTube from the menu, and back on whenever you like.
 • Settings that follow you: your filters sync across every Chrome where you're signed in.
 
 WHO IT'S FOR
-• Parents who want to watch with their kids without hovering over the remote.
-• People avoiding phobia or trauma triggers, such as spiders or blood.
-• Viewers who prefer modest content, including the subtler kind common in music videos.
+• Parents who want a safer YouTube to watch with their kids, without hovering over the remote.
+• People with arachnophobia, and anyone avoiding phobia or trauma triggers such as spiders or blood.
+• Viewers sensitive to graphic or disturbing scenes.
+• Viewers who prefer clean, modest content, including the subtler kind common in music videos.
 • Couples and families who want to watch together comfortably.
 
 WHERE IT WORKS
@@ -60,6 +62,7 @@ YouTube, including YouTube videos embedded on other websites, for videos in the 
 
 GOOD TO KNOW
 • Scenes are judged by AI, frame by frame. It can occasionally miss a scene or hide a harmless one, so unscene.it helps you avoid what you chose but can't guarantee it.
+• It isn't a parental lock: anyone using this Chrome can change the filters or turn them off.
 • No account needed. To find a video in the library, the extension sends only its YouTube video ID. No video files are uploaded, and no person ever watches what you watch. Your data is never sold or used for advertising. Privacy policy: https://unscene.it/privacy/
 • Free during the alpha.
 
@@ -68,7 +71,9 @@ Questions, feedback or a video you'd like screened: hello@unscene.it
 
 **Website:** https://unscene.it
 
-**Support URL / email:** hello@unscene.it
+**Support URL:** https://unscene.it/#faq (the FAQ links to hello@unscene.it)
+
+**Contact email** (Account tab, shown on the listing): hello@unscene.it
 
 ## Screenshots (you're making these)
 
