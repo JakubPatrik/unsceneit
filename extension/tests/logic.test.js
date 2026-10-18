@@ -10,6 +10,7 @@ const {
   blurKeysAt,
   normalizeFlaggedHandling,
   migrateEnabledFilters,
+  hiddenLabel,
   flaggedVideoFilter,
   mediaKey,
   pickMainVideo,
@@ -59,6 +60,22 @@ describe("migrateEnabledFilters", () => {
 
   it("drops unknown values and duplicates", () => {
     assert.deepEqual(migrateEnabledFilters(["gore", "id-gore", "spiders", "id-gone"], filters), ["id-gore"]);
+  });
+});
+
+describe("hiddenLabel", () => {
+  const filters = [
+    { id: "id-gore", key: "gore", label: "Blood & gore" },
+    { id: "id-15", key: "rated_15", label: "15+ content" },
+  ];
+
+  it("uses the loaded filters' labels", () => {
+    assert.equal(hiddenLabel(["gore", "rated_15"], filters), "Hidden: Blood & gore, 15+ content");
+  });
+
+  it("falls back to built-in labels, then the key", () => {
+    assert.equal(hiddenLabel(["spiders", "custom"], []), "Hidden: Spiders & insects, custom");
+    assert.equal(hiddenLabel(["inappropriate"], null), "Hidden: Sensual & inappropriate content");
   });
 });
 

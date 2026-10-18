@@ -661,7 +661,7 @@ function showBlurLabel(keys) {
   const label = prescan.layer?.blurLabel;
   if (!label) return;
   label.hidden = !keys.length;
-  label.textContent = `Hidden: ${keys.join(", ")}`;
+  label.textContent = hiddenLabel(keys, filterList);
 }
 
 function setUnavailable(text) {

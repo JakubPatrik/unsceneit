@@ -209,6 +209,25 @@ function migrateEnabledFilters(stored, filters) {
   return [...new Set(ids.filter(Boolean))];
 }
 
+// Built-in labels, for when the filter list hasn't loaded (e.g. offline).
+const BUILT_IN_FILTER_LABELS = {
+  rated_12: "12+ content",
+  rated_15: "15+ content",
+  rated_18: "18+ / mature",
+  spiders: "Spiders & insects",
+  gore: "Blood & gore",
+  inappropriate: "Sensual & inappropriate content",
+};
+
+// "Hidden: …" label for flagged keys ("gore" → "Blood & gore"), using the
+// loaded filters' labels first. Unknown keys show as they are.
+function hiddenLabel(keys, filters) {
+  const names = keys.map(
+    (k) => filters?.find((f) => f.key === k)?.label ?? BUILT_IN_FILTER_LABELS[k] ?? k
+  );
+  return `Hidden: ${[...new Set(names)].join(", ")}`;
+}
+
 // ---- Free live AI allowance ----
 // quota (from classify-frames, quota.ts): { limit_s, used_s, remaining_s,
 // resets_at, ip_limited }, or null until the first check has answered.
@@ -262,6 +281,7 @@ if (typeof module !== "undefined") {
     ageFilterIds,
     selectedAge,
     migrateEnabledFilters,
+    hiddenLabel,
     liveAIUsable,
     quotaRefillDate,
     quotaLevel,
