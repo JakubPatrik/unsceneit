@@ -1,6 +1,6 @@
 // classify-frames: turns sampled video frames into skip ranges.
 //
-// POST /functions/v1/classify-frames   (secret key only — see auth below)
+// POST /functions/v1/classify-frames   (secret or publishable key — see auth below)
 // {
 //   "video": { "title": "Sintel", "youtube_id": "eRsGyueVLvQ" },   // youtube_id optional
 //                                          // or "video_id": "<uuid>"
@@ -23,6 +23,15 @@
 // only a filter added later for one that's already scanned. The extension reads flagged
 // scenes and scanned stretches, derived from frame_scans, through find_video /
 // video_with_ranges. Frame times and interval_s are whole seconds when saving.
+//
+// Free live AI (publishable key, store builds): the request also carries
+// "install_id" (the extension's random per-browser id) and must be a live AI
+// save (persist, a YouTube id, every built-in filter, interval_s 1). Each
+// second sent to the AI is charged against the install's monthly allowance
+// and the caller IP's daily one (quota.ts, live_ai_reserve). Stored answers
+// are free. When nothing is left: 429 with code "live_ai_limit". Every reply
+// to such a caller includes "quota" (see quota.ts Quota).
+// { "quota": true, "install_id": "<uuid>" } only reads the allowance.
 
 import "@supabase/functions-js/edge-runtime.d.ts";
 import { withSupabase } from "@supabase/server";
@@ -44,12 +53,18 @@ import {
   questionName,
   selectFilters,
 } from "./ranges.ts";
+import { callerIp, hashIp, limitTodo, quotaInfo, secondsNeeded, type Quota } from "./quota.ts";
 
 const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY") ?? "";
 const MOCK = Deno.env.get("MOCK_DECISIONS") === "true" || !OPENAI_API_KEY;
 const MODEL = Deno.env.get("DECISIONS_MODEL") ?? "gpt-6-luna";
 const CONCURRENCY = 4;
 const MAX_FRAMES = 120;
+// Free live AI (publishable key). Seconds of video sent to the AI.
+const FREE_SECONDS_PER_MONTH = Number(Deno.env.get("LIVE_AI_FREE_SECONDS_PER_MONTH") ?? 1200); // per install: 20 min
+const IP_SECONDS_PER_DAY = Number(Deno.env.get("LIVE_AI_IP_SECONDS_PER_DAY") ?? 1200); // per network: 20 min
+const IP_HASH_SALT = Deno.env.get("IP_HASH_SALT") ?? "";
+const PUBLIC_MAX_FRAMES = 20; // the look-ahead sends at most ~10 per request
 
 type Filter = { id: string; key: string; label: string; prompt: string };
 type Frame = { t: number; image: string };
@@ -105,6 +120,23 @@ async function classifyFrames(frames: Frame[], filters: Filter[], threshold: num
     );
   }
   return out;
+}
+
+// Free live AI callers (publishable key) may only do what the extension's
+// live AI does: save one-second frames of a YouTube video for every built-in
+// filter. Checked before validate().
+function validatePublic(body: any): string | null {
+  if (!body || typeof body !== "object") return "Body must be a JSON object";
+  if (typeof body.install_id !== "string" || !UUID.test(body.install_id)) return "install_id must be a uuid";
+  if (body.quota === true) return null; // allowance check only
+  if (body.persist !== true) return "persist must be true";
+  if (body.video_id !== undefined || body.filter_ids !== undefined) return "Use video.youtube_id and every built-in filter";
+  if (typeof body.video?.youtube_id !== "string") return "video.youtube_id is required";
+  if (body.interval_s !== undefined && body.interval_s !== 1) return "interval_s must be 1";
+  if (Array.isArray(body.frames) && body.frames.length > PUBLIC_MAX_FRAMES) {
+    return `At most ${PUBLIC_MAX_FRAMES} frames per request`;
+  }
+  return null;
 }
 
 function validate(body: any): string | null {
@@ -180,10 +212,10 @@ async function youtubeTitle(youtubeId: string): Promise<string | null> {
 }
 
 export default {
-  // "secret" only: callers must present the project's secret key. Keeps the
-  // paid OpenAI calls off-limits to holders of the public publishable key
-  // until user auth + credits exist.
-  fetch: withSupabase({ auth: ["secret"] }, async (req, ctx) => {
+  // "secret": scripts and the dev debug panel, unlimited. "publishable": live
+  // AI in every extension build (store and dev), limited to live AI saves and
+  // charged against the free allowance (quota.ts).
+  fetch: withSupabase({ auth: ["secret", "publishable"] }, async (req, ctx) => {
     if (req.method !== "POST") return json({ error: "Use POST" }, 405);
 
     let body: any;
@@ -192,16 +224,65 @@ export default {
     } catch {
       return json({ error: "Invalid JSON" }, 400);
     }
-    const invalid = validate(body);
+    const isPublic = ctx.authMode === "publishable";
+    const invalid = (isPublic && validatePublic(body)) || (body?.quota === true ? null : validate(body));
     if (invalid) return json({ error: invalid }, 400);
 
     const db = ctx.supabaseAdmin;
+
+    // Free allowance (publishable callers only). reserve(n) charges up to n
+    // seconds and returns how many were granted, plus the caller's quota.
+    const installId: string | null = isPublic ? body.install_id : null;
+    const ipHash = isPublic ? await hashIp(callerIp(req.headers), IP_HASH_SALT) : null;
+    const reserve = async (seconds: number): Promise<{ granted: number; quota: Quota }> => {
+      const { data, error } = await db.rpc("live_ai_reserve", {
+        p_install_id: installId,
+        p_ip_hash: ipHash,
+        p_seconds: seconds,
+        p_install_limit: FREE_SECONDS_PER_MONTH,
+        p_ip_limit: IP_SECONDS_PER_DAY,
+      });
+      if (error) throw new Error(error.message);
+      return { granted: data.granted, quota: quotaInfo(data.install_used, FREE_SECONDS_PER_MONTH, data.ip_left) };
+    };
+
+    const limitReached = (quota: Quota) =>
+      json(
+        {
+          error: quota.ip_limited
+            ? "Free live AI has reached today's limit on this network"
+            : "Free live AI minutes for this month are used up",
+          code: "live_ai_limit",
+          quota,
+        },
+        429
+      );
+
+    if (body.quota === true) {
+      if (!isPublic) return json({ quota: null }); // secret key: unlimited
+      try {
+        return json({ quota: (await reserve(0)).quota });
+      } catch (err) {
+        return json({ error: String(err) }, 500);
+      }
+    }
+
+    // Nothing left: stop before creating library entries or reading scans.
+    if (isPublic) {
+      try {
+        const { quota } = await reserve(0);
+        if (quota.remaining_s === 0 || quota.ip_limited) return limitReached(quota);
+      } catch (err) {
+        return json({ error: String(err) }, 500);
+      }
+    }
     const intervalS: number = body.interval_s ?? 1;
     const persist = body.persist !== false;
 
     // Candidate filters: the requested ids, or every built-in (admin-owned)
-    // filter. Callers hold the secret key, so they're trusted; once signed-in
-    // users can call this, limit candidates to built-ins + the caller's own.
+    // filter. Only secret-key callers may pass filter_ids (validatePublic);
+    // once signed-in users can call this, limit candidates to built-ins + the
+    // caller's own.
     let query = db.from("content_filters").select("id, key, label, prompt");
     if (body.filter_ids) {
       query = query.in("id", body.filter_ids);
@@ -259,6 +340,21 @@ export default {
       ({ stored, todo } = storedAnswers(times, filterIds, intervalS, rows, threshold));
     }
 
+    // Free live AI: charge the seconds the AI will analyse. Whatever doesn't
+    // fit in what's left stays unanalysed; with nothing left, stop here.
+    let quota: Quota | null = null;
+    let granted = 0;
+    if (isPublic) {
+      const needed = secondsNeeded(todo, intervalS);
+      try {
+        ({ granted, quota } = await reserve(needed));
+      } catch (err) {
+        return json({ error: String(err) }, 500);
+      }
+      if (needed > 0 && granted === 0) return limitReached(quota);
+      todo = limitTodo(todo, granted, intervalS);
+    }
+
     const analysed: ClassifiedFrame[] = [];
     const toSave: SecondProb[] = [];
     try {
@@ -271,6 +367,10 @@ export default {
       }
     } catch (err) {
       console.error(err);
+      // Nothing was analysed for the caller: give the seconds back.
+      if (isPublic && granted > 0) {
+        await db.rpc("live_ai_refund", { p_install_id: installId, p_ip_hash: ipHash, p_seconds: granted });
+      }
       return json({ error: String(err) }, 502);
     }
 
@@ -295,6 +395,7 @@ export default {
       filters: filters.map(({ id, key, label }) => ({ id, key, label })),
       decisions: frameDecisions(classified, filters.map((f) => f.id)),
       ranges: ranges.map((r) => ({ ...r, filter_key: filters.find((f) => f.id === r.filter_id)?.key })),
+      quota, // null for secret-key callers (unlimited)
     });
   }),
 };

@@ -336,8 +336,8 @@ function renderOverlay() {
   debug.panel.innerHTML = head + body + dbLine + prescanLine + status + log;
   // Only the panel hides: live AI's loader and "Hidden: …" labels share this
   // overlay and keep working. Shown only with the dialog's toggle on, in dev
-  // builds (liveAIAvailable, content.js); a store build never shows it.
+  // builds (devBuild, content.js); a store build never shows it.
   // Never while watching without filters: unscene.it stays out of the way.
   const unfiltered = !!video && isUnfiltered(video);
-  debug.panel.hidden = !(liveAIAvailable && showDebugPanel) || unfiltered;
+  debug.panel.hidden = !(devBuild && showDebugPanel) || unfiltered;
 }

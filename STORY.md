@@ -1,6 +1,6 @@
 # unscene.it: product story
 
-Oct 15, 2026 · @Jakub
+Oct 17, 2026 · @Jakub
 
 How unscene.it works, for writing marketing copy. unscene.it is in **early alpha** (v0.1). This describes what the alpha does, and marks clearly what comes later.
 
@@ -14,16 +14,17 @@ All copy written now must stay within this list.
 
 - **Filters titles in the shared library.** Videos that unscene.it has already screened get their flagged scenes hidden, for the filters each viewer picks.
 - **Xenia** guards every video (see Meet Xenia). Every video waits under a blur until the viewer chooses how to watch.
+- **Free live AI, 20 minutes a month.** For a video that isn't in the library yet, the viewer can turn on live AI: Xenia screens it about 10 seconds ahead as it plays. Every browser gets **20 free minutes a month** (enough for a typical YouTube video), refilled on the 1st. No account needed. Only minutes the AI actually screens count; library titles stay unlimited.
 - **Blurs video thumbnails** and hover previews, on by default.
 - **Free.** No account, no sign-up.
 
 **Not in the alpha:**
-- **Live AI** (screening videos that aren't in the library yet) doesn't run for store users. In the dialog for a video that isn't in the library, the **Live AI filter** button opens the early access waitlist (https://unscene.it/waitlist/) in a new tab.
+- **More live AI than the free 20 minutes.** Once they're used up, the live AI button opens the early access waitlist (https://unscene.it/waitlist/) in a new tab until the next month.
 - **Pro, accounts, credits and custom filters** don't exist yet.
 
-Videos that aren't in the library play unfiltered, after the viewer chooses "Watch without filters".
+Videos that aren't in the library play unfiltered if the viewer chooses "Watch unfiltered", or if their free minutes are used up and they choose to keep watching.
 
-**Early access waitlist.** Anyone can join with their email address. Everyone on it gets live AI first and the **founding-member discount: 50% off Pro for life**.
+**Early access waitlist.** Anyone can join with their email address. Everyone on it gets more live AI and Pro first, with the **founding-member discount: 50% off Pro for life**.
 
 ## Brand
 
@@ -41,14 +42,15 @@ Xenia is unscene.it's AI avatar. She sits in the top-right corner of the video p
 - **She shows what she's doing:**
   - **Purple** while she's protecting the video, with an occasional sideways glance.
   - **Grey**, eyes resting, when you're watching without filters.
-  - **Thinking** *(live AI, after the alpha)*: a spinning ring around her and eyes that glance and hop, while she's analysing upcoming frames.
+  - **Thinking** *(live AI)*: a spinning ring around her and eyes that glance and hop, while she's analysing upcoming frames.
   - The colour fades smoothly between states.
 - **She talks in short speech bubbles**, for example:
   - "Checking this video against your filters…"
   - "Xenia is protecting this video"
   - "Protected · 3 scenes will be hidden"
-  - "Not in the library yet, so nothing is filtered."
+  - "Not in the library yet, so nothing is filtered. Click me to turn on live AI."
   - "Watching without filters. Click me to turn them on."
+  - Hover her and she shows how many free live AI minutes are left: "17 min of free live AI left this month".
 - **She's the control.** Click Xenia at any point and the video pauses, the player blurs, and the filter dialog opens, so you can change filters or switch mode mid-video. Making a choice shrinks the dialog back into her and playback resumes.
 - **She stays out of the way.** She's small, works in fullscreen and leaves with the video.
 
@@ -66,8 +68,8 @@ Lead with personal filtering: unscene.it hides only what each viewer chooses. Th
   1. It hides scenes *before* you see them: library titles are screened in advance.
   2. The story keeps playing: scenes are blurred, not cut.
   3. Nothing plays until you've chosen: every video waits, blurred, until you pick how to watch it.
-  4. Free during the alpha.
-- **Where to point people:** YouTube, including YouTube videos embedded in other websites, for titles in the library. Other video sites and streaming services come later (see Claims to avoid).
+  4. Free during the alpha, including 20 minutes of live AI a month for videos that aren't in the library yet.
+- **Where to point people:** YouTube, including YouTube videos embedded in other websites: titles in the library right away, and other videos with live AI while the free minutes last. Other video sites and streaming services come later (see Claims to avoid).
 - **Tone:** calm, practical and non-judgmental. Describe what gets hidden; never moralize about the content or the people who watch it. The audiences below have very different reasons, so speak to each one separately.
 - **Call to action:** install free from the Chrome Web Store (https://chromewebstore.google.com/detail/unsceneit/inpekbgpobkhdmfilepnojnfflhocgid), or visit unscene.it. The website's buttons read "Add to Chrome".
 
@@ -88,14 +90,17 @@ Lead with personal filtering: unscene.it hides only what each viewer chooses. Th
 3. **Hidden scenes are heavily blurred.** In the extension menu, viewers can choose whether sound is **muted while a scene is hidden** (on by default).
 4. **Open a video.** It doesn't play straight away: it waits, paused and blurred, while Xenia checks it against the shared library. On YouTube this happens from the first moment the page appears, so nothing slips through while the page loads.
 5. **Choose how to watch:**
-   - **In the library:** the dialog shows the title and how many scenes your filters will hide. Choose **Watch with filters** or **Watch without filters**.
-   - **Not in the library:** choose **Watch without filters**, or search the library in case the video is listed under another name. **Live AI filter** opens the early access waitlist.
-   - **Watch with filters** stays greyed out until at least one filter is picked. **Watch without filters** always works, and closing the dialog means the same thing, so a video is never stuck.
+   - **In the library:** the dialog shows the title and how many scenes your filters will hide. Choose **Watch with filters** or **Watch unfiltered**.
+   - **Not in the library:** choose **Use live AI** (marked FREE, with the minutes-left meter right under the buttons), **Watch unfiltered**, or search the library in case the video is listed under another name. Live AI holds the video under a loader while it screens the first 10 seconds, then plays and keeps screening ahead.
+   - **Free minutes used up:** the live AI button opens the early access waitlist instead. If they run out mid-video, the video pauses, blurs and the dialog asks again, so nothing plays unscreened unless the viewer chooses that.
+   - **Watch with filters** and **Use live AI** stay greyed out until at least one filter is picked. **Watch unfiltered** always works, and closing the dialog means the same thing, so a video is never stuck.
 6. **Watch.** The dialog shrinks into Xenia and the video plays.
    - When a flagged scene comes up, it's blurred and labelled ("Hidden: gore") while the movie keeps playing. When the scene ends, picture and sound come back on their own. Nothing is skipped, so you never lose your place.
    - **Without filters**, nothing is analysed or changed. Xenia stays grey in the corner in case you change your mind.
 
 **On or off with one switch.** A switch at the top of the extension menu turns unscene.it off on YouTube and back on. It's on by default.
+
+**Free minutes, always visible.** Right under that switch, the extension menu shows the free live AI minutes left this month as a meter ("17 min left · of your 20 free minutes this month · refills Nov 1"). It turns amber when a quarter or less is left and red when they're used up. Hovering Xenia shows the same.
 
 **Thumbnails are blurred too.** By default, unscene.it blurs every video thumbnail and hover preview, on YouTube, before it can show, so a stray thumbnail can't give a scene away. Viewers can turn this off in the extension menu.
 
@@ -103,7 +108,7 @@ Lead with personal filtering: unscene.it hides only what each viewer chooses. Th
 
 - **A shared library of known titles.** Popular movies and videos are screened once with AI and stored. Anyone watching a known title gets the results instantly, at no cost to them.
 - **It works on YouTube.** On YouTube watch pages, and on YouTube videos embedded in other websites. No video files are uploaded or downloaded. To find a video in the library, the extension sends only its YouTube video ID.
-- **After the alpha: live AI.** For videos nobody has screened yet, Xenia will analyse them live, about 10 seconds ahead of you, and save the results to the library for the next viewer. Don't present this as available.
+- **Live AI.** For videos nobody has screened yet, Xenia analyses them live, about 10 seconds ahead of you, and saves the results to the library (internal only: never say this in copy, see Claims to avoid). Only with live AI on, the extension sends low-resolution still frames to be checked; they're never kept. The free minutes are counted per browser with a random install ID, not tied to the viewer.
 
 ## Why it's different
 
@@ -116,28 +121,29 @@ Lead with personal filtering: unscene.it hides only what each viewer chooses. Th
 
 ## Pricing model
 
-- **Alpha:** free. Unlimited filtering on titles in the shared library.
+- **Alpha:** free. Unlimited filtering on titles in the shared library, plus **20 minutes of live AI a month** per browser for videos that aren't in the library yet.
 - **Later, Pro (prepaid credits):**
-  - **Live AI screening** for videos that aren't in the library yet. Every Pro screening is added to the shared library, so it helps every viewer who comes after.
+  - **More live AI screening**, beyond the free 20 minutes a month.
   - **Custom filters:** create your own filter when the built-ins aren't the right fit.
 
 Exact prices aren't set yet.
 
 ## Not built yet
 
-- **Live AI for store users.** It works in development builds only.
+- **Live AI beyond the free 20 minutes a month.** It needs Pro.
 - **Accounts, sign-up and credits.** The plan is in TODO.md.
 - **Creating custom filters.** The backend supports private, per-user filters, but there's no screen to create one yet.
 - **Choosing Full cover** (a grey screen) instead of blur. It exists in the code, but the menu doesn't offer it.
 
 ## Claims to avoid
 
-- **Don't promise live AI, Pro or custom filters** in alpha copy, and don't say it works on "any video". Safe wording: "for videos in the unscene.it library". Pointing people to the early access waitlist is fine.
+- **Don't promise unlimited live AI, Pro or custom filters** in alpha copy, and don't say it works on "any video". Live AI is free for **20 minutes a month per browser**: always say the limit. Safe wording: "for videos in the unscene.it library, plus 20 free minutes of live AI a month for the rest". Pointing people to the early access waitlist is fine.
+- **Don't say a viewer's live AI screenings go into the shared library** or help other viewers. People may feel they're spending their free minutes (or, later, paid credits) so someone else can watch for free. Describe live AI only in terms of the viewer's own video. The privacy policy still discloses that results are kept, in neutral terms.
 - **Don't promise perfection.** Scenes are judged by AI, frame by frame, and it can miss a scene or over-flag a harmless one. Say "helps you avoid" or "automatically hides", never "guarantees" or "100%".
 - **Don't mention sensitivity sliders or strictness settings.** They don't exist and aren't planned.
 - **Don't claim Netflix, Disney+ or other DRM streaming services.** Their protected video can't be analysed. Safe wording: "works on YouTube".
-- **Don't say nothing leaves your device.** The extension sends a video's YouTube ID to look it up. Safe wording: "no video files are uploaded".
+- **Don't say nothing leaves your device.** The extension sends a video's YouTube ID to look it up, and with live AI on, still frames to be checked. Safe wording: "no video files are uploaded".
 - **Don't imply a human is watching.** No person reviews what you watch. "Xenia watches so you don't have to" is fine. Don't present her as a real person.
 - **Don't name the AI vendor** without checking with the founder first.
-- **Don't show screenshots of live AI, sign-up or credits.**
+- **Live AI can be shown** (the FREE button, Xenia thinking, the minutes meter). Don't show the debug panel, sign-up or credits.
 - **Browser support:** Chrome only. Edge, Firefox and others are planned.

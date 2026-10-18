@@ -64,7 +64,7 @@ export function Waitlist() {
           <div className="absolute top-[-25%] left-1/2 h-[800px] w-[1200px] -translate-x-1/2 rounded-full bg-[radial-gradient(closest-side,rgb(113_107_243/0.32),transparent)]" />
         </div>
 
-        <div className="mx-auto max-w-2xl px-4 pt-36 pb-24 text-center sm:px-6 sm:pt-44">
+        <div className="mx-auto max-w-3xl px-4 pt-36 pb-24 text-center sm:px-6 sm:pt-44">
           <Xenia size={72} state={status.state === "done" ? "protecting" : "thinking"} className="mx-auto" />
           <p className="mt-10 text-sm font-medium text-brand-soft">Early access</p>
           <h1 className="mt-3 text-5xl font-semibold tracking-tighter text-balance sm:text-7xl">Watch anything. Worry less.</h1>

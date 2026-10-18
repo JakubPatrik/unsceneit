@@ -26,6 +26,10 @@ export function Privacy() {
           <p className="font-medium">The short version</p>
           <ul className="mt-3 list-disc space-y-1.5 pl-5 text-muted-foreground">
             <li>To find a video in our library, the extension sends its YouTube video ID. Nothing else about you.</li>
+            <li>
+              If you turn on live AI for a video, the extension sends still frames from it to be checked. Frames
+              aren&rsquo;t kept.
+            </li>
             <li>No account, no name, no browsing history. We only have your email address if you join the waitlist.</li>
             <li>No video files are uploaded, and no person watches what you watch.</li>
             <li>We never sell your data or use it for advertising.</li>
@@ -61,7 +65,8 @@ export function Privacy() {
             </ul>
             <p>
               These requests aren&rsquo;t tied to an account or to any identifier for you, and we don&rsquo;t store the
-              lookups or searches themselves. They&rsquo;re used only to provide the extension&rsquo;s features.
+              lookups or searches themselves. They&rsquo;re used only to provide the extension&rsquo;s features. Live
+              AI works differently, as described below.
             </p>
           </Part>
 
@@ -79,14 +84,22 @@ export function Privacy() {
             </p>
           </Part>
 
-          <Part title="Live AI (Pro, when available)">
+          <Part title="Live AI">
             <p>
-              Live AI isn&rsquo;t available yet. When it is, and only if you turn it on for a video, the extension will send
-              short, low-resolution still frames from that video to our servers. They pass them to an AI service provider,
-              which checks them against the filters. The frames aren&rsquo;t kept. We keep only the results (which seconds
-              of the video match which filter), together with the video&rsquo;s title and ID, in the shared library, where
-              they help every viewer of that video. The results aren&rsquo;t linked to you. We&rsquo;ll update this policy
-              before live AI and accounts launch.
+              Live AI screens videos that aren&rsquo;t in the library yet, as you watch. Only if you turn it on for a
+              video, the extension sends low-resolution still frames from that video, about one per second, to our
+              servers. They pass them to our AI service provider, which checks them against the filters. The frames
+              aren&rsquo;t kept. We keep only the results (which seconds of the video match which filter), together with
+              the video&rsquo;s title and ID, in the unscene.it library. The
+              results aren&rsquo;t linked to you.
+            </p>
+            <p>
+              Each browser gets a few free minutes of live AI a month. To count them, the extension creates a{" "}
+              <strong>random install ID</strong> when it&rsquo;s first used and sends it with live AI requests. It
+              identifies the installed extension, not you, and isn&rsquo;t linked to your name, email or browsing. We
+              also keep a daily count per network, stored only as a one-way, salted hash of the IP address (never the
+              address itself), so reinstalling doesn&rsquo;t add free minutes. We store only how many seconds each
+              install and each network has used, and nothing about which videos they were.
             </p>
           </Part>
 
@@ -102,8 +115,12 @@ export function Privacy() {
                 <strong>Videos you pick from the library</strong>, remembered for the page you picked them on (the most
                 recent 200) so the extension recognises the video next time. This list never leaves your device.
               </li>
+              <li>
+                <strong>The random install ID</strong> for live AI&rsquo;s free minutes (see Live AI), and how many are
+                left.
+              </li>
             </ul>
-            <p>Uninstalling the extension removes this data from your browser.</p>
+            <p>Uninstalling the extension removes this data from your browser, including the install ID.</p>
           </Part>
 
           <Part title="What we don't do">
@@ -150,7 +167,8 @@ export function Privacy() {
                 <strong>Vercel</strong>: hosts this website and provides its visitor analytics.
               </li>
               <li>
-                <strong>An AI service provider</strong>, for live AI only, once it&rsquo;s available.
+                <strong>OpenAI</strong>: checks live AI&rsquo;s still frames against the filters. It receives the frames
+                only, never your IP address or install ID.
               </li>
             </ul>
           </Part>
@@ -159,7 +177,8 @@ export function Privacy() {
             <p>
               Video lookups and searches aren&rsquo;t stored by us. Our hosting provider keeps standard request logs,
               including IP addresses, for a short period for security and reliability, then deletes them. Library entries
-              (video titles, IDs and flagged scenes) are kept for as long as the library runs. Waitlist addresses are
+              (video titles, IDs and flagged scenes) are kept for as long as the library runs. Live AI usage counts are
+              kept per month (per install ID) or per day (per hashed IP) and only add up seconds used. Waitlist addresses are
               kept until you unsubscribe or ask us to delete them.
             </p>
           </Part>

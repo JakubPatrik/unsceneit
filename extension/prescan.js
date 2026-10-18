@@ -393,6 +393,7 @@ async function analyseSeconds(seconds) {
   // 2. Analyse them in one request.
   setLoaderStep("Analysing with AI…", seconds.length / (seconds.length + 1));
   noticeBotThinking(++prescan.aiRequests > 0);
+  let limit = null; // { quota } when the free live AI minutes ran out
   try {
     const res = await chrome.runtime.sendMessage({
       type: "analyze-frames",
@@ -403,6 +404,7 @@ async function analyseSeconds(seconds) {
       video: { title: cleanTitle(document.title), youtubeId: youtubeIdFromUrl(location.href) },
     });
     if (gen !== prescan.generation) return;
+    if (res?.code === "live_ai_limit") limit = res;
     if (!res?.ok) throw new Error(res?.error ?? "No response from background worker");
     const answered = new Set(res.filters.map((f) => f.id));
     prescan.analysedFilters = prescan.analysedFilters
@@ -434,6 +436,8 @@ async function analyseSeconds(seconds) {
       renderOverlay();
     }
   }
+  // Free minutes used up: content.js stops live AI and asks the viewer again.
+  if (limit && gen === prescan.generation) liveAILimitReached(prescan.video, limit.quota);
 }
 
 // A cross-origin clone can't be drawn to a canvas. Retry once with CORS

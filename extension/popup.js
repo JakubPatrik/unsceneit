@@ -106,6 +106,44 @@ async function initFilters() {
 filtersForm.addEventListener("submit", (e) => e.preventDefault());
 initFilters();
 
+// ---- Free live AI minutes ----
+// Shows the last known allowance at once (background.js keeps it in
+// chrome.storage.local), then a fresh one from the backend.
+
+const liveCard = document.getElementById("live-ai");
+const liveLeft = document.getElementById("live-ai-left");
+const liveText = document.getElementById("live-ai-text");
+const liveMeter = document.getElementById("live-ai-meter");
+
+function renderQuota(quota) {
+  const limitMin = Math.round(quota.limit_s / 60);
+  const share = quota.remaining_s / quota.limit_s;
+  const out = quota.remaining_s <= 0;
+  const level = quotaLevel(quota);
+  liveCard.classList.toggle("out", level === "out");
+  liveCard.classList.toggle("low", level === "low");
+  liveLeft.textContent = out ? "Used up" : `${formatMinutesLeft(quota.remaining_s)} left`;
+  liveMeter.firstElementChild.style.width = `${100 * share}%`;
+  liveMeter.setAttribute("aria-valuemax", quota.limit_s);
+  liveMeter.setAttribute("aria-valuenow", quota.remaining_s);
+  liveText.textContent = out
+    ? `All ${limitMin} free minutes used. They refill on ${quotaRefillDate(quota)}.`
+    : quota.ip_limited
+      ? "Used up on this network today. Back tomorrow."
+      : `of your ${limitMin} free minutes this month · refills ${quotaRefillDate(quota)}`;
+}
+
+chrome.storage.local.get({ liveAIQuota: null }).then((s) => {
+  if (s.liveAIQuota) renderQuota(s.liveAIQuota);
+});
+chrome.runtime.sendMessage({ type: "get-live-quota" }).then(
+  (res) => {
+    if (res?.ok && res.quota) renderQuota(res.quota);
+    else if (liveText.textContent.startsWith("Checking")) liveText.textContent = "Couldn't check your free minutes.";
+  },
+  () => {}
+);
+
 // ---- Mute while a scene is hidden (on by default; prescan.js watches it) ----
 // Only the mute is offered here; the visual part of flaggedHandling keeps its
 // stored value (heavy blur by default).

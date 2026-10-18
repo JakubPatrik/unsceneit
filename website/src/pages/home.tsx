@@ -24,7 +24,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
-import { FOUNDER_OFFER, SUPPORT_EMAIL } from "@/site"
+import { FOUNDER_OFFER, FREE_LIVE_AI_MINUTES, SUPPORT_EMAIL } from "@/site"
 
 export function Home() {
   return (
@@ -34,6 +34,7 @@ export function Home() {
         <Hero />
         <Filters />
         <HowItWorks />
+        <LiveAi />
         <MeetXenia />
         <Details />
         <Pricing />
@@ -115,7 +116,17 @@ function Hero() {
       </div>
 
       <div className="mx-auto max-w-4xl px-4 text-center sm:px-6">
-        <AlphaBadge className="mb-8" />
+        <div className="mb-8 flex flex-wrap items-center justify-center gap-2">
+          <AlphaBadge />
+          <a
+            href="#live-ai"
+            className="group inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-sm transition-colors hover:bg-white/10"
+          >
+            <span className="rounded-full bg-xenia px-1.5 py-px text-xs font-semibold text-white">New</span>
+            {FREE_LIVE_AI_MINUTES} free minutes of live AI, every month
+            <ArrowRight className="size-3.5 opacity-60 transition-transform group-hover:translate-x-0.5" />
+          </a>
+        </div>
         <h1 className="text-5xl leading-[1.02] font-semibold tracking-tighter text-balance sm:text-7xl md:text-8xl">
           The scenes you&rsquo;ll never see.
         </h1>
@@ -128,7 +139,7 @@ function Hero() {
             <AddToChrome />
             <WaitlistButton />
           </div>
-          <p className="text-sm text-muted-foreground">Free during the early alpha, for YouTube videos in the unscene.it library. Chrome on desktop.</p>
+          <p className="text-sm text-muted-foreground">Free during the early alpha: every video in the library, plus {FREE_LIVE_AI_MINUTES} minutes of live AI a month for the rest. YouTube, Chrome on desktop.</p>
         </div>
         <a
           href="#how"
@@ -228,8 +239,8 @@ function HowItWorks() {
             </p>
             <p className="mt-0.5 text-xs text-muted-foreground">3 scenes will be hidden for your filters.</p>
             <div className="mt-3 flex gap-2 text-xs">
+              <span className="rounded-lg border border-white/10 bg-secondary px-2.5 py-1.5">Watch unfiltered</span>
               <span className="rounded-lg bg-xenia px-2.5 py-1.5 font-semibold text-white">Watch with filters</span>
-              <span className="rounded-lg border border-white/10 bg-secondary px-2.5 py-1.5">Watch without filters</span>
             </div>
           </div>
         </Step>
@@ -264,6 +275,85 @@ function Step({ n, title, body, children }: { n: number; title: string; body: st
   )
 }
 
+// Free live AI for videos not in the library: every install's monthly
+// allowance (FREE_LIVE_AI_MINUTES), with a mock of the extension menu's meter.
+const LIVE_AI_POINTS = [
+  `${FREE_LIVE_AI_MINUTES} free minutes every month, refilled on the 1st`,
+  "No account, no card",
+  "Minutes left are always in the menu, and when you hover Xenia",
+]
+
+function LiveAi() {
+  const left = 17
+  return (
+    <Section id="live-ai" className="py-12 sm:py-16">
+      <div className="relative overflow-hidden rounded-[2rem] border border-brand/40 bg-[linear-gradient(135deg,rgb(113_107_243/0.22),rgb(113_107_243/0.03)_65%)] p-6 sm:p-12 lg:p-14">
+        <div className="pointer-events-none absolute -top-40 -right-40 size-120 rounded-full bg-[radial-gradient(closest-side,rgb(113_107_243/0.35),transparent)]" />
+
+        <div className="relative grid items-center gap-12 lg:grid-cols-[1.15fr_1fr]">
+          <div>
+            <p className="mb-4 inline-flex items-center gap-2 text-sm font-medium text-brand-soft">
+              <Sparkles className="size-4" /> Free for everyone
+            </p>
+            <h2 className="text-4xl font-semibold tracking-tight text-balance sm:text-5xl">
+              Not in the library? Xenia screens it live.
+            </h2>
+            <p className="mt-5 text-lg text-pretty text-muted-foreground">
+              Turn on live AI and Xenia watches about 10 seconds ahead of you, hiding what you chose before it reaches
+              the screen. Every browser gets{" "}
+              <strong className="font-semibold text-foreground">{FREE_LIVE_AI_MINUTES} minutes free each month</strong>,
+              enough for a typical YouTube video.
+            </p>
+            <ul className="mt-8 space-y-3">
+              {LIVE_AI_POINTS.map((point) => (
+                <li key={point} className="flex gap-3 text-sm">
+                  <Check className="mt-0.5 size-4 shrink-0 text-brand-soft" />
+                  {point}
+                </li>
+              ))}
+            </ul>
+            <div className="mt-10">
+              <AddToChrome />
+            </div>
+          </div>
+
+          {/* The extension menu's live AI meter, plus Xenia at work */}
+          <div className="relative mx-auto w-full max-w-sm">
+            <div className="rounded-2xl border border-white/10 bg-[#0e0e14] p-5 shadow-[0_20px_80px_rgb(0_0_0/0.5)]">
+              <p className="text-xs font-bold text-brand-soft">unscene.it</p>
+              <div className="mt-4 rounded-xl border border-brand-soft/45 bg-[linear-gradient(135deg,rgb(107_76_255/0.3),rgb(107_76_255/0.1))] p-4">
+                <div className="flex items-baseline justify-between gap-3">
+                  <span className="text-xs font-bold tracking-wider text-brand-soft uppercase">Free live AI</span>
+                  <span className="text-2xl font-bold tabular-nums">{left} min left</span>
+                </div>
+                <div className="mt-3 h-2 overflow-hidden rounded-full bg-white/10">
+                  <div
+                    className="h-full rounded-full bg-[linear-gradient(90deg,#6b4cff,#b8a8ff)]"
+                    style={{ width: `${(100 * left) / FREE_LIVE_AI_MINUTES}%` }}
+                  />
+                </div>
+                <p className="mt-2.5 text-xs text-[#d6d6e2]">
+                  of your {FREE_LIVE_AI_MINUTES} free minutes this month · refills on the 1st
+                </p>
+              </div>
+              <div className="mt-4 flex items-center gap-3 rounded-xl border border-white/10 bg-secondary/60 p-3">
+                <Xenia size={32} state="thinking" />
+                <div>
+                  <p className="text-sm font-medium">Screening the next 10 seconds…</p>
+                  <p className="text-xs text-muted-foreground">Live AI · this video isn&rsquo;t in the library yet</p>
+                </div>
+              </div>
+            </div>
+            <span className="absolute -top-3 -right-3 rotate-6 rounded-full bg-xenia px-3 py-1 text-sm font-semibold text-white shadow-lg">
+              {FREE_LIVE_AI_MINUTES} min / month free
+            </span>
+          </div>
+        </div>
+      </div>
+    </Section>
+  )
+}
+
 const XENIA_STATES: { state: XeniaState; label: string; detail: ReactNode }[] = [
   { state: "protecting", label: "Protecting", detail: "Purple, with the odd sideways glance. Your filters are on." },
   { state: "off", label: "Resting", detail: "Grey. You're watching without filters, and she stays out of the way." },
@@ -272,7 +362,8 @@ const XENIA_STATES: { state: XeniaState; label: string; detail: ReactNode }[] = 
     label: "Thinking",
     detail: (
       <>
-        A spinning ring while she screens the next seconds with live AI. <SoonBadge label="After the alpha" />
+        A spinning ring while she screens the next seconds with live AI.{" "}
+        <SoonBadge label={`${FREE_LIVE_AI_MINUTES} min free a month`} />
       </>
     ),
   },
@@ -322,7 +413,7 @@ const DETAILS = [
   { icon: PauseCircle, title: "Nothing plays until you choose", body: "No autoplay surprises: each video waits under a blur for your decision." },
   { icon: ImageOff, title: "Thumbnails blurred too", body: "Video thumbnails and previews are blurred before they show, so nothing slips through." },
   { icon: RefreshCw, title: "Settings that follow you", body: "Your filters sync across every Chrome where you're signed in." },
-  { icon: CloudOff, title: "No video files uploaded", body: "unscene.it looks videos up by their ID or title. Your videos stay where they are." },
+  { icon: CloudOff, title: "No video files uploaded", body: "unscene.it looks videos up by their ID or title. Live AI checks still frames only, and never keeps them." },
 ]
 
 function Details() {
@@ -356,6 +447,7 @@ function Pricing() {
           note="Early alpha. No account needed."
           items={[
             "Unlimited filtering on every title in the library",
+            `${FREE_LIVE_AI_MINUTES} minutes of live AI a month for videos not in the library yet`,
             "All filters, in any combination",
             "Heavy blur, with optional mute",
             "Thumbnail blur",
@@ -369,9 +461,8 @@ function Pricing() {
           badge={<SoonBadge label="Planned" />}
           highlight
           items={[
-            "Live AI for videos not in the library yet, screened about 10 seconds ahead",
+            `More live AI, beyond the free ${FREE_LIVE_AI_MINUTES} minutes a month`,
             "Create your own filters",
-            "Every Pro screening joins the shared library for everyone after you",
           ]}
           cta={
             <Button asChild variant="outline" className="h-9 w-full rounded-full border-brand/40 bg-transparent hover:bg-brand/10">
@@ -442,7 +533,7 @@ const FAQ = [
   },
   {
     q: "What if a video isn't in the library?",
-    a: "Xenia tells you, and it plays without filters. You can also search the library in case it's listed under another name. The library keeps growing during the alpha.",
+    a: `Xenia tells you, and you can turn on live AI: she screens the video about 10 seconds ahead of you as it plays. Every browser gets ${FREE_LIVE_AI_MINUTES} free minutes a month, refilled on the 1st, and the menu shows how many are left. You can also search the library in case it's listed under another name, or watch without filters.`,
   },
   {
     q: "Is it perfect?",
@@ -450,14 +541,15 @@ const FAQ = [
   },
   {
     q: "Does anyone watch my videos?",
-    a: "No person ever does. unscene.it looks each video up in the library by its ID or title. No video files are uploaded, and you don't need an account.",
+    a: "No person ever does. unscene.it looks each video up in the library by its ID or title. With live AI on, still frames are checked by AI and never kept. No video files are uploaded, and you don't need an account.",
   },
   {
     q: "What data does the extension send?",
     a: (
       <>
-        Only what it needs to find the video in the library: its YouTube video ID, plus anything you type into the
-        library search. Nothing is sold or used for ads. The{" "}
+        Only what it needs: the video&rsquo;s YouTube ID to find it in the library, anything you type into the library
+        search, and, only with live AI on, still frames from that video to be checked. Nothing is sold or used for
+        ads. The{" "}
         <a href="/privacy/" className="text-foreground underline underline-offset-4">
           privacy policy
         </a>{" "}
@@ -469,8 +561,8 @@ const FAQ = [
     q: "What does early alpha mean?",
     a: (
       <>
-        unscene.it works today for titles in its library, and it&rsquo;s free. Features such as live AI for videos
-        that aren&rsquo;t in the library yet, and your own custom filters, come later.{" "}
+        unscene.it works today for titles in its library, and for {FREE_LIVE_AI_MINUTES} minutes of live AI a month
+        on everything else, all free. More live AI and your own custom filters come later with Pro.{" "}
         <a href="/waitlist/" className="text-foreground underline underline-offset-4">
           Join the waitlist
         </a>{" "}

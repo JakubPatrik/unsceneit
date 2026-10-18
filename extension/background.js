@@ -121,11 +121,18 @@ async function selectVideo({ tabId, pageUrl, video }) {
   chrome.tabs.sendMessage(tabId, { type: "library-changed" }).catch(() => {});
 }
 
-// ---- Debug modes: frame analysis (dev builds only) ----
-// classify-frames only accepts the project's secret key, which must never
-// ship in the extension. So the debug modes only analyse frames in an
-// unpacked ("Load unpacked") build that has config.dev.js. Store users get
-// this once sign-in + credits exist.
+// ---- Live AI: frame analysis ----
+// Live AI calls classify-frames with the publishable key and a random
+// per-browser install id: free live AI, charged against a monthly allowance
+// (the backend's quota.ts). Dev builds too, so the cap shows and can be
+// tested locally; their secret key (config.dev.js) is used only for the debug
+// modes' dry runs, which aren't charged.
+//
+// chrome.storage.local, read by the content scripts and the popup:
+//   liveAIAvailable: live AI can run now (the dialog's button, and the
+//                    look-ahead's stream mirroring, tee-flag.js)
+//   liveAIQuota:     the allowance as last reported (null until the first check)
+//   devBuild:        unpacked build with config.dev.js (debug panel)
 
 async function devSecretKey() {
   const self = await chrome.management.getSelf(); // no permission needed
@@ -133,10 +140,56 @@ async function devSecretKey() {
   return typeof DEV_SECRET_KEY === "string" && DEV_SECRET_KEY ? DEV_SECRET_KEY : null;
 }
 
-// Live AI (Pro) needs sign-in + credits for store users; dev builds with
-// config.dev.js have it now. Content scripts read this flag to enable the
-// "Screen it live with AI" button and the look-ahead's stream mirroring.
-devSecretKey().then((key) => chrome.storage.local.set({ liveAIAvailable: !!key }));
+// Random id for this browser profile (cleared on uninstall). Not tied to the
+// viewer in any way; it only counts this browser's free live AI seconds.
+async function installId() {
+  const { installId } = await chrome.storage.local.get("installId");
+  if (installId) return installId;
+  const id = crypto.randomUUID();
+  await chrome.storage.local.set({ installId: id });
+  return id;
+}
+
+function saveQuota(quota) {
+  return chrome.storage.local.set({
+    liveAIQuota: quota,
+    liveAIQuotaAt: Date.now(),
+    liveAIAvailable: liveAIUsable(quota),
+  });
+}
+
+// POST to classify-frames: dry runs (dev only) with the secret key,
+// everything else with the publishable key + install id.
+async function classifyFetch(body) {
+  const key = body.persist === false ? await devSecretKey() : null;
+  const res = await fetch(`${SUPABASE_URL}/functions/v1/classify-frames`, {
+    method: "POST",
+    headers: { ...(key ? { apikey: key } : supabaseHeaders()), "Content-Type": "application/json" },
+    body: JSON.stringify(key ? body : { ...body, install_id: await installId() }),
+  });
+  const data = await res.json().catch(() => ({}));
+  if ("quota" in data) await saveQuota(data.quota);
+  return { res, data };
+}
+
+// The allowance, fresh from the backend (popup open, worker start; the
+// month may have rolled over since the last answer).
+async function refreshQuota() {
+  const { res, data } = await classifyFetch({ quota: true });
+  if (!res.ok) throw new Error(data.error ?? `HTTP ${res.status}`);
+  return data.quota;
+}
+
+// The worker wakes often; check at most every 10 minutes, and whenever the
+// allowance should have refilled.
+const QUOTA_RECHECK_MS = 10 * 60 * 1000;
+devSecretKey().then(async (key) => {
+  chrome.storage.local.set({ devBuild: !!key });
+  const { liveAIQuota, liveAIQuotaAt = 0 } = await chrome.storage.local.get(["liveAIQuota", "liveAIQuotaAt"]);
+  const refilled = liveAIQuota && Date.now() >= Date.parse(liveAIQuota.resets_at);
+  if (!refilled && Date.now() - liveAIQuotaAt < QUOTA_RECHECK_MS) return;
+  await refreshQuota();
+}).catch((err) => console.warn("unscene.it: couldn't check live AI minutes", err));
 
 // Sends captured frames ({ t, image }[]) to classify-frames and returns
 // per-frame decisions plus flagged ranges.
@@ -159,32 +212,32 @@ async function analyzeFrames({ frames, filterIds, persist = false, video }, tab)
   if (persist && !video?.youtubeId && isYouTubeUrl(tab?.url)) {
     throw new Error("Not saved: YouTube page without a video id (preview or search)");
   }
-  const key = await devSecretKey();
-  if (!key) {
+  // Dry runs (the debug live overlay) are dev-only; free live AI only saves.
+  if (!persist && !(await devSecretKey())) {
     throw new Error(
       "Debug analysis needs an unpacked build with config.dev.js (run extension/scripts/dev-setup.sh)"
     );
   }
   const started = Date.now();
-  const res = await fetch(`${SUPABASE_URL}/functions/v1/classify-frames`, {
-    method: "POST",
-    headers: { apikey: key, "Content-Type": "application/json" },
-    body: JSON.stringify(
-      persist
-        ? {
-            persist: true,
-            interval_s: 1,
-            frames,
-            video: {
-              title: video?.title || cleanTitle(tab?.title) || "Untitled video",
-              youtube_id: video?.youtubeId ?? null,
-            },
-          }
-        : { persist: false, interval_s: 1, filter_ids: filterIds, frames }
-    ),
-  });
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(data.error ?? data.message ?? `HTTP ${res.status}`);
+  const { res, data } = await classifyFetch(
+    persist
+      ? {
+          persist: true,
+          interval_s: 1,
+          frames,
+          video: {
+            title: video?.title || cleanTitle(tab?.title) || "Untitled video",
+            youtube_id: video?.youtubeId ?? null,
+          },
+        }
+      : { persist: false, interval_s: 1, filter_ids: filterIds, frames }
+  );
+  if (!res.ok) {
+    const err = new Error(data.error ?? data.message ?? `HTTP ${res.status}`);
+    err.code = data.code; // "live_ai_limit": the free minutes are used up
+    err.quota = data.quota;
+    throw err;
+  }
   // Saved: the library's ranges and scanned stretches changed, so the next
   // lookup (e.g. after a reload) must see them rather than a cached answer.
   if (persist) for (const k of cache.keys()) if (k !== "filters") cache.delete(k);
@@ -193,6 +246,7 @@ async function analyzeFrames({ frames, filterIds, persist = false, video }, tab)
     decisions: data.decisions,
     ranges: data.ranges,
     mock: data.mock,
+    quota: data.quota ?? null,
     ms: Date.now() - started,
   };
 }
@@ -225,8 +279,17 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (msg.type === "analyze-frames") {
     analyzeFrames(msg, sender.tab).then(
       (result) => sendResponse({ ok: true, ...result }),
-      (err) => sendResponse({ ok: false, error: err.message })
+      (err) => sendResponse({ ok: false, error: err.message, code: err.code, quota: err.quota })
     );
     return true; // async response
+  }
+
+  // From the popup: the free live AI allowance, fresh.
+  if (msg.type === "get-live-quota") {
+    refreshQuota().then(
+      (quota) => sendResponse({ ok: true, quota }),
+      (err) => sendResponse({ ok: false, error: err.message })
+    );
+    return true;
   }
 });

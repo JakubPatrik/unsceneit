@@ -45,7 +45,7 @@ Prompts stay server-side: no client can read `prompt`, but users can write their
   3. **Library title inside the page title:** every run of up to 12 consecutive words of the page title (`title_spans`) is looked up on the same btree index. So "Tears of Steel – Blender Open Movie (4K)" finds "Tears of Steel". The longest match wins, and titles under 4 characters only match exactly, so "Up" won't match "Wake up call".
 - `video_with_ranges(p_video_id)`: the same shape for one video. Used after a manual pick, and by `find_video` for its result. Both are derived from `frame_scans` by `frame_ranges(video, flagged_only, pad)`. Reading a fully scanned 2-hour film takes about 100 ms.
   - `ranges`: flagged seconds, each padded by `skip_padding_s()` (0.5 seconds) before and after, with the start clamped at 0. Ranges of the same filter that then overlap or touch are merged. The padding also covers a single clean second between two flagged ones (the two padded ranges touch), so a scene doesn't blink back on for one sample.
-  - `scanned`: every analysed second, flagged or not, merged per filter: `[{start_s, end_s, filter_id}]`. Live AI doesn't analyse a second again once it's scanned for every filter the viewer has on. A filter turned on later has no results yet, so it's analysed again. A library video with scans offers live AI for the rest when you choose "Watch with filters" (dev builds only).
+  - `scanned`: every analysed second, flagged or not, merged per filter: `[{start_s, end_s, filter_id}]`. Live AI doesn't analyse a second again once it's scanned for every filter the viewer has on. A filter turned on later has no results yet, so it's analysed again. A library video with scans offers live AI for the rest when you choose "Watch with filters" (while free minutes are left).
 - `search_videos(p_query)`: up to 10 videos for the manual pick. It uses full-text search with word prefixes on a GIN index (`title_tsv`), so "tears ste" or "steel tears" finds Tears of Steel. When that finds nothing, it falls back to trigram similarity (`pg_trgm`) for typos.
 - `upsert_video(p_title, p_youtube_id, p_title_is_canonical)`: the video for an indexing run. It finds it by YouTube id, else by exact normalized title, else creates it. The title only changes when it came from YouTube itself (canonical). Used by `classify-frames`.
 
@@ -56,6 +56,7 @@ The lookups run with the caller's permissions, so access rules still decide whic
 - `supabase/migrations/20261014100000_video_library.sql`: the video library. It covers `videos`, title helpers and indexes, the derived ranges, lookup, search and `upsert_video`. It replaced the earlier skip-range schema, whose migrations were removed and marked reverted on production.
 - `supabase/migrations/20261014110000_frame_scans.sql`: packs the AI's answers into per-minute rows (`frame_scans`, replacing `frame_results`). It adds `flag_threshold()` and `save_frame_probs`.
 - `supabase/migrations/20261014120000_drop_frame_scans_model.sql`: drops the unused `frame_scans.model` column.
+- `supabase/migrations/20261017000000_live_ai_quota.sql`: free live AI allowances: `live_ai_usage` (seconds used per install and month, and per hashed IP and day; no client access) with `live_ai_reserve` and `live_ai_refund`.
 
 All are applied to production, so don't edit them any more. Schema changes go in new migrations: run `supabase migration new <name>`, then `backend/scripts/deploy.sh`.
 
@@ -70,7 +71,13 @@ All are applied to production, so don't edit them any more. Schema changes go in
 
 Each frame needs its own request, because the Decisions API treats all images in one request as shared evidence for every question. The function sends 4 requests at a time and accepts at most 120 frames per call.
 
-**Auth:** `withSupabase({ auth: ["secret"] })`. Only callers with the project's secret key can use it, so holders of the public key can't trigger paid OpenAI calls. When user auth and credits exist, add `@supabase/server`'s signed-in-user auth mode here and charge credits in the function.
+**Auth:** `withSupabase({ auth: ["secret", "publishable"] })`.
+- **Secret key** (scripts, and the dev build's debug-panel dry runs): unlimited, any request above.
+- **Publishable key** (live AI in every extension build, store and dev alike, so the cap can be tested locally): free live AI. The request must carry `install_id` (the extension's random per-browser id, `chrome.storage.local.installId`) and be a live AI save: `persist`, `video.youtube_id`, no `filter_ids` (every built-in filter), `interval_s` 1, at most 20 frames. Every second sent to the AI is charged against the install's **monthly** allowance (`LIVE_AI_FREE_SECONDS_PER_MONTH`, default 1200, i.e. 20 minutes) and the caller IP's **daily** one (`LIVE_AI_IP_SECONDS_PER_DAY`, default 1200), atomically in `live_ai_reserve`. Seconds answered from `frame_scans` are free, a failed AI call is refunded (`live_ai_refund`), and frames beyond what's left stay unanalysed. With nothing left the reply is **429** `{ code: "live_ai_limit", quota }`. Every reply to these callers includes `quota: { limit_s, used_s, remaining_s, resets_at, ip_limited }`; `{ "quota": true, "install_id": "…" }` only reads it. IPs are stored only as a salted SHA-256 (`IP_HASH_SALT`). Pure helpers and tests: `quota.ts`.
+
+Results from store users go to the shared library like everyone else's. The server can't verify that frames really come from the named video, so a determined caller could save wrong answers for a video, up to their allowance. If that's ever abused, save only flagged answers from publishable callers (a fake can then only over-hide).
+
+When user auth and credits exist, add `@supabase/server`'s signed-in-user auth mode here and charge credits in the function.
 
 **Request:**
 
@@ -103,10 +110,10 @@ The response lists the filters it asked about, a yes/no per frame and filter id,
 }
 ```
 
-**Pure logic:** `ranges.ts` holds the range building, threshold and mock logic. Its tests run under Node, so Deno isn't needed:
+**Pure logic:** `ranges.ts` holds the range building, threshold and mock logic, and `quota.ts` the free live AI allowance. Its tests run under Node, so Deno isn't needed:
 
 ```bash
-node --experimental-strip-types --test backend/supabase/functions/classify-frames/ranges.test.ts
+node --experimental-strip-types --test backend/supabase/functions/classify-frames/*.test.ts
 ```
 
 ### Classifying a video into the library
@@ -163,13 +170,14 @@ The script runs these steps:
 3. Deploys `classify-frames`.
 4. Smoke-tests with requests that make no OpenAI calls and cost nothing:
    - the secret key reaches the function (400 on an empty body)
-   - the publishable key is refused (401)
+   - unknown keys are refused (401)
+   - the publishable key needs an install id (400), and with one reads the free live AI allowance
    - presets are readable with the publishable key
 5. Prints the URL and publishable key for `extension/config.js`.
 
 The hosted project gets the schema and the `content_filters` presets, but no videos.
 
-**AI analysis is server-side only for now.** The function accepts only the project's secret key, which must never ship in the extension. So store builds can't call it until sign-in exists. The debug modes work only in an unpacked dev build (see Debug modes). To classify videos into the library, use `scripts/classify-video.mjs` from your machine. Get the secret key with `supabase projects api-keys --reveal`; without `--reveal`, the CLI returns it masked. Letting extension users call the AI needs sign-in and credits first.
+**Free live AI for store builds** goes through the publishable key with a per-install allowance (see Auth above). The secret key must never ship in the extension; the debug modes' dry runs work only in an unpacked dev build (see Debug modes). To classify videos into the library, use `scripts/classify-video.mjs` from your machine. Get the secret key with `supabase projects api-keys --reveal`; without `--reveal`, the CLI returns it masked. Set `IP_HASH_SALT` in `supabase/functions/.env` once (`openssl rand -hex 32`); `deploy.sh` refuses to deploy without it.
 
 ## Extension tests
 
@@ -195,20 +203,20 @@ Leave `extension/tests/` out of the store package.
 2. **Lookup:** as soon as a `<video>`'s metadata loads (before it plays), the content script sends the frame's YouTube id (from the URL, if any) and title. The background worker adds the tab's title and calls `find_video`, so only that video is fetched, never the whole library. It takes well under a millisecond on the database, even with 50,000 videos (see Performance). Results are cached for 5 minutes. A new video in the same player (YouTube) triggers a new lookup.
 3. **Manual pick:** when a video isn't found, the dialog's library search calls `search_videos`. Picking a result saves it for that page (`chrome.storage.local.manualMatches`, newest 200), and the tab's frames look up again through `video_with_ranges`.
 4. **Playback gate** (`content.js` + `notice.js`, from `document_start`): a video plays **only after the viewer chooses**. From the moment it appears, it's held (paused) under a blurred cover. While the library is checked, Xenia, the bot in the top-right corner, says "Checking this video against your filters…" with a spinner in its bubble. Then the dialog with the choices appears:
-   - **Found:** **Watch with filters** (library scenes are hidden) or **Watch without filters** (nothing is hidden).
-   - **Not found:** **Turn on live AI filter** (Pro) or **Watch without filters**, plus a library search for videos listed under another name. Picking one counts as "with filters".
-   - **Your filters in the dialog:** both dialogs include a "Your filters" picker (an age-limit dropdown plus trigger chips), the same synced setting as the popup. **Watch with filters** and **Turn on live AI filter** stay disabled until at least one filter is picked; **Watch without filters** always works. In the found dialog, the count of scenes that will be hidden follows the picker. If live AI somehow runs with no filters, its loader closes and playback continues, instead of spinning.
+   - **Found:** **Watch with filters** (library scenes are hidden) or **Watch unfiltered** (nothing is hidden).
+   - **Not found:** **Use live AI** (Pro) or **Watch unfiltered**, plus a library search for videos listed under another name. Picking one counts as "with filters".
+   - **Your filters in the dialog:** both dialogs include a "Your filters" picker (an age-limit dropdown plus trigger chips), the same synced setting as the popup. **Watch with filters** and **Use live AI** stay disabled until at least one filter is picked; **Watch unfiltered** always works. In the found dialog, the count of scenes that will be hidden follows the picker. If live AI somehow runs with no filters, its loader closes and playback continues, instead of spinning.
    - **Every choice removes the cover and starts playback.** **Live AI** first keeps the video paused and covered while the dialog flies into the bot. The bot says "Pre-screening the first 10 seconds…" in its bubble, with capture/analysis progress. Later pauses ("Waiting for analysis…") look the same, over a dimmed copy of the frame. The bot's thinking face (a spinning ring, eyes glancing and hopping) shows only while frames are actually out to the AI, during playback too. Replaying stretches that are already scanned keeps the normal face. Changing filters mid-video only analyses again when a newly turned-on filter wasn't among those already answered; live AI answers every built-in filter, so switching between built-ins costs nothing. Any play is undone. As soon as those seconds have results, it unblurs and autoplays, then keeps screening ahead. The window is `PRESCAN_WINDOW_S` in `extension/prescan.js` (10), the only place to change it.
      - **Slow answers:** live AI stays on. After `max(15 s, 1.5 s × window)`, playback starts anyway, and the pre-scan pauses wherever results are still missing.
      - **Can't run at all** (no filters, no stream access until a page reload, a non-capturable video): it switches itself off, plays, and says why.
    - **Xenia, the unscene.it bot:** after any choice, the dialog morphs (shrinks and slides) into Xenia, a small round bot in the player's top-right corner: a flat circle with two white pill eyes that blink. It's **purple** while filtering (with filters on a library video, or live AI), with a small sideways glance, and **grey** when off (without filters). The colour fades between states. Status messages appear as a short speech bubble next to it. **Clicking the bot** pauses the video and re-opens the dialog over the blurred player, so the viewer can change filters or switch mode mid-video; the next choice resumes playback. The bot re-appears if the page re-renders and leaves with the video.
    - **Debug panel toggle (dev builds only):** in an unpacked build with `config.dev.js`, the dialogs end with a **Show live AI debug panel** switch (`chrome.storage.local.showDebugPanel`, off by default). It shows or hides the look-ahead's panel in the player's top-left corner; live AI itself and its "Hidden: …" labels work either way. Store builds never show the switch or the panel.
    - **Close (✕)** in the dialog's top-right corner: on first open it means **watch without filters**, so the viewer is never left with a paused, blurred video. When the dialog was re-opened from the bot, it **cancels**: the previous choice stays and playback resumes. If live AI was already running, it resumes straight away (no new pre-screen): results already cover all built-in filters, so filter changes apply at once.
-   - **Watch without filters** is hands-off: nothing is hidden, paused or analysed for that video, including the dev look-ahead and debug capture. Live AI stops if it was on. Only the idle bot remains, to turn filters back on.
+   - **Watch unfiltered** is hands-off: nothing is hidden, paused or analysed for that video, including the dev look-ahead and debug capture. Live AI stops if it was on. Only the idle bot remains, to turn filters back on.
    - **Which video:** one per frame, `mainVideo()` in `content.js`, used by the gate, the look-ahead and the debug panel. On YouTube it's the main player's video on a `/watch` page, or a YouTube player embedded in another site (`/embed/`). Every other YouTube page (home, search, channels, Shorts) only has hover previews, so nothing there is gated, looked up, analysed or saved; `background.js` also refuses to save live AI results from a YouTube page without a video id. Elsewhere it's the biggest video on the page (at least 200×100, `pickMainVideo` in `logic.js`), even if a smaller ad or preview is playing.
    - **YouTube watch pages** (and embeds) are gated **by page**: the id in the URL is known before any `<video>` exists. The cover sits on the player box (`#movie_player`), not the `<video>`. A stylesheet (`html[data-unsceneit-hold]`) keeps the player blurred and YouTube's play button hidden from first paint, so nothing shows through while YouTube builds, resizes or swaps elements. Every 100 ms, undecided gates are re-held (paused, cover up). The overlay never blinks. It renders in the browser's **top layer** (Popover API), so no page element paints over it. It has its own non-animated **view-transition group**, because YouTube swaps its loading skeleton for the app with a View Transition, which would otherwise cross-fade the overlay. It also covers the skeleton's thumbnail (`#player-placeholder`), follows the player every frame, and if the page removes it, a watcher on its parent puts it back in the same task, before paint. It also draws at the player's last position (remembered per tab in `sessionStorage`) while a new page's player is still laying out, and a URL that briefly loses the video id mid-navigation must stay without one for 500 ms before the gate is dropped. Lookups on YouTube use the video id only, because the page title can still be the previous video's right after navigating. The hidden hover-preview player is never gated.
    - **Other sites** would gate only the page's main video (the biggest), with an inline blur plus the cover. The manifest currently runs the extension on `https://www.youtube.com/*` only (including YouTube players embedded in other sites), so this path is kept for later but unused.
-   - **Live AI (Pro):** in store builds the button reads "coming soon" until sign-in and credits exist. In **dev builds** (unpacked, with `config.dev.js`) it's on by default. It analyses all built-in filters, saves their ranges to the library (with the title fetched from YouTube), and blurs only the viewer's active filters.
+   - **Live AI (free, 20 minutes a month per browser):** in every build, store and dev alike, while free minutes are left; after that the button opens the waitlist. The minutes left show in the dialog, the popup and Xenia's hover bubble. It analyses all built-in filters, saves their ranges to the library (with the title fetched from YouTube), and blurs only the viewer's active filters.
 5. **Acting on ranges:** flagged scenes are **hidden, never skipped**, the same way for library titles and live AI (`prescan.js`; see **Hide, never skip** below). Only ranges whose `filter_id` is enabled count. Preset changes apply immediately. Library titles need no look-ahead: their padded ranges are applied every frame.
 
 ## Debug modes (extension)

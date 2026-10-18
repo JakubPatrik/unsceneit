@@ -15,7 +15,7 @@ export function NotFound() {
           <div className="absolute top-[-25%] left-1/2 h-[800px] w-[1200px] -translate-x-1/2 rounded-full bg-[radial-gradient(closest-side,rgb(113_107_243/0.22),transparent)]" />
         </div>
 
-        <div className="mx-auto flex min-h-[80vh] max-w-2xl flex-col items-center justify-center px-4 pt-32 pb-24 text-center sm:px-6">
+        <div className="mx-auto flex min-h-[80vh] max-w-2xl flex-col items-center justify-center px-4 pt-16 pb-24 text-center sm:px-6">
           <div className="relative">
             <p
               aria-hidden="true"

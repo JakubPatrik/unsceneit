@@ -16,11 +16,15 @@ export const COMPANY = {
 export const SUPPORT_EMAIL = "hello@unscene.it"
 
 // Last change to the privacy policy (shown at its top).
-export const PRIVACY_UPDATED = "October 16, 2026"
+export const PRIVACY_UPDATED = "October 17, 2026"
 
 // The early access waitlist's promise (waitlist page, pricing card):
 // founding members keep this discount for life.
 export const FOUNDER_OFFER = "50% off Pro for life"
+
+// Free live AI for every install, per calendar month (the backend's
+// LIVE_AI_FREE_SECONDS_PER_MONTH, classify-frames). Keep them in sync.
+export const FREE_LIVE_AI_MINUTES = 20
 
 // Supabase, for the waitlist form. The publishable key is public by design;
 // the database only lets it call join_waitlist() (see the waitlist migration).

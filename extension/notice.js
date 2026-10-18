@@ -6,12 +6,12 @@
 //                                        — success, auto-hides
 //   noticeFound(target, { title, ranges, filters, enabled, onFiltersChange, onWithFilters, onWithout, onClose, closeTitle })
 //                                        — in the library: watch with or without filters
-//   noticeUnmatched(target, { error, liveAI, filters, enabled, onFiltersChange, onPicked, onLiveAI, onWatchAnyway, onClose, closeTitle })
+//   noticeUnmatched(target, { error, liveAI, quota, filters, enabled, onFiltersChange, onPicked, onLiveAI, onWatchAnyway, onClose, closeTitle })
 //   Both dialogs include a "Your filters" picker; the choices that need
 //   filters stay disabled until at least one is picked.
 //                                        — not in the library: pick it via
-//                                          search, live AI (Pro; enabled when
-//                                          `liveAI`), or watch
+//                                          search, live AI (free minutes;
+//                                          enabled when `liveAI`), or watch
 //   noticeHide()
 // Positioned over the video (or its player while the <video> is still 0×0),
 // kept in place continuously, works in fullscreen. While unscene.it is waiting
@@ -37,8 +37,8 @@ const notice = {
   busy: null, // live AI working: { title, step, fraction } shown by the bot (noticeBotBusy)
 };
 
-// Store builds: the live AI button opens the early access waitlist
-// (website/src/pages/waitlist.tsx) instead.
+// Once the free live AI minutes are used up, the live AI button opens the
+// early access waitlist (website/src/pages/waitlist.tsx) instead.
 const WAITLIST_URL = "https://unscene.it/waitlist/?from=extension";
 
 const NOTICE_CSS = `
@@ -100,6 +100,20 @@ const NOTICE_CSS = `
   .chip input:checked + span { background: #6b4cff; border-color: #6b4cff; color: #fff; }
   .chip input:focus-visible + span { outline: 2px solid #a99cff; outline-offset: 1px; }
   .hint { font-size: 11px; color: #ffd479; margin: -2px 0 2px; }
+  /* Free live AI minutes, one compact row under the buttons (same
+     look as the popup's meter; .low amber, .out red). */
+  .quota {
+    --accent: #a99cff; --fill: linear-gradient(90deg, #6b4cff, #b8a8ff);
+    display: flex; align-items: center; gap: 8px; margin: 10px 0 0; padding: 5px 8px;
+    border-radius: 7px; border: 1px solid rgba(169, 156, 255, 0.3); background: rgba(107, 76, 255, 0.14);
+    font-size: 11px; line-height: 1.2;
+  }
+  .quota.low { --accent: #ffd479; --fill: linear-gradient(90deg, #e0a030, #ffd479); border-color: rgba(255, 212, 121, 0.35); background: rgba(255, 196, 80, 0.1); }
+  .quota.out { --accent: #ff9b9b; --fill: #ff9b9b; border-color: rgba(255, 155, 155, 0.35); background: rgba(255, 110, 110, 0.1); }
+  .quota .q-label { font-size: 9.5px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--accent); white-space: nowrap; }
+  .quota .q-bar { flex: 1; min-width: 40px; height: 4px; border-radius: 999px; background: rgba(255, 255, 255, 0.12); overflow: hidden; }
+  .quota .q-bar i { display: block; height: 100%; border-radius: inherit; background: var(--fill); }
+  .quota .q-left { font-weight: 600; color: #fff; white-space: nowrap; font-variant-numeric: tabular-nums; }
   .ok { color: #5fe0a0; font-weight: 600; }
   .box.loader { width: auto; text-align: center; padding: 18px 22px; }
   .progress { width: 220px; height: 4px; margin: 10px auto 0; border-radius: 2px; background: rgba(255, 255, 255, 0.15); overflow: hidden; }
@@ -121,11 +135,16 @@ const NOTICE_CSS = `
   }
   li button { width: 100%; text-align: left; margin-top: 4px; }
   li button:hover, .actions button:hover:not(:disabled) { background: #33334a; }
-  .actions { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
+  /* The two choices side by side (primary on the right); the minutes meter,
+     then the hint, each get a full-width row underneath. */
+  .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 10px; }
+  .actions > .quota { grid-column: 1 / -1; order: 1; margin: 0; }
+  .actions > .hint { grid-column: 1 / -1; order: 2; margin: 0; }
   .actions button:disabled { opacity: 0.55; cursor: not-allowed; }
   .actions button.primary { background: #6b4cff; border-color: #6b4cff; font-weight: 600; }
   .actions button.primary:hover { background: #7b5fff; }
   .pro { font-size: 10px; font-weight: 700; padding: 1px 5px; margin-left: 4px; border-radius: 4px; background: #6b4cff; color: #fff; }
+  .primary .pro { background: rgba(255, 255, 255, 0.22); }
   @keyframes spin { to { transform: rotate(360deg); } }
 
   /* Xenia, the unscene.it bot: a flat round face with two pill eyes in the player's
@@ -257,7 +276,7 @@ function noticeMount(target, { cover = false, mode = "dialog" } = {}) {
   // Only the bot on its own opens the dialog (noticeBot sets the handler).
   notice.bot.classList.toggle("passive", mode !== "bot");
   notice.bot.title = mode === "bot" ? "Xenia · change filters" : "Xenia";
-  notice.bot.onclick = null;
+  notice.bot.onclick = notice.bot.onmouseenter = notice.bot.onmouseleave = null;
   if (!NOTICE_BOT_MODES.has(mode)) notice.bubble.hidden = true;
   clearTimeout(notice.timer);
   noticeReparent();
@@ -478,8 +497,9 @@ function noticeMatched(target, title, flaggedCount, { pressPlay = false } = {}) 
 // top-right corner. active: eyes look around (filters or live AI on); else
 // closed (watching without filters). onOpen: the bot was clicked (content.js
 // pauses and re-opens the dialog). say: a short speech bubble. morph: animate
-// from the dialog that's showing now.
-function noticeBot(target, { active, onOpen, say = null, morph = false }) {
+// from the dialog that's showing now. hover: () => text the bubble shows
+// while the bot is hovered (the free live AI minutes left), or null.
+function noticeBot(target, { active, onOpen, say = null, morph = false, hover = null }) {
   const morphFrom = morph ? noticeMorphSource() : null;
   // The cover fades out when the bot takes over from a dialog or the
   // screening cover (instead of vanishing).
@@ -490,6 +510,14 @@ function noticeBot(target, { active, onOpen, say = null, morph = false }) {
   notice.bot.onclick = (e) => {
     e.stopPropagation();
     onOpen();
+  };
+  // Hover bubble, unless the bot is busy saying what it's doing.
+  notice.bot.onmouseenter = () => {
+    const text = hover?.();
+    if (text && !notice.busy) noticeBotSay(text, { sticky: true });
+  };
+  notice.bot.onmouseleave = () => {
+    if (hover && !notice.busy) noticeBubbleFade();
   };
   if (say) noticeBotSay(say);
 
@@ -594,6 +622,29 @@ function noticeFilterPicker(filters, enabled, onChange) {
   return form;
 }
 
+// Free live AI minutes as one compact meter row: label, bar, minutes left.
+// The full sentence (with the refill date) is its tooltip. [] without a quota
+// (not checked yet), so it can be spread into a children list.
+function noticeQuotaMeter(quota) {
+  if (!quota) return [];
+  const level = quotaLevel(quota);
+  const left =
+    quota.remaining_s <= 0
+      ? `Used up · refills ${quotaRefillDate(quota)}`
+      : quota.ip_limited
+        ? "Used up today"
+        : `${formatMinutesLeft(quota.remaining_s)} left`;
+  const fill = noticeEl("i");
+  fill.style.width = `${(100 * Math.max(0, quota.remaining_s)) / quota.limit_s}%`;
+  return [
+    noticeEl("div", { className: `quota ${level}`, title: liveAIQuotaText(quota) }, [
+      noticeEl("span", { className: "q-label", textContent: "Free live AI" }),
+      noticeEl("span", { className: "q-bar" }, [fill]),
+      noticeEl("span", { className: "q-left", textContent: left }),
+    ]),
+  ];
+}
+
 // Optional "Show live AI debug panel" switch at the bottom of the dialogs
 // (dev builds only). debugPanel: { on, onChange(on) } or null.
 function noticeDebugToggle(debugPanel) {
@@ -667,7 +718,7 @@ function noticeFound(
   target,
   {
     title, ranges, filters, enabled, onFiltersChange, onWithFilters, onWithout,
-    liveRest = false, onClose, closeTitle, debugPanel = null,
+    liveRest = false, quota = null, onClose, closeTitle, debugPanel = null,
   }
 ) {
   noticeMount(target, { cover: true });
@@ -703,9 +754,11 @@ function noticeFound(
     detail,
     picker,
     noticeEl("div", { className: "actions" }, [
+      noticeEl("button", { type: "button", textContent: "Watch unfiltered", onclick: onWithout }),
       withFilters,
+      // Live AI screens the rest: its free minutes.
+      ...(liveRest ? noticeQuotaMeter(quota) : []),
       hint,
-      noticeEl("button", { type: "button", textContent: "Watch without filters", onclick: onWithout }),
     ]),
     ...noticeDebugToggle(debugPanel)
   );
@@ -715,27 +768,32 @@ function noticeFound(
 function noticeUnmatched(
   target,
   {
-    error = false, liveAI = false, filters, enabled, onFiltersChange, onPicked, onLiveAI, onWatchAnyway,
-    onClose, closeTitle, debugPanel = null,
+    error = false, liveAI = false, quota = null, filters, enabled, onFiltersChange, onPicked, onLiveAI,
+    onWatchAnyway, onClose, closeTitle, debugPanel = null,
   }
 ) {
   noticeMount(target, { cover: true });
   notice.box.className = "box";
   let current = new Set(enabled);
 
-  // Live AI (Pro) runs only in dev builds for now. Store builds show the same
-  // button, but it opens the early access waitlist in a new tab; the video
-  // stays here, waiting for a choice.
+  // Live AI is free for a few minutes a month (quota: what's left, null until
+  // the first check). Once they're used up, the button opens the early access
+  // waitlist in a new tab instead; the video stays here, waiting for a choice.
+  const usedUp = !liveAI && !!quota;
   const liveButton = liveAI
     ? noticeEl("button", { type: "button", className: "primary", onclick: onLiveAI }, [
-        "Turn on live AI filter",
-        noticeEl("span", { className: "pro", textContent: "PRO" }),
+        "Use live AI",
+        noticeEl("span", { className: "pro", textContent: "FREE" }),
       ])
-    : noticeEl("button", { type: "button", onclick: () => window.open(WAITLIST_URL, "_blank", "noopener") }, [
-        "Live AI filter",
-        noticeEl("span", { className: "pro", textContent: "PRO" }),
-        noticeEl("span", { className: "muted", textContent: " · join the early access waitlist ↗" }),
-      ]);
+    : noticeEl(
+        "button",
+        {
+          type: "button",
+          title: "Join the early access waitlist (opens a new tab)",
+          onclick: () => window.open(WAITLIST_URL, "_blank", "noopener"),
+        },
+        [usedUp ? "More live AI" : "Live AI", noticeEl("span", { className: "pro", textContent: "PRO" }), " ↗"]
+      );
   const hint = noticeEl("div", { className: "hint", textContent: "Pick at least one filter to use live AI." });
   const picker = noticeFilterPicker(filters, current, (ids) => {
     current = new Set(ids);
@@ -747,11 +805,13 @@ function noticeUnmatched(
 
   const detail = error
     ? liveAI
-      ? "unscene.it couldn't reach its library. Turn on the live AI filter, or watch without filters."
-      : "unscene.it couldn't reach its library. Try again later, or watch without filters."
+      ? "unscene.it couldn't reach its library. Use live AI to screen it as you watch, or watch unfiltered."
+      : "unscene.it couldn't reach its library. Try again later, or watch unfiltered."
     : liveAI
-      ? "Turn on the live AI filter to screen it as you watch, or watch without filters."
-      : "Nothing will be hidden in it yet. Search the library in case it's listed under another name, or watch without filters. Live AI, which screens new videos as you watch, is coming soon.";
+      ? "Use live AI to screen it as you watch, or watch unfiltered."
+      : usedUp
+        ? "Your free live AI minutes are used up, so nothing will be hidden in it. Search the library in case it's listed under another name, or watch unfiltered."
+        : "Nothing will be hidden in it yet. Search the library in case it's listed under another name, or watch unfiltered.";
 
   notice.box.replaceChildren(
     noticeCloseButton(onClose, closeTitle),
@@ -763,9 +823,10 @@ function noticeUnmatched(
     noticeEl("div", { className: "muted", textContent: detail }),
     picker,
     noticeEl("div", { className: "actions" }, [
+      noticeEl("button", { type: "button", textContent: "Watch unfiltered", onclick: onWatchAnyway }),
       liveButton,
+      ...noticeQuotaMeter(quota),
       hint,
-      noticeEl("button", { type: "button", textContent: "Watch without filters", onclick: onWatchAnyway }),
     ]),
     ...noticeLibrarySearch("Listed under another name? Search the library:", onPicked),
     ...noticeDebugToggle(debugPanel)

@@ -209,6 +209,39 @@ function migrateEnabledFilters(stored, filters) {
   return [...new Set(ids.filter(Boolean))];
 }
 
+// ---- Free live AI allowance ----
+// quota (from classify-frames, quota.ts): { limit_s, used_s, remaining_s,
+// resets_at, ip_limited }, or null until the first check has answered.
+
+function liveAIUsable(quota) {
+  return !quota || (quota.remaining_s > 0 && !quota.ip_limited);
+}
+
+// "Nov 1": when the monthly minutes refill (resets_at is midnight UTC).
+function quotaRefillDate(quota) {
+  return new Date(quota.resets_at).toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" });
+}
+
+// How full the meter looks: "out" (used up, or this network's daily limit),
+// "low" (a quarter or less left: amber), else "ok".
+function quotaLevel(quota) {
+  if (quota.remaining_s <= 0 || quota.ip_limited) return "out";
+  return quota.remaining_s / quota.limit_s <= 0.25 ? "low" : "ok";
+}
+
+function formatMinutesLeft(seconds) {
+  if (seconds > 0 && seconds < 60) return "Under a minute";
+  return `${Math.floor(seconds / 60)} min`;
+}
+
+// One line for the popup and Xenia's hover bubble.
+function liveAIQuotaText(quota) {
+  if (!quota) return "Checking your free live AI minutes…";
+  if (quota.remaining_s <= 0) return `Free live AI minutes used up. They refill on ${quotaRefillDate(quota)}.`;
+  if (quota.ip_limited) return "Free live AI is used up on this network today. Back tomorrow.";
+  return `${formatMinutesLeft(quota.remaining_s)} of free live AI left this month`;
+}
+
 if (typeof module !== "undefined") {
   module.exports = {
     formatTime,
@@ -229,5 +262,10 @@ if (typeof module !== "undefined") {
     ageFilterIds,
     selectedAge,
     migrateEnabledFilters,
+    liveAIUsable,
+    quotaRefillDate,
+    quotaLevel,
+    formatMinutesLeft,
+    liveAIQuotaText,
   };
 }

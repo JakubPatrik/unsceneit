@@ -32,6 +32,7 @@ echo "→ Deploying to $REF ($URL)"
 # Guards: never ship mock mode or a missing key to production.
 [[ -f "$ENV_FILE" ]] || fail "Missing $ENV_FILE (copy .env.example and add OPENAI_API_KEY)"
 grep -qE '^OPENAI_API_KEY=.+' "$ENV_FILE" || fail "OPENAI_API_KEY is empty in $ENV_FILE"
+grep -qE '^IP_HASH_SALT=.+' "$ENV_FILE" || fail "IP_HASH_SALT is empty in $ENV_FILE (set it once: openssl rand -hex 32)"
 if grep -qE '^MOCK_DECISIONS=true' "$ENV_FILE"; then
   fail "MOCK_DECISIONS=true in $ENV_FILE; set it to false before deploying"
 fi
@@ -78,9 +79,18 @@ done
 [[ "$code" == "400" ]] || fail "Secret key call returned $code (expected 400 for an empty body)"
 echo "  ✓ secret key reaches the function (400 on empty body, rejected before OpenAI)"
 
+code="$(status "sb_publishable_not_a_real_key")"
+[[ "$code" == "401" ]] || fail "Unknown key call returned $code (expected 401)"
+echo "  ✓ unknown keys are refused (401)"
+
+# Free live AI: the publishable key needs an install id, and only reads the
+# allowance here (no frames, so no OpenAI call).
 code="$(status "$PUBLISHABLE_KEY")"
-[[ "$code" == "401" ]] || fail "Publishable key call returned $code (expected 401: AI must stay secret-key only)"
-echo "  ✓ publishable key is refused (401)"
+[[ "$code" == "400" ]] || fail "Publishable key without install_id returned $code (expected 400)"
+quota="$(curl -s -X POST "$URL/functions/v1/$FUNCTION" -H "apikey: $PUBLISHABLE_KEY" \
+  -H "Content-Type: application/json" -d '{"quota":true,"install_id":"00000000-0000-4000-8000-000000000000"}')"
+[[ "$quota" == *'"remaining_s"'* ]] || fail "Free live AI quota check failed: $quota"
+echo "  ✓ publishable key gets free live AI with an install id ($quota)"
 
 code="$(curl -s -o /dev/null -w '%{http_code}' "$URL/rest/v1/content_filters?select=key" -H "apikey: $PUBLISHABLE_KEY")"
 [[ "$code" == "200" ]] || fail "Presets query returned $code (expected 200)"

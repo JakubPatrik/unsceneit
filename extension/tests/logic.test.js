@@ -20,6 +20,10 @@ const {
   scannedSeconds,
   ageFilterIds,
   selectedAge,
+  liveAIUsable,
+  quotaLevel,
+  formatMinutesLeft,
+  liveAIQuotaText,
 } = require("../logic.js");
 
 const on = (...ids) => new Set(ids);
@@ -405,5 +409,44 @@ describe("screenedEnough", () => {
   it("treats an unknown duration as endless", () => {
     assert.equal(screenedEnough(upTo(3), 2, 2, NaN), false);
     assert.equal(screenedEnough(upTo(5), 2, 2, Infinity), true);
+  });
+});
+
+describe("free live AI allowance", () => {
+  const quota = (remaining_s, ip_limited = false) => ({
+    limit_s: 1200,
+    used_s: 1200 - remaining_s,
+    remaining_s,
+    resets_at: "2026-11-01T00:00:00.000Z",
+    ip_limited,
+  });
+
+  it("is usable with seconds left, or before the first check", () => {
+    assert.equal(liveAIUsable(null), true);
+    assert.equal(liveAIUsable(quota(30)), true);
+    assert.equal(liveAIUsable(quota(0)), false);
+    assert.equal(liveAIUsable(quota(300, true)), false);
+  });
+
+  it("turns amber at a quarter left, red when used up", () => {
+    assert.equal(quotaLevel(quota(1200)), "ok");
+    assert.equal(quotaLevel(quota(301)), "ok");
+    assert.equal(quotaLevel(quota(300)), "low");
+    assert.equal(quotaLevel(quota(0)), "out");
+    assert.equal(quotaLevel(quota(900, true)), "out");
+  });
+
+  it("rounds minutes down, and says so under a minute", () => {
+    assert.equal(formatMinutesLeft(1200), "20 min");
+    assert.equal(formatMinutesLeft(119), "1 min");
+    assert.equal(formatMinutesLeft(30), "Under a minute");
+    assert.equal(formatMinutesLeft(0), "0 min");
+  });
+
+  it("describes each state in one line", () => {
+    assert.equal(liveAIQuotaText(quota(420)), "7 min of free live AI left this month");
+    assert.equal(liveAIQuotaText(quota(0)), "Free live AI minutes used up. They refill on Nov 1.");
+    assert.equal(liveAIQuotaText(quota(300, true)), "Free live AI is used up on this network today. Back tomorrow.");
+    assert.equal(liveAIQuotaText(null), "Checking your free live AI minutes…");
   });
 });

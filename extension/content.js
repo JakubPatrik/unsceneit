@@ -77,12 +77,20 @@ chrome.storage.onChanged.addListener((changes, area) => {
   if (area === "local" && changes.showDebugPanel) debugPanelOn = !!changes.showDebugPanel.newValue;
 });
 
-// Live AI (Pro) available? True in dev builds with config.dev.js (set by
-// background.js); store users get it with sign-in + credits.
+// Live AI: can it run now (free minutes left), the free allowance as last
+// reported (null until the first check), and whether this is a dev build
+// (debug panel). All set by background.js.
 let liveAIAvailable = false;
-chrome.storage.local.get({ liveAIAvailable: false }).then((s) => (liveAIAvailable = s.liveAIAvailable));
+let liveAIQuota = null;
+let devBuild = false;
+chrome.storage.local.get({ liveAIAvailable: false, liveAIQuota: null, devBuild: false }).then((s) => {
+  ({ liveAIAvailable, liveAIQuota, devBuild } = s);
+});
 chrome.storage.onChanged.addListener((changes, area) => {
-  if (area === "local" && changes.liveAIAvailable) liveAIAvailable = !!changes.liveAIAvailable.newValue;
+  if (area !== "local") return;
+  if (changes.liveAIAvailable) liveAIAvailable = !!changes.liveAIAvailable.newValue;
+  if (changes.liveAIQuota) liveAIQuota = changes.liveAIQuota.newValue ?? null;
+  if (changes.devBuild) devBuild = !!changes.devBuild.newValue;
 });
 
 // ---- Video identity ----
@@ -168,8 +176,8 @@ function libraryFor(video) {
 // A video plays only after the viewer decides. From the moment it appears
 // it's held (paused) under a blurred cover with the unscene.it dialog, which
 // first shows "checking…" and then, in place, the choices:
-//   - found:     watch with filters | watch without filters
-//   - not found: turn on live AI filter (when available) | watch without filters (or pick the
+//   - found:     watch with filters | watch unfiltered
+//   - not found: use live AI (while free minutes last) | watch unfiltered (or pick the
 //                video from the library search)
 // Each choice removes the cover and starts playback.
 //
@@ -313,8 +321,8 @@ function showGate(gate) {
     filters: filterList,
     enabled: enabledFilters,
     onFiltersChange: setEnabledFilters,
-    // Dev builds (where live AI runs): toggle for the look-ahead's debug panel.
-    debugPanel: liveAIAvailable
+    // Dev builds: toggle for the look-ahead's debug panel.
+    debugPanel: devBuild
       ? { on: debugPanelOn, onChange: (on) => extensionAlive() && chrome.storage.local.set({ showDebugPanel: on }) }
       : null,
   };
@@ -322,7 +330,7 @@ function showGate(gate) {
   // resume); first time → watch without filters (never stuck paused).
   const close = gate.previous
     ? { onClose: () => decide(gate, gate.previous), closeTitle: "Close (keep current settings)" }
-    : { onClose: () => decide(gate, { filtered: false }), closeTitle: "Close (watch without filters)" };
+    : { onClose: () => decide(gate, { filtered: false }), closeTitle: "Close (watch unfiltered)" };
   if (gate.result.video) {
     const liveRest = screensRestLive(gate);
     noticeFound(anchor, {
@@ -331,6 +339,7 @@ function showGate(gate) {
       title: gate.result.video.title,
       ranges: gate.result.ranges,
       liveRest,
+      quota: liveAIQuota,
       onWithFilters: () => decide(gate, { filtered: true, live: liveRest }),
       onWithout: () => decide(gate, { filtered: false }),
     });
@@ -340,6 +349,7 @@ function showGate(gate) {
       ...close,
       error: !!gate.result.error,
       liveAI: liveAIAvailable,
+      quota: liveAIQuota,
       onLiveAI: () => decide(gate, { filtered: true, live: true }),
       onWatchAnyway: () => decide(gate, { filtered: false }),
       // Picked from the library search: a "with filters" choice; look the
@@ -431,6 +441,9 @@ function showBot(gate, { morph = false, say = null } = {}) {
   noticeBot(gate.anchor, {
     active: gate.filtered && (gate.live || !!gate.result?.video) && !gate.ended,
     onOpen: () => reopenGate(gate),
+    // Hovered: how many free live AI minutes are left (nothing until the
+    // first check has answered).
+    hover: () => (liveAIQuota ? liveAIQuotaText(liveAIQuota) : null),
     morph,
     say,
   });
@@ -439,8 +452,9 @@ function showBot(gate, { morph = false, say = null } = {}) {
 
 // Bot clicked: pause, blur and ask again, so the viewer can change filters or
 // switch mode mid-video. The next choice resumes playback.
-function reopenGate(gate) {
-  gate.previous = { filtered: gate.filtered, live: !!gate.live }; // what ✕ restores
+// previous: what ✕ restores (null: ✕ means watch without filters).
+function reopenGate(gate, previous = { filtered: gate.filtered, live: !!gate.live }) {
+  gate.previous = previous;
   gate.state = "deciding";
   gate.bot = false;
   if (gate.youtube) setYouTubeHold(true);
@@ -450,6 +464,21 @@ function reopenGate(gate) {
     if (!gate.youtube) setGateBlur(video, true);
   }
   showGate(gate);
+}
+
+// The free live AI minutes ran out while live AI was protecting `video`
+// (prescan.js). Stop it and ask again, paused and blurred: what's left plays
+// unscreened only if the viewer chooses that.
+function liveAILimitReached(video, quota) {
+  liveAIQuota = quota ?? liveAIQuota;
+  liveAIAvailable = liveAIUsable(liveAIQuota);
+  const gate = video && gateForVideo(video);
+  if (!gate?.live) return;
+  gate.live = false;
+  gate.progress = null;
+  prescan.warmup = null; // switching the look-ahead off mustn't start playback
+  if (prescan.enabled && debug.mode !== "prescan") prescanSetEnabled(false);
+  reopenGate(gate, null);
 }
 
 // The decided gate whose bot belongs on screen now: on YouTube the current

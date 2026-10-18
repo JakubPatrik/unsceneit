@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "unscene.it: Safe YouTube Content Filter & Blur",
-  "version": "0.1.1",
-  "description": "YouTube content filter: blur scenes with gore, spiders or anything above your age limit, plus thumbnails. The story keeps playing.",
+  "name": "UnsceneIt - Safe YouTube Content Filter & Blur",
+  "version": "0.2.0",
+  "description": "Blur scenes with gore, spiders or anything above your age limit, plus thumbnails. The story keeps playing.",
   "homepage_url": "https://unscene.it",
   "icons": {
     "16": "icons/icon-16.png",

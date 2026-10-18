@@ -1,6 +1,6 @@
 # Chrome Web Store listing
 
-Everything to paste into the developer dashboard for the **early alpha** (v0.1). Keep it in line with STORY.md: library titles only, no live AI, nothing promised for "any video".
+Everything to paste into the developer dashboard for the **early alpha** (v0.1). Keep it in line with STORY.md: library titles, plus free live AI (20 minutes a month per browser) for the rest. Nothing promised for "any video".
 
 ## Files in this folder
 
@@ -33,12 +33,12 @@ unscene.it is a YouTube content filter that hides the scenes you'd rather not se
 Flagged scenes are blurred and muted while the story keeps playing, and video thumbnails are blurred too. Nothing is cut or skipped, so you never lose your place, and you never have to block a whole video or channel.
 
 EARLY ALPHA
-unscene.it is in early alpha. It filters videos in the unscene.it library, a growing collection of videos that have already been screened. Videos that aren't in the library yet play normally, without filters. Live AI, which will screen videos that aren't in the library yet as you watch, is coming next. Join the early access waitlist at https://unscene.it/waitlist/ to get it first, at 50% off Pro for life.
+unscene.it is in early alpha. It filters videos in the unscene.it library, a growing collection of videos that have already been screened. For a video that isn't in the library yet, turn on live AI: Xenia screens it about 10 seconds ahead of you as you watch. Every browser gets 20 free minutes of live AI a month, enough for a typical YouTube video. Want more? Join the early access waitlist at https://unscene.it/waitlist/ for 50% off Pro for life.
 
 HOW IT WORKS
 1. Pick your filters in the extension menu: an age limit (Under 12, Under 15 or Under 18) and any of the triggers.
 2. Open a video. It waits under a blur while Xenia, your guardian in the corner of the player, checks it against the library.
-3. Choose "Watch with filters". Flagged scenes are blurred and labelled as they play ("Hidden: gore"), like a trigger warning that also hides the scene. When a scene ends, the picture and sound come back on their own.
+3. Choose "Watch with filters" (or "Use live AI" for a video that isn't in the library yet). Flagged scenes are blurred and labelled as they play ("Hidden: gore"), like a trigger warning that also hides the scene. When a scene ends, the picture and sound come back on their own.
 
 FEATURES
 • Personal filters: turn on any combination. One viewer hides only spiders; another hides gore and anything over 12.
@@ -58,12 +58,12 @@ WHO IT'S FOR
 • Couples and families who want to watch together comfortably.
 
 WHERE IT WORKS
-YouTube, including YouTube videos embedded on other websites, for videos in the unscene.it library. Other video sites, and streaming services such as Netflix and Disney+, aren't supported yet.
+YouTube, including YouTube videos embedded on other websites: videos in the unscene.it library right away, and others with live AI while your free minutes last. Other video sites, and streaming services such as Netflix and Disney+, aren't supported yet.
 
 GOOD TO KNOW
 • Scenes are judged by AI, frame by frame. It can occasionally miss a scene or hide a harmless one, so unscene.it helps you avoid what you chose but can't guarantee it.
 • It isn't a parental lock: anyone using this Chrome can change the filters or turn them off.
-• No account needed. To find a video in the library, the extension sends only its YouTube video ID. No video files are uploaded, and no person ever watches what you watch. Your data is never sold or used for advertising. Privacy policy: https://unscene.it/privacy/
+• No account needed. To find a video in the library, the extension sends only its YouTube video ID. With live AI on, it also sends still frames from that video to be checked; they aren't kept. No video files are uploaded, and no person ever watches what you watch. Your data is never sold or used for advertising. Privacy policy: https://unscene.it/privacy/
 • Free during the alpha.
 
 Questions, feedback or a video you'd like screened: hello@unscene.it
@@ -85,7 +85,7 @@ Questions, feedback or a video you'd like screened: hello@unscene.it
 4. **Thumbnail blur** on the YouTube home page: a grid of blurred thumbnails, with the menu or Xenia in view.
 5. Optional: **Watching without filters**, with grey Xenia and her "Click me to turn them on" bubble.
 
-Don't show a live AI pre-screen, the debug panel or anything with "PRO" as the main subject.
+Live AI can be shown now (it's free for 20 minutes a month). Don't show the debug panel or anything with "PRO" as the main subject.
 
 ## Privacy practices tab
 
@@ -94,7 +94,7 @@ Don't show a live AI pre-screen, the debug panel or anything with "PRO" as the m
   - `storage`: saves the viewer's filters and settings.
   - Host permission (www.youtube.com): finds the video player on YouTube pages (and in YouTube players embedded on other sites), hides flagged scenes and blurs video thumbnails.
 - **Remote code:** No, I am not using remote code.
-- **Data usage:** tick **Web history** (the YouTube video IDs sent for library lookups). Then tick all three certifications.
+- **Data usage:** tick **Web history** (the YouTube video IDs sent for library lookups) and **Website content** (live AI's still frames). Then tick all three certifications.
 - **Privacy policy URL:** https://unscene.it/privacy/
 
 ## Test instructions (for the reviewer)
@@ -102,7 +102,7 @@ Don't show a live AI pre-screen, the debug panel or anything with "PRO" as the m
 Fill in the videos you've confirmed are in the library (TODO.md, section 2):
 
 ```
-unscene.it is in early alpha: it filters videos in its library. Videos not in the library play unfiltered. Live AI is not part of this release; its button only opens our waitlist page.
+unscene.it is in early alpha: it filters videos in its library. For other videos, "Use live AI" screens the video as it plays, free for 20 minutes a month per browser (the remaining minutes show in the toolbar menu and when hovering Xenia, the round avatar in the player's corner).
 
 To test:
 1. Click the unscene.it toolbar icon. Under "Your filters", turn on "Blood & gore" (or the filter noted below).
