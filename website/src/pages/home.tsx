@@ -3,6 +3,7 @@ import {
   ArrowRight,
   Bug,
   Check,
+  ChevronDown,
   CloudOff,
   Droplet,
   EyeOff,
@@ -20,7 +21,6 @@ import { Footer } from "@/components/site/footer"
 import { Nav } from "@/components/site/nav"
 import { PlayerMock } from "@/components/site/player-mock"
 import { Xenia, type XeniaState } from "@/components/site/xenia"
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
@@ -131,8 +131,8 @@ function Hero() {
           The scenes you&rsquo;ll never see.
         </h1>
         <p className="mx-auto mt-7 max-w-2xl text-lg text-pretty text-muted-foreground sm:text-xl">
-          A Chrome extension that hides the scenes you choose (gore, spiders, 18+ content, or anything above your
-          family&rsquo;s age limit) while the story keeps playing.
+          A YouTube content filter for Chrome. It blurs the scenes you choose (gore, spiders, 18+ content, or anything
+          above your family&rsquo;s age limit) while the story keeps playing.
         </p>
         <div className="mt-10 flex flex-col items-center gap-4">
           <div className="flex flex-col items-center gap-3 sm:flex-row">
@@ -411,7 +411,7 @@ const DETAILS = [
   { icon: EyeOff, title: "Heavy blur", body: "Flagged scenes are blurred so strongly that nothing shows through." },
   { icon: VolumeX, title: "Muted while hidden", body: "Sound drops out with the picture and comes back on its own. On by default, and one switch to turn off." },
   { icon: PauseCircle, title: "Nothing plays until you choose", body: "No autoplay surprises: each video waits under a blur for your decision." },
-  { icon: ImageOff, title: "Thumbnails blurred too", body: "Video thumbnails and previews are blurred before they show, so nothing slips through." },
+  { icon: ImageOff, title: "YouTube thumbnails blurred too", body: "Thumbnails and hover previews are blurred before they show, so a graphic thumbnail can't catch you off guard." },
   { icon: RefreshCw, title: "Settings that follow you", body: "Your filters sync across every Chrome where you're signed in." },
   { icon: CloudOff, title: "No video files uploaded", body: "unscene.it looks videos up by their ID or title. Live AI checks still frames only, and never keeps them." },
 ]
@@ -536,6 +536,18 @@ const FAQ = [
     a: `Xenia tells you, and you can turn on live AI: she screens the video about 10 seconds ahead of you as it plays. Every browser gets ${FREE_LIVE_AI_MINUTES} free minutes a month, refilled on the 1st, and the menu shows how many are left. You can also search the library in case it's listed under another name, or watch without filters.`,
   },
   {
+    q: "How do I blur YouTube thumbnails?",
+    a: "Install unscene.it and it's on by default: every YouTube thumbnail and hover preview is blurred before it can show, including Shorts and search results. You can switch the blur off in the extension menu.",
+  },
+  {
+    q: "Can it hide spiders for arachnophobia?",
+    a: "Yes. Turn on the Spiders & insects filter and scenes with spiders, even small or partly visible ones, are blurred and muted while the video plays. Blood & gore works the same way for people avoiding that trigger.",
+  },
+  {
+    q: "Is unscene.it a parental control?",
+    a: "It's a content filter that families use to make YouTube safer to watch together: pick an age limit (Under 12, Under 15 or Under 18) and the triggers to hide. It isn't a parental lock, though: anyone using the browser can change the filters or turn them off.",
+  },
+  {
     q: "Is it perfect?",
     a: "No filter is. Scenes are judged by AI, frame by frame, and it can occasionally miss a scene or hide a harmless one. unscene.it helps you avoid what you chose, but it can't guarantee it.",
   },
@@ -588,14 +600,21 @@ function Faq() {
           <p className="mb-4 text-sm font-medium text-brand-soft">Questions</p>
           <h2 className="text-4xl font-semibold tracking-tight sm:text-6xl">Before you install.</h2>
         </div>
-        <Accordion type="single" collapsible className="border-t border-border">
+        {/* Native <details>, so every answer is in the prerendered HTML for
+            search engines; name= keeps one open at a time. */}
+        <div className="border-t border-border">
           {FAQ.map(({ q, a }) => (
-            <AccordionItem key={q} value={q} className="border-border">
-              <AccordionTrigger className="py-6 text-base hover:no-underline">{q}</AccordionTrigger>
-              <AccordionContent className="pb-6 text-base text-muted-foreground">{a}</AccordionContent>
-            </AccordionItem>
+            <details key={q} name="faq" className="faq-item group border-b border-border">
+              <summary className="flex cursor-pointer list-none items-start justify-between gap-4 rounded-lg py-6 text-base font-medium outline-none focus-visible:ring-3 focus-visible:ring-ring/50 [&::-webkit-details-marker]:hidden">
+                <h3>{q}</h3>
+                <ChevronDown className="mt-1 size-4 shrink-0 text-muted-foreground transition-transform group-open:rotate-180" />
+              </summary>
+              <div className="pb-6 text-base text-muted-foreground [&_a]:underline [&_a]:underline-offset-3 [&_a]:hover:text-foreground">
+                {a}
+              </div>
+            </details>
           ))}
-        </Accordion>
+        </div>
       </div>
     </Section>
   )

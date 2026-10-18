@@ -1,11 +1,11 @@
 {
   "name": "unsceneit-website",
   "private": true,
-  "version": "0.2.0",
+  "version": "0.3.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && vite build && vite build --ssr src/entry-server.tsx && node scripts/prerender.mjs",
     "lint": "oxlint",
     "preview": "vite preview"
   },

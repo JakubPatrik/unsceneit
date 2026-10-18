@@ -50,13 +50,15 @@ function staticHosting(): Plugin {
   }
 }
 
-export default defineConfig({
+export default defineConfig(({ isSsrBuild }) => ({
   appType: 'mpa',
   plugins: [react(), tailwindcss(), staticHosting()],
   resolve: {
     alias: { '@': path.resolve(import.meta.dirname, './src') },
   },
-  build: {
+  // `vite build --ssr src/entry-server.tsx` (prerendering, see
+  // scripts/prerender.mjs) builds only that entry, into dist-ssr/.
+  build: isSsrBuild ? { outDir: 'dist-ssr' } : {
     rollupOptions: {
       input: {
         main: path.resolve(import.meta.dirname, 'index.html'),
@@ -65,4 +67,4 @@ export default defineConfig({
       },
     },
   },
-})
+}))

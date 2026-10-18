@@ -8,9 +8,11 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { FOUNDER_OFFER, SUPABASE_PUBLISHABLE_KEY, SUPABASE_URL } from "@/site"
 
-// Early access waitlist for live AI / Pro. The extension's "Turn on live AI
-// filter" button opens this page with ?from=extension.
-const source = new URLSearchParams(window.location.search).get("from") === "extension" ? "extension" : "website"
+// Early access waitlist for more live AI / Pro. The extension's live AI
+// button opens this page with ?from=extension (read on submit: the page is
+// also prerendered at build time, where there's no window).
+const signupSource = () =>
+  new URLSearchParams(window.location.search).get("from") === "extension" ? "extension" : "website"
 
 type Status =
   | { state: "idle" }
@@ -23,7 +25,7 @@ async function joinWaitlist(email: string): Promise<number | null> {
   const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/join_waitlist`, {
     method: "POST",
     headers: { apikey: SUPABASE_PUBLISHABLE_KEY, "Content-Type": "application/json" },
-    body: JSON.stringify({ p_email: email, p_source: source }),
+    body: JSON.stringify({ p_email: email, p_source: signupSource() }),
   })
   if (!res.ok) {
     const data = await res.json().catch(() => null)

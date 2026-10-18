@@ -4,7 +4,7 @@ import { Logo } from "./logo"
 
 export function Footer() {
   const links = [
-    ...(CHROME_STORE_URL ? [{ label: "Chrome Web Store", href: CHROME_STORE_URL }] : []),
+    ...(CHROME_STORE_URL ? [{ label: "unscene.it on the Chrome Web Store", href: CHROME_STORE_URL }] : []),
     { label: "Support", href: `mailto:${SUPPORT_EMAIL}` },
     { label: "Privacy", href: "/privacy/" },
   ]
