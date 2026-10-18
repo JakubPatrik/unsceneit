@@ -3,6 +3,9 @@
   Chrome Web Store promo images, rendered to PNG by render.sh:
     promo.html?size=small    → promo-small-440x280.png   (required)
     promo.html?size=marquee  → promo-marquee-1400x560.png (optional)
+    promo.html?size=og       → og-1200x630.png, the website's link preview
+                               (website/public/og.png). Everything sits in a
+                               safe centre area, since some apps crop the sides.
   Brand colours match website/src/index.css; Xenia matches extension/notice.js.
 -->
 <html lang="en">
@@ -22,6 +25,11 @@
       }
       body.small { width: 440px; height: 280px; --s: 1; }
       body.marquee { width: 1400px; height: 560px; --s: 2.1; }
+      body.og { width: 1200px; height: 630px; --s: 2;
+        background:
+          radial-gradient(55% 80% at 80% 45%, rgb(113 107 243 / 0.42), transparent 70%),
+          radial-gradient(50% 70% at 0% 0%, rgb(113 107 243 / 0.14), transparent 70%),
+          #090a10; }
 
       .copy { position: absolute; top: 50%; transform: translateY(-50%); left: calc(30px * var(--s)); width: calc(205px * var(--s)); }
       .marquee .copy { left: 120px; width: 600px; }
@@ -35,6 +43,30 @@
       }
       .sub { display: none; }
       .marquee .sub { display: block; margin-top: 26px; font-size: 26px; line-height: 1.35; color: #a6a8bd; max-width: 520px; }
+
+      /* og: the link preview, with a call to action */
+      .og .copy { left: 96px; width: 580px; }
+      .og .logo img { width: 46px; height: 46px; border-radius: 12px; }
+      .og .logo span { font-size: 34px; }
+      .og h1 { margin-top: 26px; font-size: 64px; }
+      .og .sub { display: block; margin-top: 20px; font-size: 25px; line-height: 1.35; color: #b8b8c8; }
+      .og .sub b { color: #f2f2f7; font-weight: 600; }
+      .cta { display: none; }
+      .og .cta { display: flex; align-items: center; gap: 12px; margin-top: 32px; white-space: nowrap; }
+      .og .cta .add {
+        display: inline-flex; align-items: center; gap: 10px; padding: 14px 26px; border-radius: 999px;
+        background: #f2f2f7; color: #090a10; font-size: 22px; font-weight: 600; letter-spacing: -0.01em;
+      }
+      .og .cta .add svg { width: 22px; height: 22px; }
+      .og .cta .free {
+        padding: 12px 18px; border-radius: 999px; font-size: 18px; font-weight: 500; color: #d9d4ff;
+        border: 1px solid rgb(169 156 255 / 0.5); background: rgb(113 107 243 / 0.18);
+      }
+      .og .frame { right: 96px; width: 400px; height: 262px; }
+      .og .label { font-size: 21px; padding: 10px 19px; gap: 9px; }
+      .og .xenia { width: 104px; height: 104px; right: 66px; top: 120px; }
+      .og .eyes { gap: 16px; }
+      .og .eye { width: 13px; height: 25px; }
 
       /* A small video frame with a hidden scene, Xenia on its corner */
       .frame {
@@ -75,7 +107,14 @@
     <div class="copy">
       <div class="logo"><img src="icon-source.png" alt="" /><span>unscene<b>.</b>it</span></div>
       <h1>The scenes you’ll never see.</h1>
-      <p class="sub">Hide the scenes you’d rather not see, while the story keeps playing.</p>
+      <p class="sub" data-og="The <b>YouTube content filter</b> for Chrome. Blur gore, spiders and 18+ scenes while the story keeps playing.">Hide the scenes you’d rather not see, while the story keeps playing.</p>
+      <div class="cta">
+        <span class="add">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14" /></svg>
+          Add to Chrome · Free
+        </span>
+        <span class="free">+ 20 min free live AI / month</span>
+      </div>
     </div>
 
     <div class="frame">
@@ -92,7 +131,12 @@
     <div class="xenia"><div class="eyes"><span class="eye"></span><span class="eye"></span></div></div>
 
     <script>
-      document.body.className = new URLSearchParams(location.search).get("size") === "marquee" ? "marquee" : "small";
+      const size = new URLSearchParams(location.search).get("size");
+      document.body.className = size === "marquee" || size === "og" ? size : "small";
+      if (size === "og") {
+        const sub = document.querySelector(".sub");
+        sub.innerHTML = sub.dataset.og;
+      }
     </script>
   </body>
 </html>

@@ -22,6 +22,9 @@ shot() { # size width height out
 
 shot small 440 280 promo-small-440x280.png
 shot marquee 1400 560 promo-marquee-1400x560.png
+shot og 1200 630 og-1200x630.png
+cp og-1200x630.png ../website/public/og.png
+echo "  (also website/public/og.png)"
 
 # Icon: 96×96 artwork centred in 128×128 with 16px transparent padding.
 magick ../assets/icon.png -background none -gravity center -extent 363x363 \
