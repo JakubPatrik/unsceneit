@@ -13,3 +13,7 @@ dist/
 # Chrome Web Store takes the ZIP from extension/scripts/package.sh instead.
 *.pem
 *.crx
+
+# Recordly projects and videos
+recordly/
+data/*.mp4
