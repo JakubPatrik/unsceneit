@@ -116,3 +116,61 @@ To test:
 
 No account or login is needed.
 ```
+
+## YouTube channel
+
+**Banner:** `youtube-banner-2560x1440.png` (2560×1440 PNG, rendered by `./render.sh`). Everything that matters sits in the centre 1546×423, the part every device shows.
+
+**Video watermark:** `youtube-watermark-300x300.png` (300×300 transparent PNG, rendered by `./render.sh`). Studio → Customization → Branding.
+
+**Description** (1,000 characters max; paste as is):
+
+```
+unscene.it is a free Chrome extension that hides the YouTube scenes you'd rather not see: blood and gore, sensual or revealing content, or anything above your family's age limit.
+
+Flagged scenes are blurred and muted while the story keeps playing. Nothing is cut or skipped, and you never have to block a whole video or channel. Thumbnails can be blurred too.
+
+On this channel: demos, how-tos and updates as unscene.it grows.
+
+unscene.it is in early alpha. It filters videos in the unscene.it library, and live AI screens anything else about 10 seconds ahead of you. Every browser gets 20 free minutes of live AI a month.
+
+Add it to Chrome: https://chromewebstore.google.com/detail/unsceneit/inpekbgpobkhdmfilepnojnfflhocgid
+Website: https://unscene.it
+Questions: hello@unscene.it
+```
+
+### Promo video (`data/promo-video-2.mp4`)
+
+**Thumbnail:** `youtube-thumbnail-1280x720.png` (1280×720 PNG, 2 MB max, rendered by `./render.sh`).
+
+**Title** (100 characters max; keep the keywords in the first 70):
+> Blur Gore & Revealing Scenes on YouTube While It Keeps Playing | unscene.it
+
+**Description** (paste as is; chapter times are approximate, check them against the video):
+
+```
+unscene.it is a free Chrome extension that hides the YouTube scenes you'd rather not see: blood and gore, sensual or revealing content, or anything above your family's age limit. Flagged scenes are blurred and muted while the story keeps playing, so you never lose your place.
+
+➜ Add to Chrome (free): https://chromewebstore.google.com/detail/unsceneit/inpekbgpobkhdmfilepnojnfflhocgid
+➜ Website: https://unscene.it
+
+In this video:
+0:00 What unscene.it does
+0:08 Blurred thumbnails and your filters
+0:16 A library video: gore hidden in a movie trailer
+0:36 Any other video: live AI screens it as you watch
+0:48 20 free minutes of live AI every month
+
+How it works:
+1. Pick your filters in the extension menu: an age limit (Under 12, Under 15 or Under 18) and any triggers.
+2. Open a video. If it's in the unscene.it library, flagged scenes are hidden automatically.
+3. Not in the library yet? Turn on live AI and Xenia screens it about 10 seconds ahead of you.
+
+Every browser gets 20 free minutes of live AI a month, no account or card needed. unscene.it is in early alpha, and the library grows every week.
+
+Questions or a video you want screened? hello@unscene.it
+
+#YouTube #ParentalControls #ChromeExtension
+```
+
+**Tags:** youtube content filter, youtube parental controls, blur youtube, hide gore, gore blocker, hide revealing content, trigger warning, family safe youtube, chrome extension, unscene.it

@@ -5,6 +5,13 @@
 export const CHROME_STORE_URL: string | null =
   "https://chromewebstore.google.com/detail/unsceneit/inpekbgpobkhdmfilepnojnfflhocgid"
 
+// The YouTube channel (footer link). null hides the link.
+export const YOUTUBE_URL: string | null = "https://www.youtube.com/@unsceneit"
+
+// The one-minute demo under the hero (YouTube video ID). Its poster is
+// public/demo-poster.jpg, a frame from the video.
+export const YOUTUBE_DEMO_ID = "sXgerDdIlk8"
+
 // The company behind unscene.it (footer, and the data controller in the
 // privacy policy).
 export const COMPANY = {
@@ -16,7 +23,7 @@ export const COMPANY = {
 export const SUPPORT_EMAIL = "hello@unscene.it"
 
 // Last change to the privacy policy (shown at its top).
-export const PRIVACY_UPDATED = "October 17, 2026"
+export const PRIVACY_UPDATED = "October 27, 2026"
 
 // The early access waitlist's promise (waitlist page, pricing card):
 // founding members keep this discount for life.

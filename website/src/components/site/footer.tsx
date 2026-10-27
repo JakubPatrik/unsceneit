@@ -1,10 +1,11 @@
-import { CHROME_STORE_URL, COMPANY, SUPPORT_EMAIL } from "@/site"
+import { CHROME_STORE_URL, COMPANY, SUPPORT_EMAIL, YOUTUBE_URL } from "@/site"
 
 import { Logo } from "./logo"
 
 export function Footer() {
   const links = [
     ...(CHROME_STORE_URL ? [{ label: "unscene.it on the Chrome Web Store", href: CHROME_STORE_URL }] : []),
+    ...(YOUTUBE_URL ? [{ label: "YouTube", href: YOUTUBE_URL }] : []),
     { label: "Support", href: `mailto:${SUPPORT_EMAIL}` },
     { label: "Privacy", href: "/privacy/" },
   ]

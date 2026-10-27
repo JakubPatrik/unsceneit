@@ -8,13 +8,15 @@ import {
   Droplet,
   EyeOff,
   ImageOff,
+  LoaderCircle,
   PauseCircle,
+  Play,
   RefreshCw,
   ShieldCheck,
   Sparkles,
   VolumeX,
 } from "lucide-react"
-import type { ReactNode } from "react"
+import { useEffect, useRef, useState, type ReactNode } from "react"
 
 import { AddToChrome } from "@/components/site/add-to-chrome"
 import { Footer } from "@/components/site/footer"
@@ -24,7 +26,7 @@ import { Xenia, type XeniaState } from "@/components/site/xenia"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
-import { FOUNDER_OFFER, FREE_LIVE_AI_MINUTES, SUPPORT_EMAIL } from "@/site"
+import { FOUNDER_OFFER, FREE_LIVE_AI_MINUTES, SUPPORT_EMAIL, YOUTUBE_DEMO_ID } from "@/site"
 
 export function Home() {
   return (
@@ -33,6 +35,7 @@ export function Home() {
       <main>
         <Hero />
         <Filters />
+        <Demo />
         <HowItWorks />
         <LiveAi />
         <MeetXenia />
@@ -141,18 +144,128 @@ function Hero() {
           </div>
           <p className="text-sm text-muted-foreground">Free during the early alpha: every video in the library, plus {FREE_LIVE_AI_MINUTES} minutes of live AI a month for the rest. YouTube, Chrome on desktop.</p>
         </div>
-        <a
-          href="#how"
-          className="mt-10 inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
-        >
-          See how it works <ArrowDown className="size-4" />
-        </a>
+        <div className="mt-10 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-sm text-muted-foreground">
+          <a href="#demo" className="inline-flex items-center gap-1.5 transition-colors hover:text-foreground">
+            <Play className="size-3.5 fill-current" /> Watch the 1-min demo
+          </a>
+          <a href="#how" className="inline-flex items-center gap-1.5 transition-colors hover:text-foreground">
+            See how it works <ArrowDown className="size-4" />
+          </a>
+        </div>
       </div>
 
       <div className="mt-16 px-4 sm:mt-20 sm:px-6">
         <PlayerMock />
       </div>
     </section>
+  )
+}
+
+function Demo() {
+  return (
+    <Section id="demo">
+      <Heading
+        eyebrow="See it in action"
+        title="One minute. Real videos."
+        lead="A horror trailer, minus the gore. Then Xenia screens a video nobody has checked yet, live, as it plays."
+      />
+      <div className="mx-auto mt-12 max-w-5xl">
+        <DemoVideo />
+        <p className="mt-4 text-center text-sm text-muted-foreground">
+          <a
+            href={`https://www.youtube.com/watch?v=${YOUTUBE_DEMO_ID}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="transition-colors hover:text-foreground"
+          >
+            Watch on YouTube
+          </a>
+        </p>
+      </div>
+    </Section>
+  )
+}
+
+const YOUTUBE_EMBED_ORIGIN = "https://www.youtube-nocookie.com"
+
+// Shows the local poster and loads YouTube's player (privacy-enhanced mode)
+// only once someone presses play, so the page stays light and cookie-free.
+// The poster stays on top until the player reports it's playing, so there's
+// no black flash while YouTube loads.
+function DemoVideo() {
+  const [state, setState] = useState<"idle" | "loading" | "playing">("idle")
+  const frame = useRef<HTMLIFrameElement>(null)
+
+  useEffect(() => {
+    if (state !== "loading") return
+    const onMessage = (e: MessageEvent) => {
+      if (e.source !== frame.current?.contentWindow || typeof e.data !== "string") return
+      try {
+        const { event, info } = JSON.parse(e.data)
+        if ((event === "onStateChange" && info === 1) || (event === "infoDelivery" && info?.playerState === 1)) {
+          setState("playing")
+        }
+      } catch {
+        // Not a player message.
+      }
+    }
+    window.addEventListener("message", onMessage)
+    // Autoplay can be blocked (some phones): then show YouTube's own play button.
+    const fallback = setTimeout(() => setState("playing"), 4000)
+    return () => {
+      window.removeEventListener("message", onMessage)
+      clearTimeout(fallback)
+    }
+  }, [state])
+
+  return (
+    <div className="relative aspect-video overflow-hidden rounded-2xl border border-white/10 bg-black shadow-2xl shadow-black/60">
+      {state !== "idle" && (
+        <iframe
+          ref={frame}
+          className="absolute inset-0 size-full"
+          src={`${YOUTUBE_EMBED_ORIGIN}/embed/${YOUTUBE_DEMO_ID}?autoplay=1&rel=0&enablejsapi=1&origin=${encodeURIComponent(location.origin)}`}
+          title="unscene.it in one minute"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          referrerPolicy="strict-origin-when-cross-origin"
+          allowFullScreen
+          // Subscribe to the player's state, as YouTube's iframe API does.
+          onLoad={(e) =>
+            e.currentTarget.contentWindow?.postMessage(
+              JSON.stringify({ event: "listening", id: YOUTUBE_DEMO_ID, channel: "widget" }),
+              YOUTUBE_EMBED_ORIGIN,
+            )
+          }
+        />
+      )}
+      <button
+        type="button"
+        onClick={() => setState("loading")}
+        disabled={state !== "idle"}
+        aria-label="Play the one-minute demo"
+        className={cn(
+          "group absolute inset-0 grid cursor-pointer place-items-center bg-black transition-opacity duration-500",
+          state === "playing" && "pointer-events-none opacity-0",
+        )}
+      >
+        <img
+          src="/demo-poster.jpg"
+          alt=""
+          width={1280}
+          height={720}
+          loading="lazy"
+          decoding="async"
+          className="absolute inset-0 size-full object-cover opacity-75 transition-opacity group-hover:opacity-90"
+        />
+        <span className="relative grid size-20 place-items-center rounded-full bg-xenia text-white shadow-[0_0_60px_rgb(91_76_240/0.6)] transition-transform group-hover:scale-105">
+          {state === "idle" ? (
+            <Play className="size-8 translate-x-0.5 fill-current" />
+          ) : (
+            <LoaderCircle className="size-8 animate-spin" />
+          )}
+        </span>
+      </button>
+    </div>
   )
 }
 

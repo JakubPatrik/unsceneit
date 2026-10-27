@@ -6,6 +6,12 @@
     promo.html?size=og       → og-1200x630.png, the website's link preview
                                (website/public/og.png). Everything sits in a
                                safe centre area, since some apps crop the sides.
+    promo.html?size=banner   → youtube-banner-2560x1440.png, the YouTube channel
+                               art. Only the centre 1546×423 shows on every
+                               device, so everything that matters sits in there.
+    promo.html?size=thumb    → youtube-thumbnail-1280x720.png, the promo video
+                               thumbnail. Big type so it reads at small sizes,
+                               and the bottom right left clear for the duration.
   Brand colours match website/src/index.css; Xenia matches extension/notice.js.
 -->
 <html lang="en">
@@ -68,6 +74,48 @@
       .og .eyes { gap: 16px; }
       .og .eye { width: 13px; height: 25px; }
 
+      /* banner: YouTube channel art, content inside the 1546×423 safe area (x 507–2053, y 509–931) */
+      body.banner { width: 2560px; height: 1440px; --s: 2.4;
+        background:
+          radial-gradient(28% 40% at 68% 50%, rgb(113 107 243 / 0.45), transparent 70%),
+          radial-gradient(40% 50% at 22% 50%, rgb(113 107 243 / 0.12), transparent 70%),
+          radial-gradient(30% 45% at 100% 0%, rgb(113 107 243 / 0.10), transparent 70%),
+          #090a10; }
+      .banner .copy { left: 570px; width: 760px; }
+      .banner .logo { gap: 16px; }
+      .banner .logo img { width: 54px; height: 54px; border-radius: 14px; }
+      .banner .logo span { font-size: 40px; }
+      .banner h1 { margin-top: 28px; font-size: 86px; }
+      .banner .sub { display: block; margin-top: 24px; font-size: 32px; line-height: 1.35; color: #b8b8c8; }
+      .banner .sub b { color: #f2f2f7; font-weight: 600; }
+      .banner .frame { right: 580px; width: 500px; height: 290px; }
+      .banner .label { font-size: 26px; padding: 12px 24px; gap: 11px; }
+      .banner .xenia { width: 116px; height: 116px; right: 530px; top: 540px; }
+      .banner .eyes { gap: 18px; }
+      .banner .eye { width: 14px; height: 28px; }
+
+      /* thumb: the promo video thumbnail */
+      body.thumb { width: 1280px; height: 720px; --s: 2.6;
+        background:
+          radial-gradient(45% 65% at 76% 50%, rgb(113 107 243 / 0.5), transparent 70%),
+          radial-gradient(50% 70% at 0% 0%, rgb(113 107 243 / 0.14), transparent 70%),
+          #090a10; }
+      .thumb .copy { left: 72px; width: 560px; }
+      .thumb .logo { gap: 14px; }
+      .thumb .logo img { width: 52px; height: 52px; border-radius: 13px; }
+      .thumb .logo span { font-size: 40px; }
+      .thumb h1 { margin-top: 26px; font-size: 150px; line-height: 0.98; font-weight: 700; letter-spacing: -0.045em; }
+      .thumb h1 em { font-style: normal; color: #a99cff; }
+      .thumb .sub { display: block; text-wrap: balance; margin-top: 28px; font-size: 36px; line-height: 1.25; font-weight: 500; color: #d4d4e0; }
+      .thumb .frame { right: 64px; width: 560px; height: 360px; border-width: 2px; }
+      .thumb .label { font-size: 34px; padding: 14px 28px; gap: 12px; }
+      .thumb .xenia { width: 150px; height: 150px; right: 26px; top: 92px; }
+      .thumb .eyes { gap: 22px; }
+      .thumb .eye { width: 18px; height: 36px; }
+      .bar { display: none; }
+      .thumb .bar { display: block; position: absolute; left: 0; right: 0; bottom: 0; height: 8px; background: rgb(255 255 255 / 0.25); }
+      .thumb .bar::before { content: ""; position: absolute; inset: 0 58% 0 0; background: #716bf3; }
+
       /* A small video frame with a hidden scene, Xenia on its corner */
       .frame {
         position: absolute; top: 50%; transform: translateY(-50%) rotate(-3deg);
@@ -107,7 +155,11 @@
     <div class="copy">
       <div class="logo"><img src="icon-source.png" alt="" /><span>unscene<b>.</b>it</span></div>
       <h1>The scenes you’ll never see.</h1>
-      <p class="sub" data-og="The <b>YouTube content filter</b> for Chrome. Blur gore, spiders and 18+ scenes while the story keeps playing.">Hide the scenes you’d rather not see, while the story keeps playing.</p>
+      <p class="sub"
+        data-og="The <b>YouTube content filter</b> for Chrome. Blur gore, spiders and 18+ scenes while the story keeps playing."
+        data-banner="The <b>YouTube content filter</b> for Chrome."
+        data-thumb="Blur gore & revealing scenes on YouTube."
+        data-thumb-h1="Gore?<br><em>Hidden.</em>">Hide the scenes you’d rather not see, while the story keeps playing.</p>
       <div class="cta">
         <span class="add">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14" /></svg>
@@ -127,16 +179,16 @@
         </svg>
         Hidden: Blood &amp; gore
       </div>
+      <div class="bar"></div>
     </div>
     <div class="xenia"><div class="eyes"><span class="eye"></span><span class="eye"></span></div></div>
 
     <script>
       const size = new URLSearchParams(location.search).get("size");
-      document.body.className = size === "marquee" || size === "og" ? size : "small";
-      if (size === "og") {
-        const sub = document.querySelector(".sub");
-        sub.innerHTML = sub.dataset.og;
-      }
+      document.body.className = ["marquee", "og", "banner", "thumb"].includes(size) ? size : "small";
+      const sub = document.querySelector(".sub");
+      if (sub.dataset[size]) sub.innerHTML = sub.dataset[size];
+      if (sub.dataset[size + "H1"]) document.querySelector("h1").innerHTML = sub.dataset[size + "H1"];
     </script>
   </body>
 </html>

@@ -127,7 +127,7 @@ export function Privacy() {
             <ul className="list-disc space-y-1.5 pl-5">
               <li>We don&rsquo;t collect your name, account details or browsing history. Your email address only if you join the waitlist.</li>
               <li>We don&rsquo;t sell or rent your data, or share it for advertising, credit checks or lending.</li>
-              <li>We don&rsquo;t use analytics, trackers or cookies in the extension, and no cookies or advertising trackers on this website.</li>
+              <li>We don&rsquo;t use analytics, trackers or cookies in the extension, and no cookies or advertising trackers on this website (the demo video is YouTube&rsquo;s, and loads only if you play it).</li>
               <li>No person at unscene.it reviews what you watch.</li>
             </ul>
           </Part>
@@ -138,6 +138,11 @@ export function Privacy() {
               and doesn&rsquo;t identify you or follow you to other sites. It records which pages are visited, the
               referring site, and your browser, operating system, device type and country, all in aggregate. The
               extension doesn&rsquo;t use analytics.
+            </p>
+            <p>
+              The demo video on the home page is hosted on <strong>YouTube</strong>. Nothing loads from YouTube until
+              you press play; then the player loads in YouTube&rsquo;s privacy-enhanced mode (youtube-nocookie.com) and
+              Google&rsquo;s privacy policy applies to it.
             </p>
           </Part>
 

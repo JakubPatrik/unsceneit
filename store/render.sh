@@ -25,9 +25,16 @@ shot marquee 1400 560 promo-marquee-1400x560.png
 shot og 1200 630 og-1200x630.png
 cp og-1200x630.png ../website/public/og.png
 echo "  (also website/public/og.png)"
+shot banner 2560 1440 youtube-banner-2560x1440.png
+shot thumb 1280 720 youtube-thumbnail-1280x720.png
 
 # Icon: 96×96 artwork centred in 128×128 with 16px transparent padding.
 magick ../assets/icon.png -background none -gravity center -extent 363x363 \
   -resize 96x96 -extent 128x128 -strip icon-128.png
 cp icon-128.png ../extension/icons/icon-128.png
 echo "✓ icon-128.png (also extension/icons/icon-128.png)"
+
+# YouTube video watermark: the icon on a transparent 300×300 square.
+magick ../assets/icon.png -background none -gravity center -extent 363x363 \
+  -resize 300x300 -strip youtube-watermark-300x300.png
+echo "✓ youtube-watermark-300x300.png"
