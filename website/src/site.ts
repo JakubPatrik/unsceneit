@@ -23,7 +23,7 @@ export const COMPANY = {
 export const SUPPORT_EMAIL = "hello@unscene.it"
 
 // Last change to the privacy policy (shown at its top).
-export const PRIVACY_UPDATED = "October 27, 2026"
+export const PRIVACY_UPDATED = "November 5, 2026"
 
 // The early access waitlist's promise (waitlist page, pricing card):
 // founding members keep this discount for life.

@@ -137,7 +137,8 @@ export function Privacy() {
               unscene.it uses <strong>Vercel Web Analytics</strong> to count visits to this website. It sets no cookies
               and doesn&rsquo;t identify you or follow you to other sites. It records which pages are visited, the
               referring site, and your browser, operating system, device type and country, all in aggregate. The
-              extension doesn&rsquo;t use analytics.
+              extension doesn&rsquo;t use analytics. When you first install it, it opens a welcome page on this website,
+              with a tag in the address saying it came from the extension. That visit is counted like any other.
             </p>
             <p>
               The demo video on the home page is hosted on <strong>YouTube</strong>. Nothing loads from YouTube until

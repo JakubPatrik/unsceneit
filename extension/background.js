@@ -1,5 +1,6 @@
-// Background worker: fetches Supabase data (cached) for content scripts and
-// the popup, and runs the debug modes' frame analysis (dev builds only).
+// Background worker: opens the welcome page on first install, fetches Supabase
+// data (cached) for content scripts and the popup, and runs the debug modes'
+// frame analysis (dev builds only).
 
 importScripts("config.js", "logic.js");
 
@@ -10,6 +11,13 @@ try {
 } catch {}
 
 const CACHE_TTL_MS = 5 * 60 * 1000;
+
+// First install only: updates and Chrome restarts don't reopen it.
+const WELCOME_URL = "https://unscene.it/welcome/?utm_source=extension&utm_medium=onboarding";
+
+chrome.runtime.onInstalled.addListener(({ reason }) => {
+  if (reason === chrome.runtime.OnInstalledReason.INSTALL) chrome.tabs.create({ url: WELCOME_URL });
+});
 
 function supabaseHeaders() {
   const headers = { apikey: SUPABASE_PUBLISHABLE_KEY };

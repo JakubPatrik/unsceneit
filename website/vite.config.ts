@@ -7,7 +7,7 @@ import { defineConfig, type Connect, type Plugin } from 'vite'
 
 // Static pages, one HTML file each, so they work on any static host without
 // rewrites. Add a page here and in PAGES below.
-const PAGES = ['privacy', 'waitlist']
+const PAGES = ['privacy', 'waitlist', 'welcome']
 
 // Local servers behave like Vercel: /waitlist → /waitlist/ (vercel.json
 // trailingSlash), and any other page URL gets 404.html with a 404 status.

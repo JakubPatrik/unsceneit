@@ -5,6 +5,7 @@ import { Home } from "./pages/home"
 import { NotFound } from "./pages/not-found"
 import { Privacy } from "./pages/privacy"
 import { Waitlist } from "./pages/waitlist"
+import { Welcome } from "./pages/welcome"
 
 // Build-time prerendering (scripts/prerender.mjs): each built HTML file gets
 // its page's markup in #root, so crawlers, link previews and AI search see
@@ -14,6 +15,7 @@ const PAGES: Record<string, ReactNode> = {
   "index.html": <Home />,
   "privacy/index.html": <Privacy />,
   "waitlist/index.html": <Waitlist />,
+  "welcome/index.html": <Welcome />,
   "404.html": <NotFound />,
 }
 

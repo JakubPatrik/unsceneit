@@ -82,7 +82,7 @@ Lead with personal filtering: unscene.it hides only what each viewer chooses. Th
 
 ## How it works for the viewer
 
-1. **Install** unscene.it from the Chrome Web Store. Edge and other browsers come later.
+1. **Install** unscene.it from the Chrome Web Store. Edge and other browsers come later. A welcome page (https://unscene.it/welcome/) opens once, with the setup steps and the early access waitlist.
 2. **Pick your filters**, in the extension menu or right in the video dialog. They sync across the user's devices.
    - **Age limit:** No limit, Under 12, Under 15 or Under 18. A lower limit also hides everything rated above it.
    - **Triggers:** Spiders & insects, Blood & gore, and Sensual & revealing content.
