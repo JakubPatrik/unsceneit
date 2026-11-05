@@ -144,6 +144,17 @@
 .xenia[data-state="thinking"] .eye + .eye {
   animation-delay: 0.14s;
 }
+/* `rotate` stays separate from the blink's `transform`. */
+.xenia[data-state="sad"] .eyes {
+  animation: none;
+}
+.xenia[data-state="sad"] .eye {
+  rotate: 22deg;
+  animation-duration: 6.5s;
+}
+.xenia[data-state="sad"] .eye + .eye {
+  rotate: -22deg;
+}
 
 @keyframes xenia-blink {
   0%, 90%, 100% { transform: scaleY(1); }

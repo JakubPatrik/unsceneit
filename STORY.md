@@ -104,6 +104,8 @@ Lead with personal filtering: unscene.it hides only what each viewer chooses. Th
 
 **Thumbnails are blurred too.** By default, unscene.it blurs every video thumbnail and hover preview, on YouTube, before it can show, so a stray thumbnail can't give a scene away. Viewers can turn this off in the extension menu.
 
+**If they leave.** Removing the extension opens a page (https://unscene.it/uninstall/) asking why, with a one-click way back for anyone who removed it by accident. Answers are anonymous unless they leave an email for a reply.
+
 ## What happens behind the scenes (keep it simple in copy)
 
 - **A shared library of known titles.** Popular movies and videos are screened once with AI and stored. Anyone watching a known title gets the results instantly, at no cost to them.

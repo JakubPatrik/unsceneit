@@ -1,10 +1,18 @@
 import { cn } from "@/lib/utils"
 
-export type XeniaState = "protecting" | "off" | "thinking"
+export type XeniaState = "protecting" | "off" | "thinking" | "sad"
+
+const LABELS: Record<XeniaState, string> = {
+  protecting: "Xenia, protecting",
+  off: "Xenia, resting",
+  thinking: "Xenia, thinking",
+  sad: "Xenia, looking sad",
+}
 
 // Xenia, the unscene.it mascot: a flat round face with two white pill eyes
 // that blink. Purple while protecting, grey when off, a spinning ring while
-// she's thinking. Proportions match the extension's 46px bot.
+// she's thinking, droopy eyes when sad (the uninstall page).
+// Proportions match the extension's 46px bot.
 export function Xenia({
   size = 46,
   state = "protecting",
@@ -18,7 +26,7 @@ export function Xenia({
   return (
     <div
       role="img"
-      aria-label={state === "off" ? "Xenia, resting" : state === "thinking" ? "Xenia, thinking" : "Xenia, protecting"}
+      aria-label={LABELS[state]}
       data-state={state}
       className={cn("xenia shrink-0", className)}
       style={{ width: size, height: size }}

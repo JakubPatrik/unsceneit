@@ -1,6 +1,6 @@
-// Background worker: opens the welcome page on first install, fetches Supabase
-// data (cached) for content scripts and the popup, and runs the debug modes'
-// frame analysis (dev builds only).
+// Background worker: opens the welcome page on first install, sets the page
+// Chrome opens on removal, fetches Supabase data (cached) for content scripts
+// and the popup, and runs the debug modes' frame analysis (dev builds only).
 
 importScripts("config.js", "logic.js");
 
@@ -15,7 +15,12 @@ const CACHE_TTL_MS = 5 * 60 * 1000;
 // First install only: updates and Chrome restarts don't reopen it.
 const WELCOME_URL = "https://unscene.it/welcome/?utm_source=extension&utm_medium=onboarding";
 
+// The feedback page lives on the website (website/src/pages/uninstall.tsx).
+// Set on updates too, so existing installs get it. The version is all it's told.
+const UNINSTALL_URL = `https://unscene.it/uninstall/?v=${chrome.runtime.getManifest().version}`;
+
 chrome.runtime.onInstalled.addListener(({ reason }) => {
+  chrome.runtime.setUninstallURL(UNINSTALL_URL);
   if (reason === chrome.runtime.OnInstalledReason.INSTALL) chrome.tabs.create({ url: WELCOME_URL });
 });
 

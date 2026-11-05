@@ -33,8 +33,8 @@ export const FOUNDER_OFFER = "50% off Pro for life"
 // LIVE_AI_FREE_SECONDS_PER_MONTH, classify-frames). Keep them in sync.
 export const FREE_LIVE_AI_MINUTES = 20
 
-// Supabase, for the waitlist form. The publishable key is public by design;
-// the database only lets it call join_waitlist() (see the waitlist migration).
-// Same project as extension/config.js.
+// Supabase, for the waitlist and feedback forms. The publishable key is public
+// by design; these forms can only add rows, through join_waitlist() and
+// submit_feedback() (see their migrations). Same project as extension/config.js.
 export const SUPABASE_URL = "https://sankeqoeuociotbufbsb.supabase.co"
 export const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_JDPQRTbTBP2DS73o0SCRZQ_xy9VsmaY"

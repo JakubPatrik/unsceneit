@@ -4,6 +4,7 @@ import { renderToString } from "react-dom/server"
 import { Home } from "./pages/home"
 import { NotFound } from "./pages/not-found"
 import { Privacy } from "./pages/privacy"
+import { Uninstall } from "./pages/uninstall"
 import { Waitlist } from "./pages/waitlist"
 import { Welcome } from "./pages/welcome"
 
@@ -16,6 +17,7 @@ const PAGES: Record<string, ReactNode> = {
   "privacy/index.html": <Privacy />,
   "waitlist/index.html": <Waitlist />,
   "welcome/index.html": <Welcome />,
+  "uninstall/index.html": <Uninstall />,
   "404.html": <NotFound />,
 }
 

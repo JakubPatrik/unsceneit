@@ -10,7 +10,7 @@ export function Footer() {
     { label: "Privacy", href: "/privacy/" },
   ]
   return (
-    <footer className="mx-auto max-w-6xl px-4 sm:px-6">
+    <footer className="mx-auto w-full max-w-6xl px-4 sm:px-6">
       <div className="flex flex-col gap-6 border-t border-border py-10 sm:flex-row sm:items-center sm:justify-between">
         <Logo />
         <nav className="flex flex-wrap items-center gap-x-8 gap-y-3 text-sm text-muted-foreground">

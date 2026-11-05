@@ -20,6 +20,7 @@ pnpm dlx shadcn@latest add <component>   # add a shadcn/ui component
 | `/privacy/` | `privacy/index.html` → `src/pages/privacy.tsx` |
 | `/waitlist/` | `waitlist/index.html` → `src/pages/waitlist.tsx` |
 | `/welcome/` | `welcome/index.html` → `src/pages/welcome.tsx` (opened by the extension on first install; not indexed) |
+| `/uninstall/` | `uninstall/index.html` → `src/pages/uninstall.tsx` (opened by Chrome when the extension is removed; saves to the `feedback` table; not indexed) |
 | any unknown URL | `404.html` → `src/pages/not-found.tsx` |
 
 Each page is its own HTML file, so the build is plain static files that work on any host without rewrite rules. URLs without the trailing slash (`/waitlist`) redirect to it, on Vercel (`vercel.json`) and in `pnpm dev` / `pnpm preview` (`vite.config.ts`). Vercel serves `404.html` for anything else. To add a page, add its HTML file and its name to `PAGES` in `vite.config.ts`.

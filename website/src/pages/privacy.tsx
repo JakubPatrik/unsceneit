@@ -30,7 +30,7 @@ export function Privacy() {
               If you turn on live AI for a video, the extension sends still frames from it to be checked. Frames
               aren&rsquo;t kept.
             </li>
-            <li>No account, no name, no browsing history. We only have your email address if you join the waitlist.</li>
+            <li>No account, no name, no browsing history. We only have your email address if you join the waitlist or leave it with feedback.</li>
             <li>No video files are uploaded, and no person watches what you watch.</li>
             <li>We never sell your data or use it for advertising.</li>
           </ul>
@@ -79,8 +79,20 @@ export function Privacy() {
             </p>
             <p>
               You can unsubscribe from any email, or ask us at {email} to remove your address, and we&rsquo;ll delete it.
-              The waitlist is the only place we collect an email address, and it isn&rsquo;t linked to anything the
-              extension sends.
+              Your address isn&rsquo;t linked to anything the extension sends.
+            </p>
+          </Part>
+
+          <Part title="If you leave feedback">
+            <p>
+              When you remove the extension, Chrome opens a page on this website asking why. If you answer, we keep the
+              reason you picked, anything you write, the extension&rsquo;s version number and the date, to work out what
+              to fix. It&rsquo;s optional, and it isn&rsquo;t linked to your install ID or anything else the extension
+              sends.
+            </p>
+            <p>
+              You can also leave your <strong>email address</strong> if you&rsquo;d like a reply. We only use it to answer
+              you. Ask us at {email} and we&rsquo;ll delete it, along with your feedback.
             </p>
           </Part>
 
@@ -125,7 +137,7 @@ export function Privacy() {
 
           <Part title="What we don't do">
             <ul className="list-disc space-y-1.5 pl-5">
-              <li>We don&rsquo;t collect your name, account details or browsing history. Your email address only if you join the waitlist.</li>
+              <li>We don&rsquo;t collect your name, account details or browsing history. Your email address only if you join the waitlist or leave it with feedback.</li>
               <li>We don&rsquo;t sell or rent your data, or share it for advertising, credit checks or lending.</li>
               <li>We don&rsquo;t use analytics, trackers or cookies in the extension, and no cookies or advertising trackers on this website (the demo video is YouTube&rsquo;s, and loads only if you play it).</li>
               <li>No person at unscene.it reviews what you watch.</li>
@@ -138,7 +150,9 @@ export function Privacy() {
               and doesn&rsquo;t identify you or follow you to other sites. It records which pages are visited, the
               referring site, and your browser, operating system, device type and country, all in aggregate. The
               extension doesn&rsquo;t use analytics. When you first install it, it opens a welcome page on this website,
-              with a tag in the address saying it came from the extension. That visit is counted like any other.
+              with a tag in the address saying it came from the extension. When you remove it, Chrome opens a feedback
+              page here, with the extension&rsquo;s version number in the address. Those visits are counted like any
+              other.
             </p>
             <p>
               The demo video on the home page is hosted on <strong>YouTube</strong>. Nothing loads from YouTube until
@@ -166,7 +180,7 @@ export function Privacy() {
             <p>We use a small number of providers to run unscene.it, and they may process data only on our behalf:</p>
             <ul className="list-disc space-y-1.5 pl-5">
               <li>
-                <strong>Supabase</strong>: hosts our database and servers, including the library and the waitlist. Data is
+                <strong>Supabase</strong>: hosts our database and servers, including the library, the waitlist and feedback. Data is
                 stored in Canada, which the EU recognises as providing adequate data protection.
               </li>
               <li>
@@ -185,7 +199,8 @@ export function Privacy() {
               including IP addresses, for a short period for security and reliability, then deletes them. Library entries
               (video titles, IDs and flagged scenes) are kept for as long as the library runs. Live AI usage counts are
               kept per month (per install ID) or per day (per hashed IP) and only add up seconds used. Waitlist addresses are
-              kept until you unsubscribe or ask us to delete them.
+              kept until you unsubscribe or ask us to delete them. Feedback, and any email address left with it, is kept
+              until you ask us to delete it.
             </p>
           </Part>
 
