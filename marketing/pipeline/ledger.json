@@ -1,0 +1,62 @@
+{
+  "assets": {
+    "gore-01": {
+      "fingerprint": "436813cecdd6277b87ab5454d074a10854e9fca26b7e09139c6dee12502c46c7",
+      "public_url": "https://sankeqoeuociotbufbsb.supabase.co/storage/v1/object/public/marketing-media/gore-01-01fac5cc9c3a.mp4",
+      "sha256": "01fac5cc9c3a9a2ed93b356124983240b2bbf206eb0b14434c765fdae91a42c5",
+      "storage_path": "marketing-media/gore-01-01fac5cc9c3a.mp4"
+    },
+    "liveai-01": {
+      "fingerprint": "5279d55bfbf5181a6a4746827c3af183df0d7fe082556b40f07b136f5e641ccb"
+    },
+    "modest-01": {
+      "fingerprint": "7d8936737c0c4b4533c3ea343e84a2bb46c12a5efe3846488e84cb273d2d75bc",
+      "public_url": "https://sankeqoeuociotbufbsb.supabase.co/storage/v1/object/public/marketing-media/modest-01-d41fb07b8d51.mp4",
+      "sha256": "d41fb07b8d51f50d1bd493ad4ba02be86fb2d366c5388a4258b48081d0107a24",
+      "storage_path": "marketing-media/modest-01-d41fb07b8d51.mp4"
+    },
+    "parents-01": {
+      "fingerprint": "25c9bd90d68e64c90c38e0bb25c0fc2ee57f0ed0e66992595257d53383ded0cb",
+      "public_url": "https://sankeqoeuociotbufbsb.supabase.co/storage/v1/object/public/marketing-media/parents-01-0f0cf1692fbe.mp4",
+      "sha256": "0f0cf1692fbe7a8eed18fa35d55f32e49170d0283dfa9096108e956bb30402a5",
+      "storage_path": "marketing-media/parents-01-0f0cf1692fbe.mp4"
+    },
+    "personal-01": {
+      "fingerprint": "3e1798dd09f42ca2d1f2bc88afaf64bfb96f240a6b483c6843bcabcdd41a1098",
+      "sha256": "794855e075a9118a2cc84b8eefc3b38625d24dafba245dae8d183a5caf0424ea"
+    },
+    "spiders-01": {
+      "fingerprint": "7bf344153dadaa08ff9dacc638b9b19d9e0e8bb16bfb76528db5047e2ec151f4"
+    }
+  },
+  "posts": {
+    "gore-01:youtube": {
+      "channel_id": "6aec7aa9e29c69a1716ebbce",
+      "due_at": null,
+      "mode": "draft",
+      "post_id": "6aec7e5d060b39980650bb22",
+      "status": "draft"
+    },
+    "modest-01:youtube": {
+      "channel_id": "6aec7aa9e29c69a1716ebbce",
+      "due_at": null,
+      "mode": "draft",
+      "post_id": "6aec7e29060b39980650a177",
+      "status": "draft"
+    },
+    "parents-01:youtube": {
+      "channel_id": "6aec7aa9e29c69a1716ebbce",
+      "due_at": null,
+      "mode": "draft",
+      "post_id": "6aec7e43060b39980650adc2",
+      "status": "draft"
+    },
+    "personal-01:youtube": {
+      "channel_id": "6aec7aa9e29c69a1716ebbce",
+      "due_at": null,
+      "mode": "draft",
+      "post_id": "6aec7c03b16bf66bc7fe3f08",
+      "status": "draft"
+    }
+  }
+}

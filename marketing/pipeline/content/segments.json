@@ -1,0 +1,45 @@
+{
+  "_comment": "The only footage creatives may use. Each crop keeps out the founder's facecam (bottom left), and no segment shows third-party film or video footage: the 28 Years Later trailer (from 36s to about 48s) and the Gordon Ramsay clip (from 53.13s to about 59s) in promo-video-1, and the same clips in promo-video-2 (the trailer up to about 34.5s, Ramsay from 44.77s), are deliberately excluded, since they risk copyright claims on social platforms. What's on screen must match the line over it, cursor included. Shots of the browser window must include the whole toolbar, because the extension icon lives there: it starts at about y=114 and the window ends at about x=2407. dialog and not-in-library are close-ups that start after the source's zoom, when the toolbar is fully out of frame. crop is [x, y, width, height] in source pixels (2720x1530). hold freezes the last frame for that many extra seconds. Check the first, middle and last frame of any new segment by eye before adding it here.",
+  "hero": {
+    "source": "data/promo-video-1.mp4",
+    "start": 0.5,
+    "duration": 4.5,
+    "crop": [620, 118, 1780, 1300],
+    "shows": "Landing page: 'The scenes you'll never see.'"
+  },
+  "thumbs": {
+    "source": "data/promo-video-1.mp4",
+    "start": 8,
+    "duration": 5,
+    "crop": [620, 118, 1780, 1300],
+    "shows": "YouTube home feed with every thumbnail blurred"
+  },
+  "popup": {
+    "source": "data/promo-video-1.mp4",
+    "start": 14,
+    "duration": 7,
+    "crop": [1050, 118, 1350, 1290],
+    "shows": "Clicking the toolbar icon, then the extension menu: age limit dropdown, picking Blood & gore, free minutes meter"
+  },
+  "dialog": {
+    "source": "data/promo-video-1.mp4",
+    "start": 31.2,
+    "duration": 3.8,
+    "crop": [850, 300, 1000, 1000],
+    "shows": "Close-up of the filter dialog on a library title (title text only), choosing Watch with filters"
+  },
+  "not-in-library": {
+    "source": "data/promo-video-2.mp4",
+    "start": 39.5,
+    "duration": 3.5,
+    "crop": [1000, 100, 1000, 1000],
+    "shows": "Close-up of the 'This video isn't in the library yet' dialog: filters picked, Use live AI active, cursor on the free minutes meter"
+  },
+  "live-ai-card": {
+    "source": "data/promo-video-1.mp4",
+    "start": 60,
+    "duration": 5,
+    "crop": [620, 118, 1780, 1300],
+    "shows": "Landing page section: 'Not in the library? Xenia screens it live.' with 20 minutes free"
+  }
+}

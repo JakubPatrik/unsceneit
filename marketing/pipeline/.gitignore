@@ -1,0 +1,4 @@
+.env.pipeline
+generated_assets/
+.venv/
+__pycache__/

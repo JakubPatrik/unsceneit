@@ -1,0 +1,119 @@
+{
+  "batch": "alpha-launch-2026-11",
+  "creatives": [
+    {
+      "id": "personal-01",
+      "angle": "personal-filtering",
+      "audience": "All (STORY.md's lead message)",
+      "approved": false,
+      "beats": [
+        { "segment": "thumbs", "text": "One viewer blocks only spiders." },
+        { "segment": "popup", "text": "Another blocks gore and anything over 12." },
+        { "segment": "dialog", "text": "Your filters. Nobody else's." },
+        { "segment": "hero", "text": "Scenes blur. The story keeps playing." }
+      ],
+      "captions": {
+        "youtube_title": "A YouTube filter that fits your household",
+        "youtube": "unscene.it hides only what you choose: spiders, blood and gore, sensual scenes, an age limit, or any mix. Flagged scenes blur while the story keeps playing.\n\nWorks on YouTube in Chrome, for videos in the unscene.it library, plus 20 free minutes of live AI a month for the rest. Free during the alpha, no account.\n\n{link}",
+        "tiktok": "One household blocks spiders. Another blocks gore and anything over 12. unscene.it hides only what you pick, and the story keeps playing. Free on the Chrome Web Store during the alpha. #youtube #chromeextension",
+        "instagram": "One household blocks spiders. Another blocks gore and anything over 12.\n\nunscene.it hides only what you pick, and the story keeps playing. Works on YouTube in Chrome, free during the alpha.\n\n#youtube #chromeextension",
+        "twitter": "One viewer blocks only spiders. Another blocks gore and anything over 12.\n\nunscene.it hides only what you pick on YouTube, and the story keeps playing.\n\n{link}"
+      }
+    },
+    {
+      "id": "spiders-01",
+      "angle": "phobia",
+      "audience": "People with a fear of spiders and insects",
+      "approved": false,
+      "beats": [
+        { "segment": "thumbs", "text": "Scared of spiders? Even thumbnails can get you." },
+        { "segment": "popup", "text": "Pick only what you want gone. Like spiders." },
+        { "segment": "dialog", "text": "Xenia checks each video before it plays." },
+        { "segment": "hero", "text": "The scene blurs. The story keeps playing." }
+      ],
+      "captions": {
+        "youtube_title": "Watch YouTube with fewer spider surprises",
+        "youtube": "unscene.it blurs video thumbnails by default, and helps you avoid spider and insect scenes while the video keeps playing. AI can miss a scene, so think of it as a helping hand.\n\nWorks on YouTube in Chrome, for videos in the unscene.it library, plus 20 free minutes of live AI a month for the rest. Free during the alpha.\n\n{link}",
+        "tiktok": "For anyone who's ever been ambushed by a spider on YouTube. unscene.it blurs thumbnails and helps you avoid spider scenes while the video keeps playing. Free on the Chrome Web Store during the alpha. #arachnophobia #youtube",
+        "instagram": "For anyone who's ever been ambushed by a spider on YouTube.\n\nunscene.it blurs thumbnails and helps you avoid spider scenes while the video keeps playing. Works in Chrome, free during the alpha.\n\n#arachnophobia #youtube",
+        "twitter": "For anyone who's ever been ambushed by a spider on YouTube: unscene.it blurs thumbnails and helps you avoid spider scenes while the video keeps playing.\n\n{link}"
+      }
+    },
+    {
+      "id": "parents-01",
+      "angle": "parents",
+      "audience": "Parents watching with their kids",
+      "approved": false,
+      "beats": [
+        { "segment": "thumbs", "text": "Watching with the kids? Put the remote down." },
+        { "segment": "popup", "text": "Set an age limit: Under 12, Under 15 or Under 18." },
+        { "segment": "dialog", "text": "Every video waits under a blur until you choose." },
+        { "segment": "hero", "text": "Free during the alpha. No account." }
+      ],
+      "captions": {
+        "youtube_title": "Watch YouTube with your kids, without hovering over the remote",
+        "youtube": "Set an age limit, and unscene.it automatically hides scenes above it while the story keeps playing. Every video waits under a blur until you choose how to watch. AI can miss a scene, so stay nearby with younger kids.\n\nWorks on YouTube in Chrome, for videos in the unscene.it library, plus 20 free minutes of live AI a month for the rest. Free during the alpha, no account.\n\n{link}",
+        "tiktok": "Movie night without hovering over the remote. Set an age limit and unscene.it automatically hides scenes above it while the story keeps playing. Works on YouTube, free on the Chrome Web Store during the alpha. #parenting #youtube",
+        "instagram": "Movie night without hovering over the remote.\n\nSet an age limit and unscene.it automatically hides scenes above it while the story keeps playing. Works on YouTube in Chrome, free during the alpha.\n\n#parenting #youtube",
+        "twitter": "Watching YouTube with your kids, without hovering over the remote.\n\nSet an age limit and unscene.it automatically hides scenes above it while the story keeps playing.\n\n{link}"
+      }
+    },
+    {
+      "id": "gore-01",
+      "angle": "triggers",
+      "audience": "Viewers avoiding blood and gore",
+      "approved": false,
+      "beats": [
+        { "segment": "thumbs", "text": "Want the story without the gore?" },
+        { "segment": "popup", "text": "Turn on Blood & gore. Leave the rest as it is." },
+        { "segment": "dialog", "text": "See how many scenes will be hidden before you press play." },
+        { "segment": "hero", "text": "Hidden scenes blur. Nothing is skipped." }
+      ],
+      "captions": {
+        "youtube_title": "Watch the story without the gore",
+        "youtube": "unscene.it blurs the scenes you chose to avoid, labels them and brings the picture back when they end, so you never lose your place.\n\nWorks on YouTube in Chrome, for videos in the unscene.it library, plus 20 free minutes of live AI a month for the rest. Free during the alpha, no account.\n\n{link}",
+        "tiktok": "Want the story without the gore? unscene.it blurs the scenes you chose to avoid and the video keeps playing, so you never lose your place. Free on the Chrome Web Store during the alpha. #youtube #chromeextension",
+        "instagram": "Want the story without the gore?\n\nunscene.it blurs the scenes you chose to avoid and the video keeps playing, so you never lose your place. Works on YouTube in Chrome, free during the alpha.\n\n#youtube #chromeextension",
+        "twitter": "Want the story without the gore?\n\nunscene.it blurs the scenes you chose to avoid and the video keeps playing, so you never lose your place.\n\n{link}"
+      }
+    },
+    {
+      "id": "modest-01",
+      "angle": "modest-viewing",
+      "audience": "Viewers who prefer modest content",
+      "approved": false,
+      "beats": [
+        { "segment": "hero", "text": "Prefer your videos without the suggestive scenes?" },
+        { "segment": "popup", "text": "Blurs revealing and sexualized content, not just nudity." },
+        { "segment": "thumbs", "text": "Thumbnails and hover previews blur by default." },
+        { "segment": "dialog", "text": "You choose before anything plays." }
+      ],
+      "captions": {
+        "youtube_title": "A filter for the subtler scenes on YouTube",
+        "youtube": "The Sensual & revealing filter in unscene.it goes beyond nudity to cover revealing and sexualized content. Scenes blur while the story keeps playing.\n\nWorks on YouTube in Chrome, for videos in the unscene.it library, plus 20 free minutes of live AI a month for the rest. Free during the alpha, no account.\n\n{link}",
+        "tiktok": "It goes beyond nudity. The Sensual & revealing filter in unscene.it covers revealing and sexualized content, and the video keeps playing. Free on the Chrome Web Store during the alpha. #youtube #chromeextension",
+        "instagram": "It goes beyond nudity. The Sensual & revealing filter in unscene.it covers revealing and sexualized content, and the video keeps playing.\n\nWorks on YouTube in Chrome, free during the alpha.\n\n#youtube #chromeextension",
+        "twitter": "The Sensual & revealing filter in unscene.it goes beyond nudity to cover revealing and sexualized content. Scenes blur, and the video keeps playing.\n\n{link}"
+      }
+    },
+    {
+      "id": "liveai-01",
+      "angle": "live-ai",
+      "audience": "Viewers whose videos aren't in the library yet",
+      "approved": false,
+      "beats": [
+        { "segment": "not-in-library", "text": "Video not in the library? Xenia can screen it live." },
+        { "segment": "live-ai-card", "text": "20 free minutes of live AI a month. No account." },
+        { "segment": "popup", "text": "Your filters. She checks about 10 seconds ahead." },
+        { "segment": "hero", "text": "Scenes you picked blur. The story keeps playing." }
+      ],
+      "captions": {
+        "youtube_title": "When a video isn't in the library, Xenia screens it live",
+        "youtube": "For a video that isn't in the unscene.it library yet, turn on live AI: Xenia screens it about 10 seconds ahead as it plays. Every browser gets 20 free minutes a month, refilled on the 1st, with no account.\n\nWorks on YouTube in Chrome. Free during the alpha.\n\n{link}",
+        "tiktok": "Video not in the library? Turn on live AI and Xenia screens it about 10 seconds ahead as it plays. 20 free minutes a month, no account. unscene.it is free on the Chrome Web Store during the alpha. #youtube #chromeextension",
+        "instagram": "Video not in the library? Turn on live AI and Xenia screens it about 10 seconds ahead as it plays. 20 free minutes a month, no account.\n\nunscene.it works on YouTube in Chrome, free during the alpha.\n\n#youtube #chromeextension",
+        "twitter": "Video not in the unscene.it library? Turn on live AI and Xenia screens it about 10 seconds ahead as it plays. 20 free minutes a month, no account.\n\n{link}"
+      }
+    }
+  ]
+}

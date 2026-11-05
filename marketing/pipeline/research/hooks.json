@@ -1,0 +1,19 @@
+{
+  "_comment": "Input for writing creatives. Seeded only from the repo's own SEO research; no AdKit data yet, because the library search timed out when this was set up. The agent adds what it finds to ads_reviewed. Record angles and patterns, never copy a competitor's wording or footage.",
+  "seeded_from": ["data/seo/b-competitors.md", "data/seo/c-intent.md", "STORY.md"],
+  "competitors": [
+    { "name": "Unhook", "focus": "Hides YouTube UI such as recommendations and Shorts", "gap": "Doesn't filter scenes inside videos" },
+    { "name": "BlockTube", "focus": "Channel, video and comment blocking", "gap": "Manual blocklists, no scene-level filtering" },
+    { "name": "Video Blocker for YouTube", "focus": "Channel and keyword hiding", "gap": "Blocks whole videos or channels" },
+    { "name": "Safe Vision / SafeTube", "focus": "Kid safety through curated whitelists", "gap": "All-or-nothing per video or channel" }
+  ],
+  "angles": [
+    { "id": "personal-filtering", "audience": "All", "pain": "Other filters are one-size-fits-all", "language": "One viewer blocks only spiders; another blocks gore and anything over 12", "source": "STORY.md" },
+    { "id": "parents", "audience": "Parents", "pain": "Hovering over the remote when watching with kids", "language": "How to stop YouTube showing scary thumbnails to toddlers", "source": "data/seo/c-intent.md" },
+    { "id": "phobia", "audience": "Phobia viewers", "pain": "Unexpected spiders in videos and thumbnails", "language": "Extension to hide spiders on YouTube thumbnails", "source": "data/seo/c-intent.md" },
+    { "id": "triggers", "audience": "Viewers with gore triggers", "pain": "Wanting the story without the graphic scenes", "language": "Trigger warning extension for blood and gore", "source": "data/seo/c-intent.md" },
+    { "id": "modest-viewing", "audience": "Viewers who prefer modest content", "pain": "Subtle content that most filters ignore", "language": "Filter out suggestive thumbnails", "source": "data/seo/c-intent.md" },
+    { "id": "live-ai", "audience": "Viewers of videos outside the library", "pain": "The video they want isn't screened yet", "language": "Not in the library? Xenia screens it live.", "source": "STORY.md" }
+  ],
+  "ads_reviewed": []
+}
