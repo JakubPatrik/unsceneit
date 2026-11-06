@@ -25,6 +25,11 @@
       "fingerprint": "3e1798dd09f42ca2d1f2bc88afaf64bfb96f240a6b483c6843bcabcdd41a1098",
       "sha256": "794855e075a9118a2cc84b8eefc3b38625d24dafba245dae8d183a5caf0424ea"
     },
+    "social-01": {
+      "public_url": "https://sankeqoeuociotbufbsb.supabase.co/storage/v1/object/public/marketing-media/social-01-8b280cc98716.mp4",
+      "sha256": "8b280cc98716eea9d8fb69e080828eb34c2227b7f6f76fe24bec7c119f4f8f14",
+      "storage_path": "marketing-media/social-01-8b280cc98716.mp4"
+    },
     "spiders-01": {
       "fingerprint": "7bf344153dadaa08ff9dacc638b9b19d9e0e8bb16bfb76528db5047e2ec151f4"
     }
@@ -56,6 +61,13 @@
       "due_at": null,
       "mode": "draft",
       "post_id": "6aec7c03b16bf66bc7fe3f08",
+      "status": "draft"
+    },
+    "social-01:youtube": {
+      "channel_id": "6aec7aa9e29c69a1716ebbce",
+      "due_at": null,
+      "mode": "draft",
+      "post_id": "6aed54f2f3498efda76bdee1",
       "status": "draft"
     }
   }

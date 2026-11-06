@@ -9,6 +9,11 @@ out
 # Hard links to data/*.mp4 (scripts/link-footage.mjs)
 public/footage
 
+# Phone recordings and their cleaned-up voice tracks. Back these up outside git.
+public/*.MOV
+public/*.mov
+public/*-voice.wav
+
 # Skills
 .agents
 .claude

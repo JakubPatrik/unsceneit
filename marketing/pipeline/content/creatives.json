@@ -114,6 +114,21 @@
         "instagram": "Video not in the library? Turn on live AI and Xenia screens it about 10 seconds ahead as it plays. 20 free minutes a month, no account.\n\nunscene.it works on YouTube in Chrome, free during the alpha.\n\n#youtube #chromeextension",
         "twitter": "Video not in the unscene.it library? Turn on live AI and Xenia screens it about 10 seconds ahead as it plays. 20 free minutes a month, no account.\n\n{link}"
       }
+    },
+    {
+      "id": "social-01",
+      "angle": "founder-story",
+      "audience": "All (founder on camera)",
+      "approved": false,
+      "hand_edited": true,
+      "beats": [],
+      "captions": {
+        "youtube_title": "Everybody has a scene they can't watch",
+        "youtube": "Everybody has a scene they can't watch. So I built unscene.it, a Chrome extension that blurs the kinds of scenes you choose on YouTube, like blood and gore, while the story keeps playing.\n\nWorks for videos in the unscene.it library, plus 20 free minutes of live AI a month for the rest. Free during the alpha, no account.\n\n{link}\n\nFilm shown: Sintel © Blender Foundation, CC BY 3.0 (creativecommons.org/licenses/by/3.0)",
+        "tiktok": "Everybody has a scene they can't watch. So I built unscene.it: pick what you'd rather not see on YouTube, and it blurs while the story keeps playing. Free on the Chrome Web Store during the alpha. Film: Sintel © Blender Foundation, CC BY #youtube #chromeextension",
+        "instagram": "Everybody has a scene they can't watch. So I built unscene.it: pick what you'd rather not see on YouTube, and it blurs while the story keeps playing.\n\nWorks on YouTube in Chrome, free during the alpha.\n\nFilm: Sintel © Blender Foundation, CC BY\n\n#youtube #chromeextension",
+        "twitter": "Everybody has a scene they can't watch.\n\nSo I built unscene.it: it blurs what you choose on YouTube, and the story keeps playing.\n\n{link}\n\nFilm: Sintel © Blender Foundation, CC BY"
+      }
     }
   ]
 }

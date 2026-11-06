@@ -31,7 +31,7 @@ To go live you also need to:
 1. Connect the unscene.it channels in Buffer and create an API key at https://publish.buffer.com/settings/api.
 2. Run `run_pipeline.py channels` and copy the IDs into `.env.pipeline`. Platforms left empty are skipped.
 3. Add your Supabase secret key to `.env.pipeline`. The public `marketing-media` bucket is created on the first upload.
-4. In AdKit, create a project for unscene.it. The only one there now is EligioAI, and the agent won't use it. Research also needs the AdKit connector available to the agent.
+4. Research needs the AdKit connector available to the agent. It uses the one AdKit project on the plan (EligioAI), read-only.
 5. Add unscene.it to your TikTok and Instagram bios, since links in those captions aren't clickable.
 
 ## Running it
@@ -45,6 +45,8 @@ To go live you also need to:
 Other commands: `check`, `channels`, `lint`, `render`, `upload`, `queue`, `cleanup`. Add `--only <id>` to limit one to a creative, except `check`, `channels`, `status` and `cleanup`.
 
 To run the agent on the whole thing: `claude "$(cat PIPELINE_AGENT_PROMPT.md)"` from this folder.
+
+**Hand-edited videos** such as `social-01` have their own Remotion composition, so their creative has `"hand_edited": true` and no beats. Export the video to `generated_assets/<id>.mp4` yourself, since `render` never touches it. Lint checks only its captions, so a person checks the footage. Send one with `run --only <id> --live`.
 
 ## Publishing
 

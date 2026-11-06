@@ -84,6 +84,18 @@ class ClaimsTest(unittest.TestCase):
         bad["beats"][0]["segment"] = "movie-trailer"
         self.assertTrue(claims.has_errors(claims.lint_creative(bad, SEGMENTS)))
 
+    def test_only_hand_edited_creatives_can_skip_beats(self):
+        no_beats = creative()
+        no_beats["beats"] = []
+        self.assertTrue(claims.has_errors(claims.lint_creative(no_beats, SEGMENTS)))
+        no_beats["hand_edited"] = True
+        self.assertFalse(claims.has_errors(claims.lint_creative(no_beats, SEGMENTS)))
+
+    def test_hand_edited_captions_are_still_linted(self):
+        bad = creative(caption="Works on any video.", hand_edited=True)
+        bad["beats"] = []
+        self.assertTrue(claims.has_errors(claims.lint_creative(bad, SEGMENTS)))
+
     def test_shipped_creatives_pass(self):
         _, creatives, segments = rp.load_content()
         for item in creatives:

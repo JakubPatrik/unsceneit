@@ -12,3 +12,4 @@ Config.setVideoImageFormat("jpeg");
 Config.setJpegQuality(95); // Keeps small UI text crisp.
 Config.setOverwriteOutput(true);
 Config.setDefaultPremountInSeconds(2);
+Config.setChromiumOpenGlRenderer("angle"); // Needed by @remotion/effects, which use WebGL2.

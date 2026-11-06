@@ -8,7 +8,9 @@
     "node": "^20.19.0 || ^22.13.0 || >=24"
   },
   "dependencies": {
+    "@remotion/captions": "4.0.540",
     "@remotion/cli": "4.0.540",
+    "@remotion/effects": "4.0.540",
     "@remotion/fonts": "4.0.540",
     "@remotion/media": "4.0.540",
     "@remotion/transitions": "4.0.540",

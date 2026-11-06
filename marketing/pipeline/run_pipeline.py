@@ -117,6 +117,12 @@ def stage_lint(creatives: list[dict], segments: dict) -> list[dict]:
 def stage_render(creatives: list[dict], segments: dict, ledger: dict, force: bool = False) -> None:
     for creative in creatives:
         out = OUTPUT_DIR / f"{creative['id']}.mp4"
+        if creative.get("hand_edited"):
+            # Exported by hand from its own composition, once the founder approves it.
+            if not out.exists():
+                raise PipelineError(f"{creative['id']} is hand-edited: export it to {out.relative_to(HERE)} first")
+            print(f"Render: {creative['id']} is hand-edited, using the existing export.")
+            continue
         asset = ledger["assets"].setdefault(creative["id"], {})
         current = render.fingerprint(creative, segments, REMOTION)
         if out.exists() and asset.get("fingerprint") == current and not force:

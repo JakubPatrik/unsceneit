@@ -66,14 +66,18 @@ These hold however the pipeline is run.
 - **The screen must match the line.** That includes the cursor: don't pair "Xenia can screen it live" with a cursor on "Watch unfiltered".
 - **Never post twice.** `ledger.json` records every post, and anything in it is skipped. Failed mutations aren't retried automatically, because a timeout can hide a post that was created.
 - **Delete only after `sent`.** See Host and clean up.
-- **The right account only.** Every channel ID is checked against the Buffer organization and network before anything is sent. In AdKit, never use the EligioAI project.
+- **The right account only.** Every channel ID is checked against the Buffer organization and network before anything is sent. The AdKit plan allows one project, so research uses the existing EligioAI project, read-only: never add to its watchlist or boards.
 - **Paid ads and direct posting are out of scope.** AdKit is read-only library research. Reddit stays manual (see `reddit/`).
 
 ## Stages
 
 ### 1. Research
 
-The agent searches `adkit_library` in the unscene.it AdKit project and records angles and patterns in `research/hooks.json`, under `ads_reviewed`. It takes the angle and writes its own wording, and it never invents ad data. If the library fails, it carries on from the existing angles and says so.
+The agent uses `adkit_library` and records angles and patterns in `research/hooks.json`, under `ads_reviewed`. It takes the angle and writes its own wording, and it never invents ad data. If the library fails, it carries on from the existing angles and says so.
+
+What's worked so far: find an advertiser with `entity: "advertisers"`, then search its ads with `advertiserId` and `sort: "spend"`, and open the best with `action: "get"`. Free-text ad search timed out every time on Nov 5, 2026, and `analyze` failed on AdKit's side, so review video from frames of the ad's `mediaUrl`.
+
+AdKit shows paid ads on Meta, Google and LinkedIn, not organic posts, and has few direct competitors in it. Organic research is separate: YouTube Studio data first, then Shorts and TikTok search by hand. `organic_references` in `hooks.json` holds what's been learned.
 
 AdKit is only reachable through its MCP tools, so this step belongs to the agent and not the script. AdKit showed no video generation, which is why rendering is separate.
 
@@ -170,6 +174,7 @@ marketing/
 │   └── generated_assets/        Rendered videos (gitignored)
 ├── remotion/
 │   └── src/social-clip/         The video: layout, motion, theme
+├── scripts/                     Scripts for videos recorded by hand
 └── reddit/                      Manual Reddit plan and drafts
 ```
 

@@ -1,13 +1,16 @@
 {
-  "_comment": "Input for writing creatives. Seeded only from the repo's own SEO research; no AdKit data yet, because the library search timed out when this was set up. The agent adds what it finds to ads_reviewed. Record angles and patterns, never copy a competitor's wording or footage.",
+  "_comment": "Input for writing creatives. Record angles and patterns, never copy a competitor's wording or footage. Spend figures are AdKit's rough estimates. Founder-reported results are unverified.",
   "seeded_from": ["data/seo/b-competitors.md", "data/seo/c-intent.md", "STORY.md"],
+  "last_researched": "2026-11-05",
   "competitors": [
     { "name": "Unhook", "focus": "Hides YouTube UI such as recommendations and Shorts", "gap": "Doesn't filter scenes inside videos" },
     { "name": "BlockTube", "focus": "Channel, video and comment blocking", "gap": "Manual blocklists, no scene-level filtering" },
     { "name": "Video Blocker for YouTube", "focus": "Channel and keyword hiding", "gap": "Blocks whole videos or channels" },
-    { "name": "Safe Vision / SafeTube", "focus": "Kid safety through curated whitelists", "gap": "All-or-nothing per video or channel" }
+    { "name": "Safe Vision / SafeTube", "focus": "Kid safety through curated whitelists", "gap": "All-or-nothing per video or channel" },
+    { "name": "PhobiaBlocker", "focus": "Hides spider and insect images in the browser", "gap": "Store reviews mention slow blocking and false positives such as Spider-Man" }
   ],
   "angles": [
+    { "id": "founder-story", "audience": "Anyone who's felt awkward watching a scene with a partner or parents", "pain": "Uncomfortable scenes turn up in almost every movie: sexualized scenes, cringe romantic scenes, and anything awkward to watch with a partner or parents. The founder kept having to look away, and built unscene.it because of it.", "language": "That scene comes on while you're watching with your parents", "source": "The founder, Nov 5, 2026. True story: only the founder tells it in the first person. Unscene.it has no dedicated filter for cringe romantic scenes, so don't promise one." },
     { "id": "personal-filtering", "audience": "All", "pain": "Other filters are one-size-fits-all", "language": "One viewer blocks only spiders; another blocks gore and anything over 12", "source": "STORY.md" },
     { "id": "parents", "audience": "Parents", "pain": "Hovering over the remote when watching with kids", "language": "How to stop YouTube showing scary thumbnails to toddlers", "source": "data/seo/c-intent.md" },
     { "id": "phobia", "audience": "Phobia viewers", "pain": "Unexpected spiders in videos and thumbnails", "language": "Extension to hide spiders on YouTube thumbnails", "source": "data/seo/c-intent.md" },
@@ -15,5 +18,63 @@
     { "id": "modest-viewing", "audience": "Viewers who prefer modest content", "pain": "Subtle content that most filters ignore", "language": "Filter out suggestive thumbnails", "source": "data/seo/c-intent.md" },
     { "id": "live-ai", "audience": "Viewers of videos outside the library", "pain": "The video they want isn't screened yet", "language": "Not in the library? Xenia screens it live.", "source": "STORY.md" }
   ],
-  "ads_reviewed": []
+  "ads_reviewed": [
+    {
+      "advertiser": "BePresent",
+      "relevance": "Adjacent: consumer screen-time app, not a direct competitor. About $120-241k estimated spend, 321 active ads.",
+      "platform": "meta",
+      "ad_ids": ["6a7e205b268c79c2adf8d176", "69d7b4f6ebc2f58646deb512"],
+      "estimated_spend": "$6.4-12.8k and $1-2k",
+      "reviewed_from": "Still frames only, no audio",
+      "pattern": "Two founders on camera, phone-shot, 99s. Text box names the problem and who it's for, with word-by-word captions. Family story: a mother's phone addiction, 'nothing was working', so they built something.",
+      "why_it_might_work": "A specific person's problem, told by the people who built the fix. No app UI in the sampled frames."
+    },
+    {
+      "advertiser": "BePresent",
+      "relevance": "Same advertiser",
+      "platform": "meta",
+      "ad_ids": ["6985f46b9d38eaa379036eaa"],
+      "estimated_spend": "$1.2-2.3k",
+      "reviewed_from": "Still frames only, no audio",
+      "pattern": "Founder at a table, then cuts of daily life with a Bible. A faith-specific version: the phone pulling him away from God, so he built something. 104s.",
+      "why_it_might_work": "Same product, retold for one community with a strong identity. Relevant to viewers who prefer modest content, if told honestly."
+    },
+    {
+      "advertiser": "BePresent",
+      "relevance": "Same advertiser",
+      "platform": "meta",
+      "ad_ids": ["6a8248159a30cf86e4da5d71"],
+      "estimated_spend": "$0.4-0.8k",
+      "reviewed_from": "Still frames only, no audio",
+      "pattern": "Founders hold handwritten cards and drop them one at a time: quit big tech jobs, Apple and Meta obstacles, nearly going under. 68s.",
+      "why_it_might_work": "An underdog story with a visual device that's cheap to shoot and rewards watching to the next card."
+    },
+    {
+      "advertiser": "Freedom",
+      "relevance": "Adjacent: distraction blocker that also ships a browser extension. About $284-640k estimated spend.",
+      "platform": "google",
+      "ad_ids": ["6a9c37a26b73eb4a8b426609", "6a9c377d6b73eb4a8b4265c7", "6a9c37b06b73eb4a8b426636"],
+      "estimated_spend": "$50-110k and $21-46k on the first two, under $1.1k on the third",
+      "reviewed_from": "Ad copy",
+      "pattern": "Search ads built on the viewer's own problem and on control, running since 2024-2025.",
+      "why_it_might_work": "Long-running with real spend. Useful for search wording, less so for short video."
+    }
+  ],
+  "organic_references": [
+    {
+      "name": "Opal",
+      "lesson": "Hired a TikTok creator who already used the app. Her own-name channels went from 0 to 700,000 followers across platforms in a few months, per the founder. An organic video of hers reached tens of millions and then ran as an ad.",
+      "source": "https://www.betterlaunch.co/playbooks/kenneth-schlenker-opal-billion-user-9"
+    },
+    {
+      "name": "Tactiq",
+      "lesson": "Chrome extension reported 150,000+ users from about $1,820 paid to TikTok creators, after contacting 320 of them. Founder-reported, and only read through a search summary because the original page blocked access.",
+      "source": "https://indiehackers.com/post/how-this-chrome-extension-acquired-150k-users-with-tiktok-2bec088c92"
+    },
+    {
+      "name": "Does The Dog Die",
+      "lesson": "Closest cousin to the product's idea. Grew slowly, then broke out through press and community sites in 2013, including a Slate mention in a piece on trigger warnings and a MetaFilter front page.",
+      "source": "https://dailydot.com/does-the-dog-die-movie-rating-site"
+    }
+  ]
 }

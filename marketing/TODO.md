@@ -31,11 +31,17 @@ Videos already sent to YouTube get uploaded again for the new platform, and `run
 
 ## 4. Competitor research
 
-- [ ] Create an unscene.it project in AdKit (the only project there is EligioAI).
-- [ ] Retry the ad library search, which timed out during setup, and fill in `ads_reviewed` in `pipeline/research/hooks.json`. Only seeded from SEO research so far.
+First pass done on Nov 5, 2026, saved in `pipeline/research/hooks.json`. The main finding: BePresent's top ads are founders telling a personal story on camera, while ours are product demos.
+
+- [ ] Shorts and TikTok search by hand: your audience's terms, looking for videos far above their channel's usual views. AdKit doesn't cover organic.
+- [ ] Re-check AdKit later. Free-text ad search timed out, and its video analysis failed on AdKit's side.
 
 ## 5. Next batch
 
+- [ ] Record the founder video on your phone, using `scripts/founder-story-01.md`.
+- [ ] Add a talking-head video type to Remotion, with word-by-word captions, product cuts and the end card.
+- [ ] Find 5 to 10 small creators in the phobia, parenting or modest-viewing spaces who might genuinely use it. Opal and Tactiq both credit creators for their growth.
+- [ ] Pitch the story to writers who cover trigger warnings and family viewing. Does The Dog Die broke out through press like this.
 - [ ] Run the agent (`pipeline/PIPELINE_AGENT_PROMPT.md`) for new creatives, doubling down on the angles that worked.
 - [ ] Record fresh footage if the angles need it. There's no shot yet of a scene actually being blurred mid-video without third-party footage, which is the product's main moment. It needs footage you're allowed to post.
 - [ ] Other formats in `remotion/` as needed, such as a landscape demo or store promo.

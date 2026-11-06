@@ -96,7 +96,8 @@ def lint_creative(creative: dict, segments: dict) -> list[Issue]:
     captions = creative.get("captions", {})
     beats = creative.get("beats", [])
 
-    if not beats:
+    # A hand-edited video is checked by eye, so only its captions are linted here.
+    if not beats and not creative.get("hand_edited"):
         issues.append(Issue("error", "beats", "needs at least one beat"))
     for i, beat in enumerate(beats):
         field = f"beats[{i}]"

@@ -55,9 +55,12 @@ export const Xenia: React.FC<{ readonly size: number }> = ({ size }) => {
   );
 };
 
-export const Wordmark: React.FC<{ readonly fontSize: number }> = ({ fontSize }) => (
+export const Wordmark: React.FC<{
+  readonly fontSize: number;
+  readonly dotColor?: string;
+}> = ({ fontSize, dotColor = color.brand }) => (
   <span style={{ fontSize, fontWeight: 600, letterSpacing: "-0.02em" }}>
-    unscene<span style={{ color: color.brand }}>.</span>it
+    unscene<span style={{ color: dotColor }}>.</span>it
   </span>
 );
 

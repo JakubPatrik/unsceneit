@@ -33,7 +33,10 @@ export const SOURCE_HEIGHT = 1530;
 export const END_CARD_FRAMES = 90;
 export const TRANSITION_FRAMES = 8;
 
-export const creatives: readonly Creative[] = creativesFile.creatives;
+/** Hand-edited creatives have no beats, and register their own composition in Root.tsx. */
+export const creatives: readonly Creative[] = creativesFile.creatives.filter(
+  (creative) => creative.beats.length > 0,
+);
 
 const segments = segmentsFile as unknown as Record<string, Segment>;
 

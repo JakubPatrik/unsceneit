@@ -148,7 +148,8 @@ const BeatScene: React.FC<{ readonly beat: Beat; readonly isFirst: boolean }> = 
   </AbsoluteFill>
 );
 
-const EndCard: React.FC = () => {
+/** `allWhite` makes every piece of text white, with the button in brand purple to carry it. */
+export const EndCard: React.FC<{ readonly allWhite?: boolean }> = ({ allWhite = false }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const pop = spring({ frame, fps, config: { damping: 14, stiffness: 140 } });
@@ -185,7 +186,7 @@ const EndCard: React.FC = () => {
             marginTop: 40,
             fontSize: 44,
             lineHeight: 1.3,
-            color: color.muted,
+            color: allWhite ? "#fff" : color.muted,
             textWrap: "balance",
           }}
         >
@@ -198,8 +199,8 @@ const EndCard: React.FC = () => {
             marginTop: 70,
             padding: "30px 60px",
             borderRadius: 999,
-            background: color.foreground,
-            color: color.background,
+            background: allWhite ? color.xenia : color.foreground,
+            color: allWhite ? "#fff" : color.background,
             fontSize: 48,
             fontWeight: 600,
             letterSpacing: "-0.01em",
@@ -210,7 +211,7 @@ const EndCard: React.FC = () => {
       </Rise>
       <Rise at={24}>
         <div style={{ marginTop: 44 }}>
-          <Wordmark fontSize={56} />
+          <Wordmark fontSize={56} dotColor={allWhite ? "#fff" : undefined} />
         </div>
       </Rise>
     </AbsoluteFill>
