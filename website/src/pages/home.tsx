@@ -272,7 +272,7 @@ function DemoVideo() {
 const FILTERS = [
   { icon: ShieldCheck, title: "Age limit", detail: "Under 12, Under 15 or Under 18" },
   { icon: Droplet, title: "Blood & gore", detail: "Wounds, injuries, graphic violence" },
-  { icon: Bug, title: "Spiders & insects", detail: "Even small or partly visible" },
+  { icon: Bug, title: "Spiders", detail: "Even small or partly visible" },
   { icon: EyeOff, title: "Sensual & revealing", detail: "Nudity, revealing outfits, suggestive dancing" },
 ]
 
@@ -329,7 +329,7 @@ function HowItWorks() {
         <Step n={1} title="Pick your filters" body="In the extension menu, or right on the video. Your choice syncs across your Chrome.">
           <div className="flex flex-wrap gap-2">
             <span className="rounded-lg border border-white/10 bg-secondary px-3 py-1.5 text-sm">Under 12 ▾</span>
-            {["Blood & gore", "Spiders & insects"].map((c) => (
+            {["Blood & gore", "Spiders"].map((c) => (
               <span key={c} className="rounded-full bg-xenia px-3 py-1.5 text-sm font-medium text-white">
                 {c}
               </span>
@@ -366,7 +366,7 @@ function HowItWorks() {
           <div className="relative grid h-[106px] place-items-center overflow-hidden rounded-xl bg-[linear-gradient(135deg,#5a3d78,#d9785f)]">
             <div className="absolute inset-0 backdrop-blur-xl backdrop-brightness-50" />
             <span className="relative flex items-center gap-2 rounded-full bg-black/60 px-3 py-1.5 text-sm font-semibold">
-              <EyeOff className="size-3.5" /> Hidden: Spiders &amp; insects
+              <EyeOff className="size-3.5" /> Hidden: Spiders
             </span>
           </div>
         </Step>
@@ -654,7 +654,7 @@ const FAQ = [
   },
   {
     q: "Can it hide spiders for arachnophobia?",
-    a: "Yes. Turn on the Spiders & insects filter and scenes with spiders, even small or partly visible ones, are blurred and muted while the video plays. Blood & gore works the same way for people avoiding that trigger.",
+    a: "Yes. Turn on the Spiders filter and scenes with spiders, even small or partly visible ones, are blurred and muted while the video plays. Blood & gore works the same way for people avoiding that trigger.",
   },
   {
     q: "Is unscene.it a parental control?",

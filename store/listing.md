@@ -28,7 +28,7 @@ To change the tiles, edit `promo.html` and run `./render.sh`. It also regenerate
 **Detailed description** (plain text; paste as is):
 
 ```
-unscene.it is a YouTube content filter that hides the scenes you'd rather not see: blood and gore, spiders and insects, sensual or revealing content, or anything above your family's age limit.
+unscene.it is a YouTube content filter that hides the scenes you'd rather not see: blood and gore, spiders, sensual or revealing content, or anything above your family's age limit.
 
 Flagged scenes are blurred and muted while the story keeps playing, and video thumbnails are blurred too. Nothing is cut or skipped, so you never lose your place, and you never have to block a whole video or channel.
 

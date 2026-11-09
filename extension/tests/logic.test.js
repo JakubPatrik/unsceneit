@@ -74,7 +74,7 @@ describe("hiddenLabel", () => {
   });
 
   it("falls back to built-in labels, then the key", () => {
-    assert.equal(hiddenLabel(["spiders", "custom"], []), "Hidden: Spiders & insects, custom");
+    assert.equal(hiddenLabel(["spiders", "custom"], []), "Hidden: Spiders, custom");
     assert.equal(hiddenLabel(["inappropriate"], null), "Hidden: Sensual & inappropriate content");
   });
 });

@@ -76,7 +76,7 @@ Lead with personal filtering: unscene.it hides only what each viewer chooses. Th
 ## Who it's for
 
 - **Parents** who want to watch films with their kids without hovering over the remote.
-- **People with phobias or trauma triggers**, such as spiders and insects, or blood and gore.
+- **People with phobias or trauma triggers**, such as spiders, or blood and gore.
 - **Viewers who prefer modest content**: no nudity, sexualized scenes, revealing outfits or suggestive dancing, including the subtler kind common in music videos.
 - **Couples and families** who want to watch together comfortably.
 
@@ -85,7 +85,7 @@ Lead with personal filtering: unscene.it hides only what each viewer chooses. Th
 1. **Install** unscene.it from the Chrome Web Store. Edge and other browsers come later. A welcome page (https://unscene.it/welcome/) opens once, with the setup steps and the early access waitlist.
 2. **Pick your filters**, in the extension menu or right in the video dialog. They sync across the user's devices.
    - **Age limit:** No limit, Under 12, Under 15 or Under 18. A lower limit also hides everything rated above it.
-   - **Triggers:** Spiders & insects, Blood & gore, and Sensual & revealing content.
+   - **Triggers:** Spiders, Blood & gore, and Sensual & revealing content.
    - Built-in filters have one fixed strictness; there are no sensitivity sliders.
 3. **Hidden scenes are heavily blurred.** In the extension menu, viewers can choose whether sound is **muted while a scene is hidden** (on by default).
 4. **Open a video.** It doesn't play straight away: it waits, paused and blurred, while Xenia checks it against the shared library. On YouTube this happens from the first moment the page appears, so nothing slips through while the page loads.

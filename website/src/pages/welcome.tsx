@@ -58,7 +58,7 @@ export function Welcome() {
                 body="Click the unscene.it icon and choose an age limit, the scenes to hide, or both. Thumbnails are already blurred, but scenes aren't hidden until you pick."
               >
                 <ul className="flex flex-wrap gap-1.5 text-xs">
-                  {["Spiders & insects", "Blood & gore", "Sensual & revealing", "Under 12"].map((filter) => (
+                  {["Spiders", "Blood & gore", "Sensual & revealing", "Under 12"].map((filter) => (
                     <li key={filter} className="rounded-full border border-brand/40 bg-brand/10 px-2.5 py-1 text-brand-soft">
                       {filter}
                     </li>

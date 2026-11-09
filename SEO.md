@@ -28,7 +28,7 @@ Success = more store impressions and a better impression-to-install rate in the 
 |---|---|---|
 | Name | `unscene.it` | brand only. **This is the biggest gap**: the name is the field that carries the most weight in store search. |
 | Summary | "Hide the scenes you'd rather not see. Pick your filters once and keep watching while the story plays on." | hide scenes, filters (both weak) |
-| Description | see listing.md | blood and gore, spiders, insects, age limit, parents, phobia, trauma triggers, thumbnails blurred, YouTube |
+| Description | see listing.md | blood and gore, spiders, age limit, parents, phobia, trauma triggers, thumbnails blurred, YouTube |
 | Category | Entertainment | |
 
 Seed keyword ideas to test (hypotheses, not decisions): YouTube filter, YouTube parental control, family safe YouTube, kid safe YouTube, content filter for YouTube, blur YouTube, blur thumbnails, hide gore, gore blocker, spider blocker, arachnophobia, trigger warning, sensitive content filter, NSFW blur, mature content blocker, age filter, clean YouTube, safe viewing, digital wellbeing, AI content filter.

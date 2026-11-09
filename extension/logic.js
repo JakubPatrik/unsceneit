@@ -214,7 +214,7 @@ const BUILT_IN_FILTER_LABELS = {
   rated_12: "12+ content",
   rated_15: "15+ content",
   rated_18: "18+ / mature",
-  spiders: "Spiders & insects",
+  spiders: "Spiders",
   gore: "Blood & gore",
   inappropriate: "Sensual & inappropriate content",
 };

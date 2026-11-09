@@ -2,18 +2,14 @@
   "assets": {
     "gore-01": {
       "fingerprint": "436813cecdd6277b87ab5454d074a10854e9fca26b7e09139c6dee12502c46c7",
-      "public_url": "https://sankeqoeuociotbufbsb.supabase.co/storage/v1/object/public/marketing-media/gore-01-01fac5cc9c3a.mp4",
-      "sha256": "01fac5cc9c3a9a2ed93b356124983240b2bbf206eb0b14434c765fdae91a42c5",
-      "storage_path": "marketing-media/gore-01-01fac5cc9c3a.mp4"
+      "sha256": "01fac5cc9c3a9a2ed93b356124983240b2bbf206eb0b14434c765fdae91a42c5"
     },
     "liveai-01": {
       "fingerprint": "5279d55bfbf5181a6a4746827c3af183df0d7fe082556b40f07b136f5e641ccb"
     },
     "modest-01": {
       "fingerprint": "7d8936737c0c4b4533c3ea343e84a2bb46c12a5efe3846488e84cb273d2d75bc",
-      "public_url": "https://sankeqoeuociotbufbsb.supabase.co/storage/v1/object/public/marketing-media/modest-01-d41fb07b8d51.mp4",
-      "sha256": "d41fb07b8d51f50d1bd493ad4ba02be86fb2d366c5388a4258b48081d0107a24",
-      "storage_path": "marketing-media/modest-01-d41fb07b8d51.mp4"
+      "sha256": "d41fb07b8d51f50d1bd493ad4ba02be86fb2d366c5388a4258b48081d0107a24"
     },
     "parents-01": {
       "fingerprint": "25c9bd90d68e64c90c38e0bb25c0fc2ee57f0ed0e66992595257d53383ded0cb",
@@ -26,9 +22,12 @@
       "sha256": "794855e075a9118a2cc84b8eefc3b38625d24dafba245dae8d183a5caf0424ea"
     },
     "social-01": {
-      "public_url": "https://sankeqoeuociotbufbsb.supabase.co/storage/v1/object/public/marketing-media/social-01-8b280cc98716.mp4",
-      "sha256": "8b280cc98716eea9d8fb69e080828eb34c2227b7f6f76fe24bec7c119f4f8f14",
-      "storage_path": "marketing-media/social-01-8b280cc98716.mp4"
+      "sha256": "8b280cc98716eea9d8fb69e080828eb34c2227b7f6f76fe24bec7c119f4f8f14"
+    },
+    "social-02": {
+      "public_url": "https://sankeqoeuociotbufbsb.supabase.co/storage/v1/object/public/marketing-media/social-02-0c021571129b.mp4",
+      "sha256": "0c021571129b341605a5639846a48f4ad50a8aba17d7f5337fc31536fa7f244a",
+      "storage_path": "marketing-media/social-02-0c021571129b.mp4"
     },
     "spiders-01": {
       "fingerprint": "7bf344153dadaa08ff9dacc638b9b19d9e0e8bb16bfb76528db5047e2ec151f4"
@@ -68,6 +67,13 @@
       "due_at": null,
       "mode": "draft",
       "post_id": "6aed54f2f3498efda76bdee1",
+      "status": "draft"
+    },
+    "social-02:youtube": {
+      "channel_id": "6aec7aa9e29c69a1716ebbce",
+      "due_at": null,
+      "mode": "draft",
+      "post_id": "6af14485e44ddbb57c2e3068",
       "status": "draft"
     }
   }

@@ -23,7 +23,7 @@
     {
       "id": "spiders-01",
       "angle": "phobia",
-      "audience": "People with a fear of spiders and insects",
+      "audience": "People with a fear of spiders",
       "approved": false,
       "beats": [
         { "segment": "thumbs", "text": "Scared of spiders? Even thumbnails can get you." },
@@ -33,7 +33,7 @@
       ],
       "captions": {
         "youtube_title": "Watch YouTube with fewer spider surprises",
-        "youtube": "unscene.it blurs video thumbnails by default, and helps you avoid spider and insect scenes while the video keeps playing. AI can miss a scene, so think of it as a helping hand.\n\nWorks on YouTube in Chrome, for videos in the unscene.it library, plus 20 free minutes of live AI a month for the rest. Free during the alpha.\n\n{link}",
+        "youtube": "unscene.it blurs video thumbnails by default, and helps you avoid spider scenes while the video keeps playing. AI can miss a scene, so think of it as a helping hand.\n\nWorks on YouTube in Chrome, for videos in the unscene.it library, plus 20 free minutes of live AI a month for the rest. Free during the alpha.\n\n{link}",
         "tiktok": "For anyone who's ever been ambushed by a spider on YouTube. unscene.it blurs thumbnails and helps you avoid spider scenes while the video keeps playing. Free on the Chrome Web Store during the alpha. #arachnophobia #youtube",
         "instagram": "For anyone who's ever been ambushed by a spider on YouTube.\n\nunscene.it blurs thumbnails and helps you avoid spider scenes while the video keeps playing. Works in Chrome, free during the alpha.\n\n#arachnophobia #youtube",
         "twitter": "For anyone who's ever been ambushed by a spider on YouTube: unscene.it blurs thumbnails and helps you avoid spider scenes while the video keeps playing.\n\n{link}"
@@ -128,6 +128,21 @@
         "tiktok": "Everybody has a scene they can't watch. So I built unscene.it: pick what you'd rather not see on YouTube, and it blurs while the story keeps playing. Free on the Chrome Web Store during the alpha. Film: Sintel © Blender Foundation, CC BY #youtube #chromeextension",
         "instagram": "Everybody has a scene they can't watch. So I built unscene.it: pick what you'd rather not see on YouTube, and it blurs while the story keeps playing.\n\nWorks on YouTube in Chrome, free during the alpha.\n\nFilm: Sintel © Blender Foundation, CC BY\n\n#youtube #chromeextension",
         "twitter": "Everybody has a scene they can't watch.\n\nSo I built unscene.it: it blurs what you choose on YouTube, and the story keeps playing.\n\n{link}\n\nFilm: Sintel © Blender Foundation, CC BY"
+      }
+    },
+    {
+      "id": "social-02",
+      "angle": "phobia",
+      "audience": "People with a fear of spiders (founder on camera)",
+      "approved": false,
+      "hand_edited": true,
+      "beats": [],
+      "captions": {
+        "youtube_title": "Harry Potter's spider scene, with the spiders blurred",
+        "youtube": "If you hate spiders, the Aragog scene in Harry Potter is a nightmare. unscene.it blurs the spiders on YouTube while the movie keeps playing, and blurs thumbnails too, so nothing jumps out at you.\n\nWhich phobia should I add next? Tell me in the comments.\n\nWorks on YouTube in Chrome. Free during the alpha, no account.\n\n{link}",
+        "tiktok": "If you hate spiders, the Aragog scene in Harry Potter is a nightmare. unscene.it blurs the spiders on YouTube while the movie keeps playing. Which phobia should I add next? Free on the Chrome Web Store during the alpha. #arachnophobia #harrypotter #youtube #chromeextension",
+        "instagram": "If you hate spiders, the Aragog scene in Harry Potter is a nightmare.\n\nunscene.it blurs the spiders on YouTube while the movie keeps playing. Which phobia should I add next?\n\nWorks on YouTube in Chrome, free during the alpha.\n\n#arachnophobia #harrypotter #youtube #chromeextension",
+        "twitter": "If you hate spiders, the Aragog scene in Harry Potter is a nightmare.\n\nunscene.it blurs the spiders on YouTube, and the movie keeps playing. Which phobia should I add next?\n\n{link}"
       }
     }
   ]

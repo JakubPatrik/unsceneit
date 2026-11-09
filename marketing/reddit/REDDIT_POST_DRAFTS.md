@@ -49,7 +49,7 @@ Some scenes you can't unsee. I was watching a movie on YouTube with my girlfrien
 
 What it does:
 
-- You pick what to hide: sensual and revealing content, blood and gore, spiders and insects, or an age limit. Any combination works.
+- You pick what to hide: sensual and revealing content, blood and gore, spiders, or an age limit. Any combination works.
 - Every video waits under a blur until you choose how to watch it.
 - Flagged scenes get heavily blurred and muted while the video keeps playing, then come back on their own. No jump cuts, so you don't lose your place.
 - Thumbnails and hover previews are blurred too. You can turn that off.

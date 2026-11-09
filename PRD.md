@@ -15,7 +15,7 @@
 Users can toggle multiple modular filter profiles simultaneously:
 
 * **Age Ratings:** Under-12, Under-15, Mature/R-rated exclusions.
-* **Phobia Triggers:** Arachnophobia (spiders/insects), blood and gore.
+* **Phobia Triggers:** Arachnophobia (spiders), blood and gore.
 * **Sensory Cues:** Flashing lights / seizure risk profiles (future iteration).
 
 ---
