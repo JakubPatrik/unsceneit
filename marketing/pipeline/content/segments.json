@@ -1,5 +1,15 @@
 {
-  "_comment": "The only footage creatives may use. Each crop keeps out the founder's facecam (bottom left), and no segment shows third-party film or video footage: the 28 Years Later trailer (from 36s to about 48s) and the Gordon Ramsay clip (from 53.13s to about 59s) in promo-video-1, and the same clips in promo-video-2 (the trailer up to about 34.5s, Ramsay from 44.77s), are deliberately excluded, since they risk copyright claims on social platforms. What's on screen must match the line over it, cursor included. Shots of the browser window must include the whole toolbar, because the extension icon lives there: it starts at about y=114 and the window ends at about x=2407. dialog and not-in-library are close-ups that start after the source's zoom, when the toolbar is fully out of frame. crop is [x, y, width, height] in source pixels (2720x1530). hold freezes the last frame for that many extra seconds. Check the first, middle and last frame of any new segment by eye before adding it here.",
+  "_comment": "The only footage creatives may use. Each crop keeps out the founder's facecam (bottom left), and no segment shows third-party film or video footage: the 28 Years Later trailer (from 36s to about 48s) and the Gordon Ramsay clip (from 53.13s to about 59s) in promo-video-1, and the same clips in promo-video-2 (the trailer up to about 34.5s, Ramsay from 44.77s), are deliberately excluded, since they risk copyright claims on social platforms. What's on screen must match the line over it, cursor included. Shots of the browser window must include the whole toolbar, because the extension icon lives there: it starts at about y=114 and the window ends at about x=2407. dialog and not-in-library are close-ups that start after the source's zoom, when the toolbar is fully out of frame. crop is [x, y, width, height] in source pixels (2720x1530). hold freezes the last frame for that many extra seconds. Check the first, middle and last frame of any new segment by eye before adding it here. Entries with \"kind\": \"scene\" contain no footage at all: they're drawn in code by the Remotion project (social-clip/PlayerScene.tsx), so they have no source or crop.",
+  "player-playing": {
+    "kind": "scene",
+    "duration": 4.5,
+    "shows": "Code-drawn video player: abstract bokeh picture playing, scrubber with three flagged scenes, playhead moving"
+  },
+  "player-blur": {
+    "kind": "scene",
+    "duration": 4.5,
+    "shows": "Same player: the playhead enters a flagged scene, the picture blurs for 2 seconds under a 'Hidden: Blood & gore' pill while the timecode keeps running, then sharpens"
+  },
   "hero": {
     "source": "data/promo-video-1.mp4",
     "start": 0.5,

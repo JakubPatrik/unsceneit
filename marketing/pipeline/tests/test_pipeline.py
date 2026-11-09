@@ -14,6 +14,7 @@ from unittest import mock
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 import claims  # noqa: E402
+import render  # noqa: E402
 import run_pipeline as rp  # noqa: E402
 from buffer_api import BufferClient, BufferError, build_post_input  # noqa: E402
 
@@ -95,6 +96,16 @@ class ClaimsTest(unittest.TestCase):
         bad = creative(caption="Works on any video.", hand_edited=True)
         bad["beats"] = []
         self.assertTrue(claims.has_errors(claims.lint_creative(bad, SEGMENTS)))
+
+    def test_scene_segments_need_no_footage(self):
+        scenes = {"player-blur": {"kind": "scene", "duration": 4.5}, "tall": {"crop": [0, 0, 100, 400]}}
+        item = creative()
+        item["beats"] = [{"segment": "player-blur", "text": "Blurred for 2 seconds."}]
+        self.assertFalse(claims.has_errors(claims.lint_creative(item, scenes)))
+        render.check_footage_band(item, scenes)
+        item["beats"].append({"segment": "tall", "text": "Too tall."})
+        with self.assertRaises(render.RenderError):
+            render.check_footage_band(item, scenes)
 
     def test_shipped_creatives_pass(self):
         _, creatives, segments = rp.load_content()

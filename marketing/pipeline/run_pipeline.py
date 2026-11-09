@@ -306,7 +306,7 @@ def cmd_check() -> int:
     ok = ok and remotion
 
     _, creatives, segments = load_content()
-    for source in sorted({s["source"] for s in segments.values()}):
+    for source in sorted({s["source"] for s in segments.values() if "source" in s}):
         exists = (REPO / source).exists()
         print(f"{'ok     ' if exists else 'MISSING'} footage {source}")
         ok = ok and exists

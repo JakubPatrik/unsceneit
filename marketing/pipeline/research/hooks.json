@@ -16,6 +16,7 @@
     { "id": "phobia", "audience": "Phobia viewers", "pain": "Unexpected spiders in videos and thumbnails", "language": "Extension to hide spiders on YouTube thumbnails", "source": "data/seo/c-intent.md" },
     { "id": "triggers", "audience": "Viewers with gore triggers", "pain": "Wanting the story without the graphic scenes", "language": "Trigger warning extension for blood and gore", "source": "data/seo/c-intent.md" },
     { "id": "modest-viewing", "audience": "Viewers who prefer modest content", "pain": "Subtle content that most filters ignore", "language": "Filter out suggestive thumbnails", "source": "data/seo/c-intent.md" },
+    { "id": "keeps-playing", "audience": "All", "pain": "Blockers hide a whole video or channel, so one scene costs you the movie", "language": "Blurred for 2 seconds. Then the story's back.", "source": "store/screenshots/1-flow.jpg headline, and the competitor gap above" },
     { "id": "live-ai", "audience": "Viewers of videos outside the library", "pain": "The video they want isn't screened yet", "language": "Not in the library? Xenia screens it live.", "source": "STORY.md" }
   ],
   "ads_reviewed": [

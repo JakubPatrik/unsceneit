@@ -11,18 +11,36 @@ export type Beat = {
   readonly text: string;
 };
 
+/** A licensed track in public/. `start` is where in the track the clip begins, in seconds. */
+export type Music = {
+  readonly src: string;
+  readonly start: number;
+  readonly volume: number;
+};
+
 export type Creative = {
   readonly id: string;
   readonly beats: readonly Beat[];
+  readonly music?: Music;
 };
 
-export type Segment = {
+export type FootageSegment = {
+  readonly kind?: undefined;
   readonly source: string;
   readonly start: number;
   readonly duration: number;
   readonly hold?: number;
   readonly crop: readonly [number, number, number, number];
 };
+
+/** Drawn in code, with no footage at all. */
+export type SceneSegment = {
+  readonly kind: "scene";
+  readonly duration: number;
+  readonly hold?: number;
+};
+
+export type Segment = FootageSegment | SceneSegment;
 
 export const WIDTH = 1080;
 export const HEIGHT = 1920;
@@ -47,6 +65,12 @@ export const beatFrames = (beat: Beat): number => {
   const { duration, hold = 0 } = segmentFor(beat);
   return Math.round((duration + hold) * FPS);
 };
+
+/** The frame where a beat starts on the clip's timeline, after the crossfades before it. */
+export const beatStart = (creative: Creative, index: number): number =>
+  creative.beats
+    .slice(0, index)
+    .reduce((sum, beat) => sum + beatFrames(beat) - TRANSITION_FRAMES, 0);
 
 /** Transitions overlap neighbouring scenes, which shortens the total. */
 export const clipFrames = (creative: Creative): number => {

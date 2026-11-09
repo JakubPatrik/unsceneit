@@ -116,6 +116,26 @@
       }
     },
     {
+      "id": "story-01",
+      "angle": "keeps-playing",
+      "audience": "All (how it works: the scene, not the whole video)",
+      "approved": false,
+      "music": { "src": "music/story-01.mp3", "start": 7.7, "volume": 0.5 },
+      "beats": [
+        { "segment": "player-playing", "text": "One scene you can't watch shouldn't cost you the movie." },
+        { "segment": "player-blur", "text": "Blurred for 2 seconds. Then the story's back." },
+        { "segment": "popup", "text": "Pick what you'd rather not see. Like Blood & gore." },
+        { "segment": "dialog", "text": "Nothing is skipped. The story keeps playing." }
+      ],
+      "captions": {
+        "youtube_title": "Blur the scene, keep the movie",
+        "youtube": "Other blockers hide a whole video or channel. unscene.it blurs only the scenes you chose to avoid, like blood and gore, labels them and brings the picture back when they end. The story keeps playing.\n\nWorks on YouTube in Chrome, for videos in the unscene.it library, plus 20 free minutes of live AI a month for the rest. Free during the alpha, no account.\n\n{link}\n\nMusic: Baby Ay by Next Route\nLicense: https://license.declandp.info/NR\nFree Download / Stream: https://links.al/ydC\nMusic promoted by Audio Library: https://links.al/youtube",
+        "tiktok": "One scene you can't watch shouldn't cost you the movie. unscene.it blurs only the scenes you pick on YouTube, then the story's back. Free on the Chrome Web Store during the alpha. Music: Baby Ay by Next Route #youtube #chromeextension",
+        "instagram": "One scene you can't watch shouldn't cost you the movie.\n\nunscene.it blurs only the scenes you pick, then the story's back. Works on YouTube in Chrome, free during the alpha.\n\nMusic: Baby Ay by Next Route\n\n#youtube #chromeextension",
+        "twitter": "One scene you can't watch shouldn't cost you the movie.\n\nunscene.it blurs only the scenes you pick on YouTube, then the story's back.\n\n{link}\n\nMusic: Baby Ay by Next Route"
+      }
+    },
+    {
       "id": "social-01",
       "angle": "founder-story",
       "audience": "All (founder on camera)",

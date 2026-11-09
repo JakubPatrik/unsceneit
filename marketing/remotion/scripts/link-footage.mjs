@@ -1,4 +1,5 @@
 // Makes the footage that segments.json uses available in public/footage/.
+// Scene segments are drawn in code and have no source, so they're skipped.
 // Remotion doesn't serve symlinks from public/, so these are hard links: real
 // files to Remotion, with no second copy on disk. Re-linking on every run picks
 // up a re-exported source. The footage is gitignored in data/ and here.
@@ -11,7 +12,7 @@ const repo = join(root, "..", "..");
 const segments = JSON.parse(readFileSync(join(root, "..", "pipeline", "content", "segments.json"), "utf8"));
 const sources = new Set(
   Object.entries(segments)
-    .filter(([name]) => !name.startsWith("_"))
+    .filter(([name, segment]) => !name.startsWith("_") && segment.source)
     .map(([, segment]) => segment.source),
 );
 

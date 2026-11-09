@@ -21,10 +21,22 @@ def remotion_binary(remotion_dir: Path) -> Path:
     return remotion_dir / "node_modules" / ".bin" / "remotion"
 
 
+def music_path(music: dict, remotion_dir: Path) -> Path:
+    path = remotion_dir / "public" / music["src"]
+    if not path.is_file():
+        raise RenderError(f"Music file is missing: {path}")
+    return path
+
+
 def fingerprint(creative: dict, segments: dict, remotion_dir: Path) -> str:
     """Changes whenever the output would, so unchanged creatives aren't re-rendered."""
     used = {b["segment"]: segments[b["segment"]] for b in creative["beats"]}
-    digest = hashlib.sha256(json.dumps({"beats": creative["beats"], "segments": used}, sort_keys=True).encode())
+    music = creative.get("music")
+    digest = hashlib.sha256(
+        json.dumps({"beats": creative["beats"], "segments": used, "music": music}, sort_keys=True).encode()
+    )
+    if music:
+        digest.update(music_path(music, remotion_dir).read_bytes())
     files = sorted((remotion_dir / "src").rglob("*")) + [remotion_dir / "remotion.config.ts", remotion_dir / "package-lock.json"]
     for path in files:
         if path.is_file():
@@ -32,13 +44,23 @@ def fingerprint(creative: dict, segments: dict, remotion_dir: Path) -> str:
     return digest.hexdigest()
 
 
+def check_footage_band(creative: dict, segments: dict) -> None:
+    """Every footage crop must fit the band. Scene segments are drawn in code and have no crop."""
+    for beat in creative["beats"]:
+        segment = segments[beat["segment"]]
+        if "crop" not in segment:
+            continue
+        _, _, width, height = segment["crop"]
+        if WIDTH * height / width > HEIGHT - BAND_TOP:
+            raise RenderError(f'Segment "{beat["segment"]}" crop is too tall for the footage band')
+
+
 def render(creative: dict, segments: dict, remotion_dir: Path, out: Path) -> dict:
     if not remotion_binary(remotion_dir).exists():
         raise RenderError(f"Remotion isn't installed: run `npm i` in {remotion_dir}")
-    for beat in creative["beats"]:
-        _, _, width, height = segments[beat["segment"]]["crop"]
-        if WIDTH * height / width > HEIGHT - BAND_TOP:
-            raise RenderError(f'Segment "{beat["segment"]}" crop is too tall for the footage band')
+    check_footage_band(creative, segments)
+    if creative.get("music"):
+        music_path(creative["music"], remotion_dir)
 
     out.parent.mkdir(parents=True, exist_ok=True)
     link = subprocess.run(["node", "scripts/link-footage.mjs"], cwd=remotion_dir, capture_output=True, text=True)

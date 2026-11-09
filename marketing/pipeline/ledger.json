@@ -25,12 +25,16 @@
       "sha256": "8b280cc98716eea9d8fb69e080828eb34c2227b7f6f76fe24bec7c119f4f8f14"
     },
     "social-02": {
-      "public_url": "https://sankeqoeuociotbufbsb.supabase.co/storage/v1/object/public/marketing-media/social-02-0c021571129b.mp4",
-      "sha256": "0c021571129b341605a5639846a48f4ad50a8aba17d7f5337fc31536fa7f244a",
-      "storage_path": "marketing-media/social-02-0c021571129b.mp4"
+      "sha256": "0c021571129b341605a5639846a48f4ad50a8aba17d7f5337fc31536fa7f244a"
     },
     "spiders-01": {
       "fingerprint": "7bf344153dadaa08ff9dacc638b9b19d9e0e8bb16bfb76528db5047e2ec151f4"
+    },
+    "story-01": {
+      "fingerprint": "1190741074c2f6485879c48eb29b683e9c5a73a0b7cabca69c3f390f34174fd7",
+      "public_url": "https://sankeqoeuociotbufbsb.supabase.co/storage/v1/object/public/marketing-media/story-01-d512965c1c76.mp4",
+      "sha256": "d512965c1c768513b89dd5f75d97fb3013981bd2029f9a1a13e289ef18748f16",
+      "storage_path": "marketing-media/story-01-d512965c1c76.mp4"
     }
   },
   "posts": {
@@ -74,6 +78,13 @@
       "due_at": null,
       "mode": "draft",
       "post_id": "6af14485e44ddbb57c2e3068",
+      "status": "draft"
+    },
+    "story-01:youtube": {
+      "channel_id": "6aec7aa9e29c69a1716ebbce",
+      "due_at": null,
+      "mode": "draft",
+      "post_id": "6af195d909f4bbfb73add7d0",
       "status": "draft"
     }
   }

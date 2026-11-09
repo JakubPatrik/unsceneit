@@ -7,6 +7,7 @@ Where marketing stands, and what's next. As of Nov 5, 2026.
 ## 1. Finish the first batch
 
 - [ ] Send the other five to YouTube, spaced out so they can be compared: `gore-01`, `liveai-01`, `modest-01`, `parents-01`, `spiders-01`. Use `run --live --only <id>`, or `run --live` for all five.
+- [ ] `story-01` ("Keep the movie", added Nov 9): review in Studio, render once approved, then make a Buffer draft and schedule it there for Nov 10. Its first two beats are a player drawn in code (`social-clip/PlayerScene.tsx`), so it uses no third-party footage.
 - [ ] Run `cleanup` after each one publishes. Hosted videos stay in Supabase until then.
 - [ ] Decide on the cursor in `modest-01` and `spiders-01`: the line talks about one filter while the cursor is near "Blood & gore". Fix by finding a better moment in the footage, or leave it.
 - [ ] Decide on sound. The videos are silent, so try music on one and compare.
