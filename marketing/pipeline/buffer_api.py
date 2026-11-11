@@ -53,8 +53,11 @@ class BufferError(RuntimeError):
     pass
 
 
-def build_post_input(creative: dict, service: str, channel_id: str, media_url: str, text: str, mode: str) -> dict:
-    """The CreatePostInput for one creative on one channel. mode: draft | queue."""
+def build_post_input(
+    creative: dict, service: str, channel_id: str, media_url: str, text: str, mode: str, due_at: str | None = None
+) -> dict:
+    """The CreatePostInput for one creative on one channel. mode: draft | queue.
+    due_at (ISO 8601) publishes at that time instead of the next queue slot."""
     video: dict = {"url": media_url}
     if service in ("instagram", "tiktok"):
         video["metadata"] = {"thumbnailOffset": THUMBNAIL_OFFSET_MS}
@@ -69,6 +72,9 @@ def build_post_input(creative: dict, service: str, channel_id: str, media_url: s
     }
     if mode == "draft":
         post["saveToDraft"] = True
+    elif due_at:
+        post["mode"] = "customScheduled"
+        post["dueAt"] = due_at
 
     if service == "youtube":
         post["metadata"] = {

@@ -136,6 +136,28 @@
       }
     },
     {
+      "id": "story-02",
+      "angle": "gore",
+      "audience": "People who avoid blood and gore (no face, footage and code-drawn player)",
+      "approved": false,
+      "music": { "src": "music/story-01.mp3", "start": 7.7, "volume": 0.5 },
+      "beats": [
+        { "segment": "player-playing", "text": "This movie has three gory scenes. Watch it without them." },
+        { "segment": "player-blur", "text": "Blood on screen? It blurs until the scene is over." },
+        { "segment": "thumbs", "text": "Even the thumbnails come blurred." },
+        { "segment": "popup", "text": "Pick Blood & gore from the menu." },
+        { "segment": "dialog", "text": "Then press Watch with filters." },
+        { "segment": "not-in-library", "text": "Not in the library? Live AI screens it. 20 min free a month." }
+      ],
+      "captions": {
+        "youtube_title": "This movie has three gory scenes. Watch it without them.",
+        "youtube": "Blood and gore can put you off a whole movie. unscene.it blurs the blood and gore scenes on YouTube, labels them and brings the picture back when they end, so the story keeps playing.\n\nWorks on YouTube in Chrome, for videos in the unscene.it library, plus 20 free minutes of live AI a month for the rest. Free during the alpha, no account.\n\n{link}\n\nMusic: Baby Ay by Next Route\nLicense: https://license.declandp.info/NR\nFree Download / Stream: https://links.al/ydC\nMusic promoted by Audio Library: https://links.al/youtube",
+        "tiktok": "This movie has three gory scenes. Watch it without them. unscene.it blurs blood and gore on YouTube, and the story keeps playing. Free on the Chrome Web Store during the alpha. Music: Baby Ay by Next Route #youtube #chromeextension",
+        "instagram": "This movie has three gory scenes. Watch it without them.\n\nunscene.it blurs blood and gore on YouTube, and the story keeps playing. Works on YouTube in Chrome, free during the alpha.\n\nMusic: Baby Ay by Next Route\n\n#youtube #chromeextension",
+        "twitter": "This movie has three gory scenes. Watch it without them.\n\nunscene.it blurs blood and gore on YouTube, and the story keeps playing.\n\n{link}\n\nMusic: Baby Ay by Next Route"
+      }
+    },
+    {
       "id": "social-01",
       "angle": "founder-story",
       "audience": "All (founder on camera)",
@@ -163,6 +185,21 @@
         "tiktok": "If you hate spiders, the Aragog scene in Harry Potter is a nightmare. unscene.it blurs the spiders on YouTube while the movie keeps playing. Which phobia should I add next? Free on the Chrome Web Store during the alpha. #arachnophobia #harrypotter #youtube #chromeextension",
         "instagram": "If you hate spiders, the Aragog scene in Harry Potter is a nightmare.\n\nunscene.it blurs the spiders on YouTube while the movie keeps playing. Which phobia should I add next?\n\nWorks on YouTube in Chrome, free during the alpha.\n\n#arachnophobia #harrypotter #youtube #chromeextension",
         "twitter": "If you hate spiders, the Aragog scene in Harry Potter is a nightmare.\n\nunscene.it blurs the spiders on YouTube, and the movie keeps playing. Which phobia should I add next?\n\n{link}"
+      }
+    },
+    {
+      "id": "social-03",
+      "angle": "founder-story",
+      "audience": "All (founder on camera, Star Wars cantina)",
+      "approved": false,
+      "hand_edited": true,
+      "beats": [],
+      "captions": {
+        "youtube_title": "You forgot this scene was in Star Wars",
+        "youtube": "Everybody has a scene they can't watch. In the Star Wars cantina, it's the arm on the floor. unscene.it blurs the kinds of scenes you choose on YouTube, like blood and gore, and the movie keeps going.\n\nWorks on YouTube in Chrome, for videos in the unscene.it library, plus 20 free minutes of live AI a month for the rest. Free during the alpha, no account.\n\n{link}",
+        "tiktok": "You forgot this scene was in Star Wars. unscene.it blurs the scenes you choose on YouTube, like blood and gore, and the movie keeps going. Free on the Chrome Web Store during the alpha. #starwars #youtube #chromeextension",
+        "instagram": "You forgot this scene was in Star Wars.\n\nunscene.it blurs the scenes you choose on YouTube, like blood and gore, and the movie keeps going.\n\nWorks on YouTube in Chrome, free during the alpha.\n\n#starwars #youtube #chromeextension",
+        "twitter": "You forgot this scene was in Star Wars.\n\nunscene.it blurs the scenes you choose on YouTube, like blood and gore, and the movie keeps going.\n\n{link}"
       }
     }
   ]

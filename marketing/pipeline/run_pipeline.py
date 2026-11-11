@@ -214,9 +214,11 @@ def check_channels(client: BufferClient) -> dict[str, str]:
 
 
 def stage_queue(
-    creatives: list[dict], batch: str, ledger: dict, mode: str, live: bool, client: BufferClient | None = None
+    creatives: list[dict], batch: str, ledger: dict, mode: str, live: bool, client: BufferClient | None = None,
+    due_at: str | None = None,
 ) -> int:
-    """Sends posts to Buffer, or prints what would be sent. Returns the failure count."""
+    """Sends posts to Buffer, or prints what would be sent. Returns the failure count.
+    due_at publishes approved creatives at that time instead of the next queue slot."""
     if mode == "queue":
         not_approved = [c["id"] for c in creatives if not c.get("approved")]
         if not_approved:
@@ -240,7 +242,8 @@ def stage_queue(
             if not live:
                 # With no channels set up yet, preview every platform.
                 if os.getenv(CHANNEL_ENV[service]) or not any(os.getenv(name) for name in CHANNEL_ENV.values()):
-                    print(f"Queue (dry run, {mode}): {key}\n    {text!r}")
+                    when = f" at {due_at}" if due_at and mode == "queue" else ""
+                    print(f"Queue (dry run, {mode}{when}): {key}\n    {text!r}")
                 continue
             if service not in channels:
                 continue
@@ -250,7 +253,9 @@ def stage_queue(
                 print(f"Queue: {key} FAILED: the rendered file isn't hosted (or changed since). Run `upload`.")
                 failures += 1
                 continue
-            post_input = build_post_input(creative, service, channels[service], asset["public_url"], text, mode)
+            post_input = build_post_input(
+                creative, service, channels[service], asset["public_url"], text, mode, due_at
+            )
             try:
                 post = client.create_post(post_input)
             except BufferError as error:
@@ -355,6 +360,10 @@ def main() -> int:
                 "--mode", choices=("draft", "queue"), default="draft",
                 help="draft: Buffer drafts, nothing publishes. queue: approved creatives publish on Buffer's schedule.",
             )
+            sub.add_argument(
+                "--at", metavar="ISO8601",
+                help="With --mode queue: publish at this time (e.g. 2026-11-11T21:00:00+07:00) instead of the next queue slot.",
+            )
         return sub
 
     add("lint", "Check all copy against STORY.md's claims rules")
@@ -388,7 +397,9 @@ def main() -> int:
             stage_host(clean, ledger)
         failures = 0
         if args.command in ("queue", "run"):
-            failures = stage_queue(clean, batch, ledger, args.mode, args.live)
+            if args.at and args.mode != "queue":
+                raise PipelineError("--at only works with --mode queue")
+            failures = stage_queue(clean, batch, ledger, args.mode, args.live, due_at=args.at)
             print_summary(ledger)
         if args.command == "run" and args.live:
             stage_cleanup(ledger, buffer_client())

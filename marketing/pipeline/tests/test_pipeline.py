@@ -124,6 +124,14 @@ class PostInputTest(unittest.TestCase):
         self.assertNotIn("saveToDraft", queued)
         self.assertEqual(queued["mode"], "addToQueue")
 
+    def test_due_at_schedules_a_queued_post_but_never_a_draft(self):
+        at = "2026-11-11T21:00:00+07:00"
+        queued = build_post_input(creative(), "youtube", "c", "https://x/v.mp4", "t", "queue", at)
+        self.assertEqual((queued["mode"], queued["dueAt"]), ("customScheduled", at))
+        draft = build_post_input(creative(), "youtube", "c", "https://x/v.mp4", "t", "draft", at)
+        self.assertEqual(draft["mode"], "addToQueue")
+        self.assertNotIn("dueAt", draft)
+
     def test_youtube_has_required_metadata_and_is_not_made_for_kids(self):
         post = build_post_input(creative(), "youtube", "c", "https://x/v.mp4", "t", "draft")
         youtube = post["metadata"]["youtube"]
