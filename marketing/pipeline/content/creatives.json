@@ -158,6 +158,28 @@
       }
     },
     {
+      "id": "story-03",
+      "angle": "modest-viewing",
+      "audience": "Christian families who prefer modest content (no face, footage and code-drawn player)",
+      "approved": false,
+      "music": { "src": "music/story-01.mp3", "start": 7.7, "volume": 0.5 },
+      "beats": [
+        { "segment": "player-playing", "text": "Christian family movie night. Then that scene." },
+        { "segment": "player-blur-sensual", "text": "Sensual or revealing? It blurs. The story keeps playing." },
+        { "segment": "popup", "text": "Not just gore. Pick the filters that fit your family." },
+        { "segment": "not-in-library", "text": "Mix them: revealing scenes, gore, spiders, an age limit." },
+        { "segment": "thumbs", "text": "Thumbnails blur too, so nothing catches you off guard." },
+        { "segment": "dialog", "text": "Every video waits until you choose how to watch." }
+      ],
+      "captions": {
+        "youtube_title": "Christian family movie night, without the revealing scenes",
+        "youtube": "Movie night as a Christian family shouldn't mean reaching for the remote. unscene.it blurs the scenes you choose on YouTube: sensual and revealing content, blood and gore, spiders, or an age limit, in any mix. The story keeps playing, and every video waits under a blur until you choose how to watch.\n\nWorks on YouTube in Chrome, for videos in the unscene.it library, plus 20 free minutes of live AI a month for the rest. Free during the alpha, no account.\n\n{link}\n\nMusic: Baby Ay by Next Route\nLicense: https://license.declandp.info/NR\nFree Download / Stream: https://links.al/ydC\nMusic promoted by Audio Library: https://links.al/youtube",
+        "tiktok": "Christian family movie night, without the revealing scenes. unscene.it blurs the scenes you choose on YouTube, sensual content, gore or an age limit, and the story keeps playing. Free on the Chrome Web Store during the alpha. Music: Baby Ay by Next Route #christianfamily #faith #youtube #chromeextension",
+        "instagram": "Christian family movie night, without the revealing scenes.\n\nunscene.it blurs the scenes you choose on YouTube: sensual and revealing content, gore, spiders or an age limit, in any mix. The story keeps playing.\n\nWorks on YouTube in Chrome, free during the alpha.\n\nMusic: Baby Ay by Next Route\n\n#christianfamily #faith #youtube #chromeextension",
+        "twitter": "Christian family movie night, without the revealing scenes.\n\nunscene.it blurs what you choose on YouTube, in any mix. The story keeps playing.\n\n{link}\n\nMusic: Baby Ay by Next Route"
+      }
+    },
+    {
       "id": "social-01",
       "angle": "founder-story",
       "audience": "All (founder on camera)",
@@ -200,6 +222,21 @@
         "tiktok": "You forgot this scene was in Star Wars. unscene.it blurs the scenes you choose on YouTube, like blood and gore, and the movie keeps going. Free on the Chrome Web Store during the alpha. #starwars #youtube #chromeextension",
         "instagram": "You forgot this scene was in Star Wars.\n\nunscene.it blurs the scenes you choose on YouTube, like blood and gore, and the movie keeps going.\n\nWorks on YouTube in Chrome, free during the alpha.\n\n#starwars #youtube #chromeextension",
         "twitter": "You forgot this scene was in Star Wars.\n\nunscene.it blurs the scenes you choose on YouTube, like blood and gore, and the movie keeps going.\n\n{link}"
+      }
+    },
+    {
+      "id": "social-04",
+      "angle": "founder-story",
+      "audience": "All (founder on camera, The Revenant bear attack)",
+      "approved": false,
+      "hand_edited": true,
+      "beats": [],
+      "captions": {
+        "youtube_title": "You forgot how brutal The Revenant actually is",
+        "youtube": "You forgot how brutal The Revenant actually is. unscene.it blurs the blood and gore on YouTube, from the torn-up body at the start to the bear attack, and the movie keeps going.\n\nWorks on YouTube in Chrome, for videos in the unscene.it library, plus 20 free minutes of live AI a month for the rest. Free during the alpha, no account.\n\n{link}",
+        "tiktok": "You forgot how brutal The Revenant actually is. unscene.it blurs the blood and gore on YouTube, and the movie keeps going. Free on the Chrome Web Store during the alpha. #therevenant #youtube #chromeextension",
+        "instagram": "You forgot how brutal The Revenant actually is.\n\nunscene.it blurs the blood and gore on YouTube, and the movie keeps going.\n\nWorks on YouTube in Chrome, free during the alpha.\n\n#therevenant #youtube #chromeextension",
+        "twitter": "You forgot how brutal The Revenant actually is.\n\nunscene.it blurs the blood and gore on YouTube, and the movie keeps going.\n\n{link}"
       }
     }
   ]

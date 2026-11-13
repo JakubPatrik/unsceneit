@@ -1,6 +1,7 @@
 import { Social01 } from "./Social01";
 import { Social02 } from "./Social02";
 import { Social03 } from "./Social03";
+import { Social04 } from "./Social04";
 import { Composition, Folder } from "remotion";
 import { SocialClip } from "./social-clip/SocialClip";
 import { FPS, HEIGHT, WIDTH, clipFrames, creatives } from "./social-clip/content";
@@ -42,6 +43,14 @@ export const RemotionRoot: React.FC = () => {
           id="social-03"
           component={Social03}
           durationInFrames={640}
+          fps={30}
+          width={1080}
+          height={1920}
+        />
+        <Composition
+          id="social-04"
+          component={Social04}
+          durationInFrames={937}
           fps={30}
           width={1080}
           height={1920}

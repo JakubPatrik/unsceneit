@@ -223,9 +223,11 @@ const PauseIcon: React.FC = () => (
   </div>
 );
 
-export const PlayerScene: React.FC<{ readonly phase: PlayerPhase }> = ({
-  phase,
-}) => {
+/** `label` names the filter on the "Hidden:" pill. */
+export const PlayerScene: React.FC<{
+  readonly phase: PlayerPhase;
+  readonly label?: string;
+}> = ({ phase, label = "Blood & gore" }) => {
   const frame = useCurrentFrame();
   const clock = phase === "playing" ? frame : BLUR_OFFSET + frame;
   const { playhead, seconds, blur } = playerState(phase, frame);
@@ -304,7 +306,7 @@ export const PlayerScene: React.FC<{ readonly phase: PlayerPhase }> = ({
               color: color.foreground,
             }}
           >
-            Hidden: Blood &amp; gore
+            Hidden: {label}
           </div>
         </AbsoluteFill>
       </div>

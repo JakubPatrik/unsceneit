@@ -10,6 +10,11 @@
     "duration": 4.5,
     "shows": "Same player: the playhead enters a flagged scene, the picture blurs for 2 seconds under a 'Hidden: Blood & gore' pill while the timecode keeps running, then sharpens"
   },
+  "player-blur-sensual": {
+    "kind": "scene",
+    "duration": 4.5,
+    "shows": "Same as player-blur, but the pill reads 'Hidden: Sensual & revealing content'"
+  },
   "hero": {
     "source": "data/promo-video-1.mp4",
     "start": 0.5,

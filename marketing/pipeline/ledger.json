@@ -28,9 +28,12 @@
       "sha256": "0c021571129b341605a5639846a48f4ad50a8aba17d7f5337fc31536fa7f244a"
     },
     "social-03": {
-      "public_url": "https://sankeqoeuociotbufbsb.supabase.co/storage/v1/object/public/marketing-media/social-03-c659707548bc.mp4",
-      "sha256": "c659707548bc026e2b6147645215f477a2d59d6cb4acff222b3059b5f887192e",
-      "storage_path": "marketing-media/social-03-c659707548bc.mp4"
+      "sha256": "c659707548bc026e2b6147645215f477a2d59d6cb4acff222b3059b5f887192e"
+    },
+    "social-04": {
+      "public_url": "https://sankeqoeuociotbufbsb.supabase.co/storage/v1/object/public/marketing-media/social-04-3e65366aa9ba.mp4",
+      "sha256": "3e65366aa9baef7ed2badd890f85dc47b98d191984fe6d0a067767146d341135",
+      "storage_path": "marketing-media/social-04-3e65366aa9ba.mp4"
     },
     "spiders-01": {
       "fingerprint": "7bf344153dadaa08ff9dacc638b9b19d9e0e8bb16bfb76528db5047e2ec151f4"
@@ -41,9 +44,13 @@
     },
     "story-02": {
       "fingerprint": "55591fae227ff8c307379762d25514e0eb94decdc07dd2d2850ffdfb3f71fbd9",
-      "public_url": "https://sankeqoeuociotbufbsb.supabase.co/storage/v1/object/public/marketing-media/story-02-bdc601c23086.mp4",
-      "sha256": "bdc601c2308693112949cc310d229de042ac6120b55694ecd3d7ce1a1fdc6238",
-      "storage_path": "marketing-media/story-02-bdc601c23086.mp4"
+      "sha256": "bdc601c2308693112949cc310d229de042ac6120b55694ecd3d7ce1a1fdc6238"
+    },
+    "story-03": {
+      "fingerprint": "2a23469778cb424f228a5d68910ac13991ac5fd382f2e8713ad69dfba15cefef",
+      "public_url": "https://sankeqoeuociotbufbsb.supabase.co/storage/v1/object/public/marketing-media/story-03-a9b1a187e234.mp4",
+      "sha256": "a9b1a187e234646cdbff2ea85d4c2138fa76d7fb1d6a0955d15d391cc37f42fa",
+      "storage_path": "marketing-media/story-03-a9b1a187e234.mp4"
     }
   },
   "posts": {
@@ -96,6 +103,13 @@
       "post_id": "6af3de3ad9a6812579c9d536",
       "status": "scheduled"
     },
+    "social-04:youtube": {
+      "channel_id": "6aec7aa9e29c69a1716ebbce",
+      "due_at": null,
+      "mode": "draft",
+      "post_id": "6af6ab59fb90ccefdd220482",
+      "status": "draft"
+    },
     "story-01:youtube": {
       "channel_id": "6aec7aa9e29c69a1716ebbce",
       "due_at": null,
@@ -108,6 +122,13 @@
       "due_at": "2026-11-11T14:00:00.000Z",
       "mode": "queue",
       "post_id": "6af3e1a50b5acab586309c8d",
+      "status": "scheduled"
+    },
+    "story-03:youtube": {
+      "channel_id": "6aec7aa9e29c69a1716ebbce",
+      "due_at": "2026-11-14T12:08:00.000Z",
+      "mode": "queue",
+      "post_id": "6af6af90da25c4db3e9d1cc1",
       "status": "scheduled"
     }
   }

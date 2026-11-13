@@ -43,6 +43,12 @@ const BAND_TOP = 600;
 const SCENE_PHASES: Record<string, PlayerPhase> = {
   "player-playing": "playing",
   "player-blur": "blur",
+  "player-blur-sensual": "blur",
+};
+
+/** The filter named on the "Hidden:" pill, where it isn't Blood & gore. */
+const SCENE_LABELS: Record<string, string> = {
+  "player-blur-sensual": "Sensual & revealing content",
 };
 
 /** How far the footage pushes in over a beat. */
@@ -112,7 +118,10 @@ const BeatScene: React.FC<{
   return (
     <AbsoluteFill style={{ background: color.background }}>
       {segment.kind === "scene" ? (
-        <PlayerScene phase={SCENE_PHASES[beat.segment]} />
+        <PlayerScene
+          phase={SCENE_PHASES[beat.segment]}
+          label={SCENE_LABELS[beat.segment]}
+        />
       ) : (
         <Footage segment={segment} />
       )}
