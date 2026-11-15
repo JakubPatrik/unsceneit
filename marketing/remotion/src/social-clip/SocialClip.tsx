@@ -55,7 +55,7 @@ const SCENE_LABELS: Record<string, string> = {
 const PUSH_IN = 0.03;
 
 /**
- * Crops the landscape recording to the segment's allowlisted box. The push-in is
+ * Crops the recording (landscape promo, or a portrait phone take) to the segment's allowlisted box. The push-in is
  * anchored to the top of the box, so a browser toolbar in the shot stays in frame,
  * and it only ever zooms in, so nothing outside the box can come into view.
  */
@@ -65,6 +65,7 @@ const Footage: React.FC<{ readonly segment: FootageSegment }> = ({
   const frame = useCurrentFrame();
   const { durationInFrames } = useVideoConfig();
   const [x, y, width, height] = segment.crop;
+  const [sourceWidth, sourceHeight] = segment.source_size ?? [SOURCE_WIDTH, SOURCE_HEIGHT];
   const scale = WIDTH / width;
   const lastFootageFrame = Math.round(segment.duration * FPS) - 1;
   const file = segment.source.split("/").pop();
@@ -99,8 +100,8 @@ const Footage: React.FC<{ readonly segment: FootageSegment }> = ({
               position: "absolute",
               left: -x * scale,
               top: -y * scale,
-              width: SOURCE_WIDTH * scale,
-              height: SOURCE_HEIGHT * scale,
+              width: sourceWidth * scale,
+              height: sourceHeight * scale,
               maxWidth: "none",
             }}
           />
@@ -265,7 +266,7 @@ const BackgroundMusic: React.FC<{
 }> = ({ creative, music }) => {
   const { durationInFrames } = useVideoConfig();
   const hidden = creative.beats.flatMap((beat, i) =>
-    SCENE_PHASES[beat.segment] === "blur"
+    music.muteWhileHidden !== false && SCENE_PHASES[beat.segment] === "blur"
       ? [
           {
             from: beatStart(creative, i) + HIDDEN_FRAMES.from,

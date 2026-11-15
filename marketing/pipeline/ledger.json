@@ -31,9 +31,12 @@
       "sha256": "c659707548bc026e2b6147645215f477a2d59d6cb4acff222b3059b5f887192e"
     },
     "social-04": {
-      "public_url": "https://sankeqoeuociotbufbsb.supabase.co/storage/v1/object/public/marketing-media/social-04-3e65366aa9ba.mp4",
-      "sha256": "3e65366aa9baef7ed2badd890f85dc47b98d191984fe6d0a067767146d341135",
-      "storage_path": "marketing-media/social-04-3e65366aa9ba.mp4"
+      "sha256": "3e65366aa9baef7ed2badd890f85dc47b98d191984fe6d0a067767146d341135"
+    },
+    "social-05": {
+      "public_url": "https://sankeqoeuociotbufbsb.supabase.co/storage/v1/object/public/marketing-media/social-05-2e5305feb6b0.mp4",
+      "sha256": "2e5305feb6b014beddaca94f9071ab965a4a65e5d2dad2ad1f0b881ce32fa997",
+      "storage_path": "marketing-media/social-05-2e5305feb6b0.mp4"
     },
     "spiders-01": {
       "fingerprint": "7bf344153dadaa08ff9dacc638b9b19d9e0e8bb16bfb76528db5047e2ec151f4"
@@ -48,9 +51,13 @@
     },
     "story-03": {
       "fingerprint": "2a23469778cb424f228a5d68910ac13991ac5fd382f2e8713ad69dfba15cefef",
-      "public_url": "https://sankeqoeuociotbufbsb.supabase.co/storage/v1/object/public/marketing-media/story-03-a9b1a187e234.mp4",
-      "sha256": "a9b1a187e234646cdbff2ea85d4c2138fa76d7fb1d6a0955d15d391cc37f42fa",
-      "storage_path": "marketing-media/story-03-a9b1a187e234.mp4"
+      "sha256": "a9b1a187e234646cdbff2ea85d4c2138fa76d7fb1d6a0955d15d391cc37f42fa"
+    },
+    "story-04": {
+      "fingerprint": "5696559ababa123a92546d5ec4dc49de4874dcf4e60915508b3a3e83443637cf",
+      "public_url": "https://sankeqoeuociotbufbsb.supabase.co/storage/v1/object/public/marketing-media/story-04-a177d39f4be4.mp4",
+      "sha256": "a177d39f4be41168af665df681b882d74632e6c61a395ad0c3897d4ff9fdd3bc",
+      "storage_path": "marketing-media/story-04-a177d39f4be4.mp4"
     }
   },
   "posts": {
@@ -110,6 +117,13 @@
       "post_id": "6af6ab59fb90ccefdd220482",
       "status": "draft"
     },
+    "social-05:youtube": {
+      "channel_id": "6aec7aa9e29c69a1716ebbce",
+      "due_at": null,
+      "mode": "draft",
+      "post_id": "6af95a19e86a5789a6f5ce58",
+      "status": "draft"
+    },
     "story-01:youtube": {
       "channel_id": "6aec7aa9e29c69a1716ebbce",
       "due_at": null,
@@ -130,6 +144,13 @@
       "mode": "queue",
       "post_id": "6af6af90da25c4db3e9d1cc1",
       "status": "scheduled"
+    },
+    "story-04:youtube": {
+      "channel_id": "6aec7aa9e29c69a1716ebbce",
+      "due_at": null,
+      "mode": "draft",
+      "post_id": "6af96238b9a106584c944781",
+      "status": "draft"
     }
   }
 }

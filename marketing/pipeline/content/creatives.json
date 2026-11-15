@@ -180,6 +180,26 @@
       }
     },
     {
+      "id": "story-04",
+      "angle": "modest-viewing",
+      "audience": "Christian couples who prefer modest content (no face; follows story-03's Christian hook)",
+      "approved": false,
+      "music": { "src": "music/story-01.mp3", "start": 7.7, "volume": 0.5, "muteWhileHidden": false },
+      "beats": [
+        { "segment": "gata-playing", "text": "Christian couple? Put on a music video. Then that scene." },
+        { "segment": "gata-blur", "text": "Even in the background, it blurs. The music keeps playing." },
+        { "segment": "gata-dialog", "text": "Pick the filters that fit your faith. Then press play." },
+        { "segment": "gata-back", "text": "The scene ends, and the picture comes back." }
+      ],
+      "captions": {
+        "youtube_title": "Christian couple? Music videos without the revealing scenes",
+        "youtube": "Watching music videos together as a Christian couple shouldn't mean reaching for the remote. unscene.it blurs the revealing and sexualized shots on YouTube, and with \"Mute sound while hidden\" switched off, the music keeps playing. Pick the filters that fit your faith: sensual and revealing content, blood and gore, spiders or an age limit.\n\nWorks on YouTube in Chrome, for videos in the unscene.it library, plus 20 free minutes of live AI a month for the rest. Free during the alpha, no account.\n\n{link}\n\nMusic: Baby Ay by Next Route\nLicense: https://license.declandp.info/NR\nFree Download / Stream: https://links.al/ydC\nMusic promoted by Audio Library: https://links.al/youtube",
+        "tiktok": "Christian couple? Music videos without the revealing scenes. unscene.it blurs them on YouTube, and the music keeps playing. Free on the Chrome Web Store during the alpha. Music: Baby Ay by Next Route #christiancouple #faith #youtube #chromeextension",
+        "instagram": "Christian couple? Music videos without the revealing scenes.\n\nunscene.it blurs them on YouTube, and the music keeps playing. Pick the filters that fit your faith. Works on YouTube in Chrome, free during the alpha.\n\nMusic: Baby Ay by Next Route\n\n#christiancouple #faith #youtube #chromeextension",
+        "twitter": "Christian couple? Music videos without the revealing scenes.\n\nunscene.it blurs them on YouTube, and the music keeps playing.\n\n{link}\n\nMusic: Baby Ay by Next Route"
+      }
+    },
+    {
       "id": "social-01",
       "angle": "founder-story",
       "audience": "All (founder on camera)",
@@ -237,6 +257,21 @@
         "tiktok": "You forgot how brutal The Revenant actually is. unscene.it blurs the blood and gore on YouTube, and the movie keeps going. Free on the Chrome Web Store during the alpha. #therevenant #youtube #chromeextension",
         "instagram": "You forgot how brutal The Revenant actually is.\n\nunscene.it blurs the blood and gore on YouTube, and the movie keeps going.\n\nWorks on YouTube in Chrome, free during the alpha.\n\n#therevenant #youtube #chromeextension",
         "twitter": "You forgot how brutal The Revenant actually is.\n\nunscene.it blurs the blood and gore on YouTube, and the movie keeps going.\n\n{link}"
+      }
+    },
+    {
+      "id": "social-05",
+      "angle": "modest-viewing",
+      "audience": "All (founder on camera, Gata Only music video, Sensual & revealing content)",
+      "approved": false,
+      "hand_edited": true,
+      "beats": [],
+      "captions": {
+        "youtube_title": "You put on Gata Only, and then your partner walks in",
+        "youtube": "You put on Gata Only, and then your partner walks in. unscene.it blurs the revealing and sexualized shots in music videos on YouTube, and the video keeps playing. Pick the Sensual & revealing filter, and choose whether sound stays on while a scene is hidden.\n\nWorks on YouTube in Chrome, for videos in the unscene.it library, plus 20 free minutes of live AI a month for the rest. Free during the alpha, no account.\n\n{link}",
+        "tiktok": "You put on Gata Only, and then your partner walks in. unscene.it blurs the revealing shots in music videos on YouTube, and the video keeps playing. Free on the Chrome Web Store during the alpha. #gataonly #youtube #chromeextension",
+        "instagram": "You put on Gata Only, and then your partner walks in.\n\nunscene.it blurs the revealing shots in music videos on YouTube, and the video keeps playing.\n\nWorks on YouTube in Chrome, free during the alpha.\n\n#gataonly #youtube #chromeextension",
+        "twitter": "You put on Gata Only, and then your partner walks in.\n\nunscene.it blurs the revealing shots in music videos on YouTube, and the video keeps playing.\n\n{link}"
       }
     }
   ]

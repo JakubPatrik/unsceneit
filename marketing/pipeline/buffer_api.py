@@ -15,7 +15,9 @@ SERVICES = ("youtube", "tiktok", "instagram", "twitter")
 # that the first beat's text is on screen.
 THUMBNAIL_OFFSET_MS = 1500
 
-YOUTUBE_CATEGORY_SCIENCE_TECH = "28"
+# YouTube category ids: 24 Entertainment, 28 Science & Technology. The reels are
+# entertainment; a creative can override with "youtube_category".
+YOUTUBE_CATEGORY_DEFAULT = "24"
 
 CREATE_POST = """
 mutation CreatePost($input: CreatePostInput!) {
@@ -80,7 +82,7 @@ def build_post_input(
         post["metadata"] = {
             "youtube": {
                 "title": creative["captions"]["youtube_title"],
-                "categoryId": YOUTUBE_CATEGORY_SCIENCE_TECH,
+                "categoryId": creative.get("youtube_category", YOUTUBE_CATEGORY_DEFAULT),
                 # The audience is adults choosing filters, parents included, so
                 # this is not "made for kids" content under YouTube's rules.
                 "madeForKids": False,

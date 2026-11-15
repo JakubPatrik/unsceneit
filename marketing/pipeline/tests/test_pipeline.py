@@ -136,8 +136,14 @@ class PostInputTest(unittest.TestCase):
         post = build_post_input(creative(), "youtube", "c", "https://x/v.mp4", "t", "draft")
         youtube = post["metadata"]["youtube"]
         self.assertEqual(youtube["title"], "A title")
-        self.assertTrue(youtube["categoryId"])
+        self.assertEqual(youtube["categoryId"], "24", "reels default to Entertainment")
         self.assertIs(youtube["madeForKids"], False)
+
+    def test_youtube_category_can_be_overridden(self):
+        item = creative()
+        item["youtube_category"] = "28"
+        post = build_post_input(item, "youtube", "c", "https://x/v.mp4", "t", "draft")
+        self.assertEqual(post["metadata"]["youtube"]["categoryId"], "28")
 
     def test_instagram_is_a_reel(self):
         post = build_post_input(creative(), "instagram", "c", "https://x/v.mp4", "t", "draft")

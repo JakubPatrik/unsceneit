@@ -16,6 +16,8 @@ export type Music = {
   readonly src: string;
   readonly start: number;
   readonly volume: number;
+  /** false keeps the music playing while a drawn scene is blurred, like the extension with "Mute sound while hidden" off. Default true. */
+  readonly muteWhileHidden?: boolean;
 };
 
 export type Creative = {
@@ -31,6 +33,8 @@ export type FootageSegment = {
   readonly duration: number;
   readonly hold?: number;
   readonly crop: readonly [number, number, number, number];
+  /** [width, height] as the browser shows the source. Default: the 2720x1530 promo recordings. */
+  readonly source_size?: readonly [number, number];
 };
 
 /** Drawn in code, with no footage at all. */
